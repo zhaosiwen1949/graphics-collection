@@ -1,0 +1,416 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>Vulkan API 梳理 · GitBook</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="../engine/" />
+    
+    
+    <link rel="prev" href="difference.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    背景介绍
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    图形 API
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1" data-path="difference.html">
+            
+                <a href="difference.html">
+            
+                    
+                    OpenGL 与 Vulkan 的区别
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.2.2" data-path="vulkanAPI.html">
+            
+                <a href="vulkanAPI.html">
+            
+                    
+                    Vulkan API 梳理
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="../engine/">
+            
+                <a href="../engine/">
+            
+                    
+                    引擎架构
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1" data-path="../engine/vulkanRenderer.html">
+            
+                <a href="../engine/vulkanRenderer.html">
+            
+                    
+                    引擎架构之 Vulkan Renderer 封装
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="../RHI/">
+            
+                <a href="../RHI/">
+            
+                    
+                    RHI 跨平台
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" data-path="../rendering/">
+            
+                <a href="../rendering/">
+            
+                    
+                    渲染技术
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" data-path="../rayTracing/">
+            
+                <a href="../rayTracing/">
+            
+                    
+                    光线追踪
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >Vulkan API 梳理</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="vulkan-api-&#x68B3;&#x7406;">Vulkan API &#x68B3;&#x7406;</h1>
+<blockquote>
+<p>&#x53C2;&#x8003;&#x6587;&#x7AE0;&#xFF1A;<a href="https://gpuopen.com/learn/understanding-vulkan-objects/" target="_blank">Understanding Vulkan&#xAE; Objects</a></p>
+</blockquote>
+<h2 id="&#x6574;&#x4F53;&#x6982;&#x89C8;">&#x6574;&#x4F53;&#x6982;&#x89C8;</h2>
+<p><img src="../resources/images/Vulkan-Diagram.webp" alt="&#x6574;&#x4F53;&#x67B6;&#x6784;"></p>
+<ol>
+<li>&#x521B;&#x5EFA; Instance&#xFF0C;&#x8FD9;&#x4E00;&#x6B65;&#x9700;&#x8981;&#x914D;&#x7F6E;&#x652F;&#x6301;&#x7684; Layer &#x548C; Extension &#x6269;&#x5C55;&#x529F;&#x80FD;&#xFF1B;</li>
+<li>&#x521B;&#x5EFA; device &#x903B;&#x8F91;&#x8BBE;&#x5907;&#xFF0C;&#x8FD9;&#x4E00;&#x6B65;&#x4E3B;&#x8981;&#x9700;&#x8981;&#xFF1A;&#x7269;&#x7406;&#x8BBE;&#x5907; physical device&#x3001;&#x961F;&#x5217;&#x65CF; queue family&#x3001;&#x903B;&#x8F91;&#x8BBE;&#x5907;&#x9700;&#x8981;&#x652F;&#x6301;&#x7684;&#x6269;&#x5C55;&#x7279;&#x6027;&#xFF1B;</li>
+<li>&#x521B;&#x5EFA; swapChain &#x4EA4;&#x6362;&#x94FE;&#xFF0C;&#x6CE8;&#x610F; surface &#x9700;&#x8981;&#x901A;&#x8FC7;&#x7A97;&#x53E3;&#x5E93;&#x521B;&#x5EFA;&#xFF0C;&#x7136;&#x540E;&#x6839;&#x636E; surface &#x548C; physical device &#x67E5;&#x8BE2; swapChain &#x652F;&#x6301;&#x7684; &#x56FE;&#x50CF;&#x683C;&#x5F0F; &#x548C; &#x5448;&#x73B0;&#x6A21;&#x5F0F;&#xFF0C;&#x9009;&#x62E9;&#x5408;&#x9002;&#x7684;&#x5448;&#x73B0;&#x6A21;&#x5F0F;&#xFF1B;</li>
+<li>swapChain &#x521B;&#x5EFA;&#x4E3B;&#x8981;&#x5C31;&#x662F;&#x628A; surface &#x548C; graphic queue &#x8FDE;&#x63A5;&#x8D77;&#x6765;&#xFF0C;&#x5E76;&#x4E14;&#x8BBE;&#x7F6E;&#x597D; image &#x7684;&#x683C;&#x5F0F;&#x3001;&#x5927;&#x5C0F;&#x3001;&#x6570;&#x91CF;&#x3001;&#x7528;&#x9014;&#x7B49;&#xFF0C;&#x4EE5;&#x53CA;&#x5448;&#x73B0;&#x6A21;&#x5F0F;&#x3001;&#x65CB;&#x8F6C;&#x6A21;&#x5F0F;&#x3001;&#x88C1;&#x526A;&#x6A21;&#x5F0F;&#x7B49; image &#x5904;&#x7406;&#x7684;&#x5185;&#x5BB9;&#xFF1B;</li>
+<li>&#x4ECE; swapChain &#x4E2D;&#x83B7;&#x53D6;&#x5BF9;&#x5E94;&#x7684; VkImage &#x5BF9;&#x8C61;&#xFF0C;&#x5E76;&#x521B;&#x5EFA;x&#x76F8;&#x5E94;&#x7684; ImageView&#xFF1B;</li>
+<li>&#x521B;&#x5EFA; commandPool &#x548C; queueFamily &#x5173;&#x8054;&#xFF1B;</li>
+<li>&#x521B;&#x5EFA; commandBuffer&#xFF0C;&#x4ECE; commandPool &#x5206;&#x914D;&#xFF1B;</li>
+<li>&#x521B;&#x5EFA;&#x4E24;&#x4E2A; &#x4FE1;&#x53F7;&#x91CF; semaphore&#xFF0C;&#x4E00;&#x4E2A;&#x7528;&#x6765;&#x5448;&#x73B0;&#x5B8C;&#x6210;&#x540E;&#xFF0C;&#x901A;&#x77E5;&#x56FE;&#x50CF; available&#xFF0C;&#x4E00;&#x4E2A;&#x6E32;&#x67D3;&#x5B8C;&#x6210;&#x540E;&#xFF0C;&#x901A;&#x77E5;&#x53EF;&#x4EE5;&#x7528;&#x4E8E;&#x5448;&#x73B0;&#xFF1B;</li>
+<li>Buffer &#x548C; Image&#xFF1A;  <ol>
+<li>createBuffer &#x521B;&#x5EFA; Buffer&#xFF0C;&#x5E76;&#x5206;&#x914D; memory &#x5185;&#x5B58;&#xFF1B;</li>
+<li>createImage&#x3001;createImageView &#x521B;&#x5EFA; Image &#x548C; ImageView &#x5BF9;&#x8C61;&#xFF0C;&#x7528;&#x4E8E; color/depth/stencil attachment &#x548C; texture &#x7EB9;&#x7406;&#x5BF9;&#x8C61;&#xFF1B;</li>
+<li>createSampler &#x521B;&#x5EFA;&#x7EB9;&#x7406;&#x91C7;&#x6837;&#x5668;&#xFF1B;</li>
+<li>copyBuffer&#x3001;copyImageToBuffer&#x3001;copyBufferToImage&#xFF0C;&#x901A;&#x8FC7;&#x547D;&#x4EE4;&#x65B9;&#x5F0F;&#x4F20;&#x8F93;&#x6570;&#x636E;&#xFF0C;&#x5176;&#x4E2D;&#x5BF9;&#x4E8E; Image &#x5BF9;&#x8C61;&#x7684;&#x6570;&#x636E;&#x4F20;&#x8F93;&#xFF0C;&#x9700;&#x8981;&#x5148;&#x901A;&#x8FC7; transitionImageLayout&#xFF0C;&#x6765;&#x8F6C;&#x6362;&#x56FE;&#x50CF;&#x5E03;&#x5C40; layout&#xFF1B;</li>
+</ol>
+</li>
+<li>&#x521B;&#x5EFA;&#x6DF1;&#x5EA6;&#x7F13;&#x51B2; createDepthResources&#xFF1B;</li>
+<li>&#x521B;&#x5EFA;&#x7EB9;&#x7406;&#x5BF9;&#x8C61; createTextureImage&#xFF1B;</li>
+<li>&#x521B;&#x5EFA;&#x9876;&#x70B9;&#x7F13;&#x5B58; createTexturedVertexBuffer&#xFF0C;&#x6CE8;&#x610F;&#x8FD9;&#x91CC;&#x662F;&#x7528;&#x7684; storage buffer &#x5B9E;&#x73B0;&#x7684;&#xFF1B;</li>
+<li>&#x521B;&#x5EFA; Uniform &#x7F13;&#x5B58; createUniformBuffers&#xFF1B;</li>
+<li>&#x521B;&#x5EFA;&#x63CF;&#x8FF0;&#x7B26;&#x5206;&#x914D;&#x6C60; DescriptorPool&#xFF0C;&#x5176;&#x4E2D;&#x4E3B;&#x8981;&#x5206;&#x914D; DescriptorSet &#x7684;&#x6570;&#x91CF;&#xFF0C;&#x4EE5;&#x53CA; Uniform Buffer&#x3001;Storage Buffer &#x548C; Image Sampler &#x7684;&#x6570;&#x91CF;&#xFF0C;&#x6CE8;&#x610F;&#x8FD9;&#x91CC;&#x6BCF;&#x4E00;&#x4E2A; swapChain &#x4E0A;&#x7684; framebuffer &#x90FD;&#x90FD;&#x4E00;&#x4E2A;&#x5355;&#x72EC;&#x7684;DescriptorSet&#xFF0C;&#x5E76;&#x4E14;&#x4F1A;&#x5F71;&#x54CD;&#x5176;&#x4ED6;&#x8D44;&#x6E90;&#x4E58;&#x4EE5;&#x5BF9;&#x5E94;&#x7684;&#x6570;&#x91CF;&#xFF1B;</li>
+<li>&#x521B;&#x5EFA; DescriptorSetLayout&#xFF0C;&#x63CF;&#x8FF0;&#x8D44;&#x6E90;&#x5E03;&#x5C40;&#xFF1B;</li>
+<li>&#x6839;&#x636E; DescriptorSetLayout&#xFF0C;&#x4ECE; DescriptorPool &#x4E2D;&#xFF0C;&#x521B;&#x5EFA; DescriptorSet&#xFF0C;&#x6700;&#x540E;&#x901A;&#x8FC7; vkUpdateDescriptorSets&#xFF0C;&#x5C06;&#x771F;&#x6B63;&#x7684; buffer &#x6570;&#x636E;&#x66F4;&#x65B0;&#x5230; DescriptorSet &#x4E2D;&#xFF1B;</li>
+<li>&#x521B;&#x5EFA; GraphicsPipeline &#x4E4B;&#x524D;&#xFF0C;&#x5148;&#x521B;&#x5EFA; PipelineLayout&#xFF0C;PipelineLayout &#x4E3B;&#x8981;&#x63CF;&#x8FF0; DescriptorSetLayout &#x548C; PushContantRange&#xFF0C;&#x7C7B;&#x4F3C;&#x63CF;&#x8FF0;&#x4E86;&#x51FD;&#x6570;&#x7684;&#x5165;&#x53C2;&#x7C7B;&#x578B;&#xFF1B;</li>
+<li>&#x521B;&#x5EFA; RenderPass&#xFF0C;RenderPass &#x4E3B;&#x8981;&#x63CF;&#x8FF0;&#x4E09;&#x90E8;&#x5206;&#x5185;&#x5BB9;&#xFF0C;&#x91CD;&#x70B9;&#x662F;&#x5982;&#x4F55;&#x8F93;&#x51FA;&#xFF0C;&#x7C7B;&#x4F3C;&#x51FD;&#x6570;&#x7684;&#x8FD4;&#x56DE;&#x503C;&#x7C7B;&#x578B;&#xFF1A;<ol>
+<li>color&#x3001;depth&#x3001;stencil attachment description&#xFF0C;&#x63CF;&#x8FF0;&#x5728; RenderPass &#x6574;&#x4E2A;&#x524D;&#x540E;&#x7684; layout &#x5206;&#x522B;&#x662F;&#x4EC0;&#x4E48;&#xFF0C;&#x6CE8;&#x610F;&#x8FD9;&#x91CC;&#x5E76;&#x672A;&#x548C;&#x5177;&#x4F53; framebuffer &#x7ED1;&#x5B9A;&#xFF1B;</li>
+<li>subpass&#xFF0C;&#x8FD9;&#x91CC; subpass &#x4F1A;&#x5F15;&#x7528;&#x4E0A;&#x8FF0; attachment&#xFF0C;&#x5E76;&#x4E14;&#x5728;&#x8FD9;&#x4E2A; subpass &#x4E2D;&#x4F7F;&#x7528;&#x7684; layout &#x662F;&#x4EC0;&#x4E48;&#xFF1B;</li>
+<li>SubpassDependency&#xFF0C;&#x7528;&#x6765;&#x63CF;&#x8FF0; subpass &#x4E4B;&#x95F4;&#x5F02;&#x6B65;&#x64CD;&#x4F5C;&#x7684;&#x4F9D;&#x8D56;&#xFF0C;&#x540C;&#x65F6;&#x5BF9;&#x4E8E; memory layout &#x7684;&#x53D8;&#x6362;&#x4E5F;&#x5F88;&#x91CD;&#x8981;&#xFF1B;</li>
+</ol>
+</li>
+<li>&#x5F00;&#x59CB;&#x521B;&#x5EFA; GraphicsPipeline&#xFF0C;&#x8BBE;&#x5B9A;&#x4EE5;&#x4E0B;&#x90E8;&#x5206;&#xFF1A;<ol>
+<li>Vertext &#x9876;&#x70B9;&#xFF1B;</li>
+<li>Viewport &#x89C6;&#x89D2;&#xFF1B;</li>
+<li>Scissor &#x88C1;&#x526A;&#xFF1B;</li>
+<li>Rasterizer &#x5149;&#x6805;&#x5316;&#xFF1B;</li>
+<li>MultiSampling &#x591A;&#x91CD;&#x91C7;&#x6837;&#xFF1B;</li>
+<li>Blend &#x6DF7;&#x5408;&#xFF1B;</li>
+<li>DepthAndStencil &#x6DF1;&#x5EA6;&#x6D4B;&#x8BD5;&#x3001;&#x6A21;&#x677F;&#x6D4B;&#x8BD5;&#xFF1B;</li>
+<li>DynamicState &#x52A8;&#x6001;&#x72B6;&#x6001;&#xFF1B;</li>
+<li>Tessellation &#x66F2;&#x9762;&#x7EC6;&#x5206;&#xFF1B;</li>
+<li>Shader&#xFF1B;</li>
+<li>DescriptorSetLayout&#xFF1B;</li>
+<li>RenderPass&#xFF1B;</li>
+</ol>
+</li>
+<li>&#x521B;&#x5EFA; FrameBuffer&#xFF0C;&#x4E3B;&#x8981;&#x662F;&#x5C06; RenderPass &#x548C; SwapChain &#x4E2D;&#x7684; ImageView&#xFF0C;&#x4EE5;&#x53CA;&#x6DF1;&#x5EA6;&#x7F13;&#x51B2;&#x7684; DepthImageView &#x5173;&#x8054;&#x8D77;&#x6765;&#xFF1B;</li>
+</ol>
+<p>&#x5230;&#x6B64;&#xFF0C;&#x8D44;&#x6E90;&#x7684;&#x521B;&#x5EFA;&#x5B8C;&#x6210;&#xFF0C;&#x4E0B;&#x9762;&#x662F;&#x5982;&#x4F55;&#x5C06;&#x4E0A;&#x8FF0;&#x8D44;&#x6E90;&#x4E32;&#x8054;&#x8D77;&#x6765;&#xFF0C;&#x5B8C;&#x6210;&#x4E00;&#x6B21;&#x7ED8;&#x5236;&#xFF1A;</p>
+<ol>
+<li>vkAcquireNextImageKHR&#xFF0C;&#x83B7;&#x53D6;&#x4E0B;&#x4E00;&#x5E27;&#x53EF;&#x7528;&#x8D44;&#x6E90;&#xFF1B;</li>
+<li>vkResetCommandPool &#x91CD;&#x7F6E;&#x547D;&#x4EE4;&#x7F13;&#x51B2;&#x6C60;&#xFF1B;</li>
+<li>&#x66F4;&#x65B0; uniform &#x53D8;&#x91CF;&#xFF1B;</li>
+<li>&#x5F00;&#x59CB;&#x5F55;&#x5236; command buffer&#xFF1A;<ol>
+<li>vkBeginCommandBuffer&#xFF0C;&#x5F00;&#x59CB;&#x5F55;&#x5236; command&#xFF0C;&#x8BBE;&#x7F6E; command buffer &#x7684;&#x4F7F;&#x7528;&#x9891;&#x7387;&#xFF1B;</li>
+<li>vkCmdBeginRenderPass&#xFF0C;&#x5F00;&#x59CB; renderPass&#xFF0C;&#x8BBE;&#x7F6E; renderPass&#x3001;framebuffer&#x3001;&#x7ED8;&#x56FE;&#x533A;&#x57DF;&#x3001;&#x989C;&#x8272;\&#x6DF1;&#x5EA6;&#x7684;&#x6E05;&#x9664;&#x503C;&#xFF1B;</li>
+<li>vkCmdBindPipeline&#xFF0C;&#x7ED1;&#x5B9A; pipeline&#xFF0C;&#x8BBE;&#x5B9A;&#x91C7;&#x7528; graphic &#x7BA1;&#x7EBF;&#xFF1B;</li>
+<li>vkCmdBindDescriptorSets&#xFF0C;&#x7ED1;&#x5B9A; DescriptorSet&#xFF0C;&#x8FD9;&#x91CC;&#x9700;&#x8981;&#x4F20;&#x5165; PipelineLayout&#xFF0C;&#x5E76;&#x4E14;&#x652F;&#x6301;&#x7ED1;&#x5B9A;&#x591A;&#x4E2A; DescriptorSets&#xFF1B;</li>
+<li>vkCmdDraw&#xFF0C;&#x53D1;&#x8D77; DrawCall&#xFF1B;</li>
+<li>vkCmdEndRenderPass&#xFF1B;</li>
+<li>vkEndCommandBuffer&#xFF1B;</li>
+</ol>
+</li>
+<li>vkQueueSubmit&#xFF0C;&#x63D0;&#x4EA4;&#x547D;&#x4EE4;&#xFF0C;&#x8FD9;&#x91CC;&#x4E3B;&#x8981;&#x914D;&#x7F6E;&#x9700;&#x8981;&#x63D0;&#x4EA4;&#x7684; command&#x3001;&#x9700;&#x8981;&#x7B49;&#x5F85;&#x7684;&#x4FE1;&#x53F7;&#x91CF;&#x3001;&#x7ED8;&#x5236;&#x5B8C;&#x6210;&#x540E;&#x547D;&#x4EE4;&#x53D1;&#x51FA;&#x7684;&#x4FE1;&#x53F7;&#x91CF;&#xFF1B;</li>
+<li>vkQueuePresentKHR&#xFF0C;&#x5448;&#x73B0;&#x7ED8;&#x5236;&#x7684;&#x56FE;&#x50CF;&#xFF0C;&#x4E3B;&#x8981;&#x914D;&#x7F6E; swapChain &#x4EE5;&#x53CA;&#x5BF9;&#x5E94;&#x7684; imageIndex&#xFF0C;&#x4EE5;&#x53CA;&#x9700;&#x8981;&#x7B49;&#x5F85;&#x5B8C;&#x6210;&#x7684;&#x7ED8;&#x5236;&#x4FE1;&#x53F7;&#x91CF;&#xFF1B;</li>
+</ol>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="difference.html" class="navigation navigation-prev " aria-label="Previous page: OpenGL 与 Vulkan 的区别">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="../engine/" class="navigation navigation-next " aria-label="Next page: 引擎架构">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"Vulkan API 梳理","level":"1.2.2","depth":2,"next":{"title":"引擎架构","level":"1.3","depth":1,"path":"engine/README.md","ref":"engine/README.md","articles":[{"title":"引擎架构之 Vulkan Renderer 封装","level":"1.3.1","depth":2,"path":"engine/vulkanRenderer.md","ref":"engine/vulkanRenderer.md","articles":[]}]},"previous":{"title":"OpenGL 与 Vulkan 的区别","level":"1.2.1","depth":2,"path":"graphicsAPI/difference.md","ref":"graphicsAPI/difference.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"graphicsAPI/vulkanAPI.md","mtime":"2021-12-14T09:45:51.368Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2021-12-14T09:49:21.669Z"},"basePath":"..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

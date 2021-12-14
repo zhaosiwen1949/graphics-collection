@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <title>图形 API · GitBook</title>
+        <title>引擎架构之 Vulkan Renderer 封装 · GitBook</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
         <meta name="generator" content="GitBook 3.2.3">
@@ -57,10 +57,10 @@
     <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
 
     
-    <link rel="next" href="difference.html" />
+    <link rel="next" href="../RHI/" />
     
     
-    <link rel="prev" href="../" />
+    <link rel="prev" href="./" />
     
 
     </head>
@@ -102,9 +102,9 @@
             
         </li>
     
-        <li class="chapter active" data-level="1.2" data-path="./">
+        <li class="chapter " data-level="1.2" data-path="../graphicsAPI/">
             
-                <a href="./">
+                <a href="../graphicsAPI/">
             
                     
                     图形 API
@@ -116,9 +116,9 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.2.1" data-path="difference.html">
+        <li class="chapter " data-level="1.2.1" data-path="../graphicsAPI/difference.html">
             
-                <a href="difference.html">
+                <a href="../graphicsAPI/difference.html">
             
                     
                     OpenGL 与 Vulkan 的区别
@@ -129,9 +129,9 @@
             
         </li>
     
-        <li class="chapter " data-level="1.2.2" data-path="vulkanAPI.html">
+        <li class="chapter " data-level="1.2.2" data-path="../graphicsAPI/vulkanAPI.html">
             
-                <a href="vulkanAPI.html">
+                <a href="../graphicsAPI/vulkanAPI.html">
             
                     
                     Vulkan API 梳理
@@ -147,9 +147,9 @@
             
         </li>
     
-        <li class="chapter " data-level="1.3" data-path="../engine/">
+        <li class="chapter " data-level="1.3" data-path="./">
             
-                <a href="../engine/">
+                <a href="./">
             
                     
                     引擎架构
@@ -161,9 +161,9 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.3.1" data-path="../engine/vulkanRenderer.html">
+        <li class="chapter active" data-level="1.3.1" data-path="vulkanRenderer.html">
             
-                <a href="../engine/vulkanRenderer.html">
+                <a href="vulkanRenderer.html">
             
                     
                     引擎架构之 Vulkan Renderer 封装
@@ -248,7 +248,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href=".." >图形 API</a>
+        <a href=".." >引擎架构之 Vulkan Renderer 封装</a>
     </h1>
 </div>
 
@@ -263,15 +263,7 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 id="&#x56FE;&#x5F62;-api">&#x56FE;&#x5F62; API</h1>
-<p>OpenGL ES :</p>
-<ul>
-<li>Learn OpenGL (<a href="https://learnopengl-cn.github.io/" target="_blank">https://learnopengl-cn.github.io/</a>)  </li>
-</ul>
-<p>Vulkan :  </p>
-<ul>
-<li>Vulkan &#x7F16;&#x7A0B;&#x6307;&#x5357;(<a href="https://github.com/fangcun010/VulkanTutorialCN" target="_blank">https://github.com/fangcun010/VulkanTutorialCN</a>)</li>
-</ul>
+                                <h1 id="&#x5F15;&#x64CE;&#x67B6;&#x6784;&#x4E4B;-vulkan-renderer-&#x5C01;&#x88C5;">&#x5F15;&#x64CE;&#x67B6;&#x6784;&#x4E4B; Vulkan Renderer &#x5C01;&#x88C5;</h1>
 
                                 
                                 </section>
@@ -299,12 +291,12 @@
 
             
                 
-                <a href="../" class="navigation navigation-prev " aria-label="Previous page: 背景介绍">
+                <a href="./" class="navigation navigation-prev " aria-label="Previous page: 引擎架构">
                     <i class="fa fa-angle-left"></i>
                 </a>
                 
                 
-                <a href="difference.html" class="navigation navigation-next " aria-label="Next page: OpenGL 与 Vulkan 的区别">
+                <a href="../RHI/" class="navigation navigation-next " aria-label="Next page: RHI 跨平台">
                     <i class="fa fa-angle-right"></i>
                 </a>
                 
@@ -315,7 +307,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"图形 API","level":"1.2","depth":1,"next":{"title":"OpenGL 与 Vulkan 的区别","level":"1.2.1","depth":2,"path":"graphicsAPI/difference.md","ref":"graphicsAPI/difference.md","articles":[]},"previous":{"title":"背景介绍","level":"1.1","depth":1,"path":"README.md","ref":"README.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"graphicsAPI/README.md","mtime":"2021-11-16T10:49:46.486Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2021-12-14T09:49:21.669Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"引擎架构之 Vulkan Renderer 封装","level":"1.3.1","depth":2,"next":{"title":"RHI 跨平台","level":"1.4","depth":1,"path":"RHI/README.md","ref":"RHI/README.md","articles":[]},"previous":{"title":"引擎架构","level":"1.3","depth":1,"path":"engine/README.md","ref":"engine/README.md","articles":[{"title":"引擎架构之 Vulkan Renderer 封装","level":"1.3.1","depth":2,"path":"engine/vulkanRenderer.md","ref":"engine/vulkanRenderer.md","articles":[]}]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"engine/vulkanRenderer.md","mtime":"2021-12-14T09:48:00.863Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2021-12-14T09:49:21.669Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>
