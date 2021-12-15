@@ -41,9 +41,9 @@
     8. DynamicState 动态状态；
     9. Tessellation 曲面细分；
     10. Shader；
-    11. DescriptorSetLayout；
+    11. DescriptorSetLayout -> PipelineLayout；
     12. RenderPass；
-20. 创建 FrameBuffer，主要是将 RenderPass 和 SwapChain 中的 ImageView，以及深度缓冲的 DepthImageView 关联起来；
+20. 创建 FrameBuffer，主要是将 RenderPass 和 SwapChain 中的 ImageView，以及深度缓冲的 DepthImageView 关联起来，注意：FrameBuffer 类似 DescriptorSets，只是用来组合 image 的，RenderPass 类似 DescriptorSetLayout 只是描述使用的 framebuffer 的格式；
 
 到此，资源的创建完成，下面是如何将上述资源串联起来，完成一次绘制：
 1. vkAcquireNextImageKHR，获取下一帧可用资源；

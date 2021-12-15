@@ -8,5 +8,6 @@
     * [引擎架构之 Vulkan Renderer 封装](engine/vulkanRenderer.md)
 * [RHI 跨平台](RHI/README.md)
 * [渲染技术](rendering/README.md)
+    * [摄像机基础](rendering/camera.md)
 * [光线追踪](rayTracing/README.md)
 
