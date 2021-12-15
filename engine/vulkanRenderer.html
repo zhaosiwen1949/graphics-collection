@@ -203,6 +203,25 @@
             
 
             
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.1" data-path="../rendering/camera.html">
+            
+                <a href="../rendering/camera.html">
+            
+                    
+                    摄像机基础
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
         </li>
     
         <li class="chapter " data-level="1.6" data-path="../rayTracing/">
@@ -264,6 +283,895 @@
                                 <section class="normal markdown-section">
                                 
                                 <h1 id="&#x5F15;&#x64CE;&#x67B6;&#x6784;&#x4E4B;-vulkan-renderer-&#x5C01;&#x88C5;">&#x5F15;&#x64CE;&#x67B6;&#x6784;&#x4E4B; Vulkan Renderer &#x5C01;&#x88C5;</h1>
+<h2 id="&#x57FA;&#x672C;&#x601D;&#x8DEF;">&#x57FA;&#x672C;&#x601D;&#x8DEF;</h2>
+<p>&#x5C01;&#x88C5;&#x7684;&#x57FA;&#x672C;&#x601D;&#x8DEF;&#x662F;&#x5206;&#x5C42;&#x6E32;&#x67D3;&#xFF0C;&#x6BCF;&#x4E00;&#x5C42;&#x4FDD;&#x7559;&#x81EA;&#x5DF1;&#x7684; uniform&#x3001;descriptor set&#x3001;pipeline&#x3001;render pass&#x3001;framebuffer&#xFF0C;&#x8FD9;&#x901A;&#x8FC7;&#x7EE7;&#x627F; RendererBase &#x7C7B;&#x5B9E;&#x73B0;&#xFF0C;&#x7136;&#x540E;&#x5728;&#x6E32;&#x67D3;&#x7684;&#x5FAA;&#x73AF;&#x91CC;&#xFF0C;&#x5728;&#x6BCF;&#x4E00;&#x5E27;&#x5FAA;&#x73AF;&#x7684;&#x6700;&#x5916;&#x5C42;&#x6784;&#x5EFA; command buffer&#xFF0C;&#x7136;&#x540E;&#x904D;&#x5386;&#x4E0D;&#x540C;&#x5C42;&#x7684; renderer&#xFF0C;&#x63D0;&#x4EA4;&#x547D;&#x4EE4;&#xFF0C;&#x4EE3;&#x7801;&#x5982;&#x4E0B;&#xFF1A;</p>
+<pre><code>VK_CHECK(vkBeginCommandBuffer(commandBuffer, &amp;bi));
+for (auto&amp; r : renderers)
+    r-&gt;fillCommandBuffer(commandBuffer, imageIndex;
+VK_CHECK(vkEndCommandBuffer(commandBuffer));   
+</code></pre><p>&#x6784;&#x5EFA;&#x597D;&#x547D;&#x4EE4;&#x540E;&#xFF0C;&#x63D0;&#x4EA4;&#x5230;&#x6E32;&#x67D3;&#x961F;&#x5217;&#xFF0C;&#x5E76;&#x7B49;&#x5F85;&#x5448;&#x73B0;&#x3002;</p>
+<h2 id="&#x6A21;&#x5757;&#x5256;&#x6790;">&#x6A21;&#x5757;&#x5256;&#x6790;</h2>
+<h3 id="rendererbase">RendererBase</h3>
+<p>RendererBase &#x4F5C;&#x4E3A;&#x6240;&#x4EE5; layer &#x7684;&#x7236;&#x7C7B;&#xFF0C;&#x8D1F;&#x8D23;&#x4FDD;&#x5B58; Vulkan &#x6E32;&#x67D3;&#x9700;&#x8981;&#x7684;&#x72B6;&#x6001;&#xFF0C;&#x4EE5;&#x53CA;&#x6839;&#x636E;&#x8FD9;&#x4E9B;&#x72B6;&#x6001;&#x62FC;&#x63A5;&#x5BF9;&#x5E94;&#x7684;&#x547D;&#x4EE4;&#xFF0C;&#x89C1;&#x4EE3;&#x7801;&#xFF1A;</p>
+<pre><code>class RendererBase
+{
+public:
+    explicit RendererBase(const VulkanRenderDevice&amp; vkDev, VulkanImage depthTexture)
+    : device_(vkDev.device)
+    , framebufferWidth_(vkDev.framebufferWidth)
+    , framebufferHeight_(vkDev.framebufferHeight)
+    , depthTexture_(depthTexture)
+    {}
+    virtual ~RendererBase();
+    virtual void fillCommandBuffer(VkCommandBuffer commandBuffer, size_t currentImage) = 0;
+
+    inline VulkanImage getDepthTexture() const { return depthTexture_; }
+
+protected:
+    void beginRenderPass(VkCommandBuffer commandBuffer, size_t currentImage);
+    bool createUniformBuffers(VulkanRenderDevice&amp; vkDev, size_t uniformDataSize);
+
+    VkDevice device_ = nullptr;
+
+    uint32_t framebufferWidth_ = 0;
+    uint32_t framebufferHeight_ = 0;
+
+    // Depth buffer
+    VulkanImage depthTexture_;
+
+    // Descriptor set (layout + pool + sets) -&gt; uses uniform buffers, textures, framebuffers
+    VkDescriptorSetLayout descriptorSetLayout_ = nullptr;
+    VkDescriptorPool descriptorPool_ = nullptr;
+    std::vector&lt;VkDescriptorSet&gt; descriptorSets_;
+
+    // Framebuffers (one for each command buffer)
+    std::vector&lt;VkFramebuffer&gt; swapchainFramebuffers_;
+
+    // 4. Pipeline &amp; render pass (using DescriptorSets &amp; pipeline state options)
+    VkRenderPass renderPass_ = nullptr;
+    VkPipelineLayout pipelineLayout_ = nullptr;
+    VkPipeline graphicsPipeline_ = nullptr;
+
+    // 5. Uniform buffer
+    std::vector&lt;VkBuffer&gt; uniformBuffers_;
+    std::vector&lt;VkDeviceMemory&gt; uniformBuffersMemory_;
+};
+</code></pre><p>&#x5148;&#x770B;&#x65B9;&#x6CD5;&#xFF1A;  </p>
+<ol>
+<li>fillCommandBuffer&#xFF0C;&#x586B;&#x5145;&#x7ED8;&#x5236;&#x547D;&#x4EE4;&#xFF1B;</li>
+<li>getDepthTexture&#xFF0C;&#x83B7;&#x53D6;&#x6DF1;&#x5EA6;&#x7F13;&#x51B2;&#xFF0C;&#x4E3A;&#x4E86;&#x5728;&#x5404;&#x4E2A; layer &#x4E2D;&#x5171;&#x7528;&#xFF1B;</li>
+<li>beginRenderPass&#xFF0C;&#x8BBE;&#x7F6E; vkCmdBeginRenderPass&#x3001;vkCmdBindPipeline&#x3001;vkCmdBindDescriptorSet&#xFF1B;</li>
+<li>createUniformBuffers&#xFF0C;&#x66F4;&#x65B0; uniform buffer&#xFF1B;</li>
+</ol>
+<p>&#x518D;&#x770B;&#x5C5E;&#x6027;&#xFF1A;</p>
+<ol>
+<li>device_&#xFF0C;VkDevice&#xFF1B;</li>
+<li>framebufferWidth<em>&#x3001;framebufferHeight</em>&#xFF0C;framebuffer &#x5927;&#x5C0F;&#xFF1B;</li>
+<li>depthTexture_&#xFF0C;&#x6DF1;&#x5EA6;&#x7F13;&#x51B2;&#xFF1B;</li>
+<li>swapchainFramebuffers_&#xFF0C;framebuffer&#xFF1B;</li>
+<li>descriptorSetLayout<em>&#x3001;descriptorPool</em>&#x3001;descriptorSets_&#xFF0C;&#x4FDD;&#x5B58; uniform &#x53D8;&#x91CF;&#xFF1B;</li>
+<li>uniformBuffers<em>&#x3001;uniformBuffersMemory</em>&#xFF0C;uniform &#x7F13;&#x51B2;&#xFF1B;</li>
+<li>renderPass<em>&#x3001;pipelineLayout</em>&#x3001;graphicsPipeline_&#xFF0C;render pass &#x548C; pipeline&#xFF1B;</li>
+</ol>
+<p>&#x65B9;&#x6CD5;&#x5B9E;&#x73B0;&#xFF1A;</p>
+<ol>
+<li><p>createUniformBuffers</p>
+<pre><code> bool RendererBase::createUniformBuffers(VulkanRenderDevice&amp; vkDev, size_t uniformDataSize)
+ {
+     uniformBuffers_.resize(vkDev.swapchainImages.size());
+     uniformBuffersMemory_.resize(vkDev.swapchainImages.size());
+     for (size_t i = 0; i &lt; vkDev.swapchainImages.size(); i++)
+     {
+         if (!createUniformBuffer(vkDev, uniformBuffers_[i], uniformBuffersMemory_[i], uniformDataSize))
+         {
+             printf(&quot;Cannot create uniform buffer\n&quot;);
+             fflush(stdout);
+             return false;
+         }
+     }
+     return true;
+ }
+</code></pre><p> &#x6839;&#x636E; swapchainImages &#x5927;&#x5C0F;&#xFF0C;&#x8C03;&#x7528;&#x5B50;&#x7C7B;&#x7684; createUniformBuffer&#xFF0C;&#x586B;&#x5145; uniformBuffers_&#xFF1B;</p>
+</li>
+<li><p>beginRenderPass</p>
+<pre><code> void RendererBase::beginRenderPass(VkCommandBuffer commandBuffer, size_t currentImage)
+ {
+     const VkRect2D screenRect = {
+         .offset = { 0, 0 },
+         .extent = {.width = framebufferWidth_, .height = framebufferHeight_ }
+     };
+
+     const VkRenderPassBeginInfo renderPassInfo = {
+         .sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO,
+         .pNext = nullptr,
+         .renderPass = renderPass_,
+         .framebuffer = swapchainFramebuffers_[currentImage],
+         .renderArea = screenRect
+     };
+
+     vkCmdBeginRenderPass(commandBuffer, &amp;renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
+     vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline_);
+     vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout_, 0, 1, &amp;descriptorSets_[currentImage], 0, nullptr);
+ }
+</code></pre><p> &#x5F00;&#x59CB; renderPass&#xFF0C;&#x7ED1;&#x5B9A; pipeline &#x548C; descriptorSets&#xFF1B;</p>
+</li>
+</ol>
+<h3 id="vulkanclear">VulkanClear</h3>
+<ol>
+<li><p>&#x6784;&#x9020;&#x51FD;&#x6570;</p>
+<pre><code> VulkanClear::VulkanClear(VulkanRenderDevice&amp; vkDev, VulkanImage depthTexture): RendererBase(vkDev, depthTexture)
+ , shouldClearDepth(depthTexture.image != VK_NULL_HANDLE)
+ {
+     if (!createColorAndDepthRenderPass(
+         vkDev, shouldClearDepth, &amp;renderPass_, RenderPassCreateInfo{ .clearColor_ = true, .clearDepth_ = true, .flags_ = eRenderPassBit_First }))
+     {
+         printf(&quot;VulkanClear: failed to create render pass\n&quot;);
+         exit(EXIT_FAILURE);
+     }
+
+     createColorAndDepthFramebuffers(vkDev, renderPass_, depthTexture.imageView, swapchainFramebuffers_);
+ }
+</code></pre><ol>
+<li>&#x521B;&#x5EFA; renderPass&#xFF1B;</li>
+<li>&#x521B;&#x5EFA; swapchainFramebuffers_&#xFF0C;&#x6CE8;&#x610F;&#xFF1A;FrameBuffer &#x76F8;&#x5F53;&#x4E8E; DescriptorSet&#xFF0C;&#x672C;&#x8EAB;&#x53EA;&#x662F; SwapChainImage &#x7684;&#x96C6;&#x5408;&#xFF0C;&#x4E0D;&#x6301;&#x6709; image&#xFF0C;&#x6240;&#x4EE5;&#x53EF;&#x4EE5;&#x6BCF;&#x4E2A; Layer &#x90FD;&#x521B;&#x5EFA;&#x4E00;&#x4E2A;&#xFF0C;&#x4F46;&#x662F;&#x5E95;&#x5C42;&#x6301;&#x6709;&#x7684; SwapChainImage &#x662F;&#x540C;&#x4E00;&#x4EFD;&#xFF1B;</li>
+</ol>
+</li>
+<li><p>fillCommandBuffer</p>
+<pre><code> void VulkanClear::fillCommandBuffer(VkCommandBuffer commandBuffer, size_t swapFramebuffer)
+ {
+     EASY_FUNCTION();
+
+     const VkClearValue clearValues[2] =
+     {
+         VkClearValue { .color = { 1.0f, 1.0f, 1.0f, 1.0f } },
+         VkClearValue { .depthStencil = { 1.0f, 0 } }
+     };
+
+     const VkRect2D screenRect = {
+         .offset = { 0, 0 },
+         .extent = {.width = framebufferWidth_, .height = framebufferHeight_ }
+     };
+
+     const VkRenderPassBeginInfo renderPassInfo = {
+         .sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO,
+         .renderPass = renderPass_,
+         .framebuffer = swapchainFramebuffers_[swapFramebuffer],
+         .renderArea = screenRect,
+         .clearValueCount = static_cast&lt;uint32_t&gt;(shouldClearDepth ? 2 : 1),
+         .pClearValues = &amp;clearValues[0]
+     };
+
+     vkCmdBeginRenderPass( commandBuffer, &amp;renderPassInfo, VK_SUBPASS_CONTENTS_INLINE );
+     vkCmdEndRenderPass( commandBuffer );
+ }
+</code></pre><p> &#x6CE8;&#x610F;&#xFF0C;&#x8FD9;&#x91CC;&#x53EA;&#x662F;&#x6E05;&#x9664; Framebuffer &#x7684;&#x989C;&#x8272;&#x548C;&#x6DF1;&#x5EA6;&#x7F13;&#x51B2;&#xFF0C;&#x4E0D;&#x9700;&#x8981;&#x521B;&#x5EFA; Pipeline&#xFF1B;</p>
+</li>
+</ol>
+<h3 id="vulkanfinish">VulkanFinish</h3>
+<pre><code>VulkanFinish::VulkanFinish(VulkanRenderDevice&amp; vkDev, VulkanImage depthTexture): RendererBase(vkDev, depthTexture)
+{
+    if (!createColorAndDepthRenderPass(
+        vkDev, (depthTexture.image != VK_NULL_HANDLE), &amp;renderPass_, RenderPassCreateInfo{ .clearColor_ = false, .clearDepth_ = false, .flags_ = eRenderPassBit_Last }))
+    {
+        printf(&quot;VulkanFinish: failed to create render pass\n&quot;);
+        exit(EXIT_FAILURE);
+    }
+
+    createColorAndDepthFramebuffers(vkDev, renderPass_, depthTexture.imageView, swapchainFramebuffers_);
+}
+
+void VulkanFinish::fillCommandBuffer(VkCommandBuffer commandBuffer, size_t currentImage)
+{
+    EASY_FUNCTION();
+
+    const VkRect2D screenRect = {
+        .offset = { 0, 0 },
+        .extent = {.width = framebufferWidth_, .height = framebufferHeight_ }
+    };
+
+    const VkRenderPassBeginInfo renderPassInfo = {
+        .sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO,
+        .renderPass = renderPass_,
+        .framebuffer = swapchainFramebuffers_[currentImage],
+        .renderArea = screenRect
+    };
+
+    vkCmdBeginRenderPass( commandBuffer, &amp;renderPassInfo, VK_SUBPASS_CONTENTS_INLINE );
+    vkCmdEndRenderPass( commandBuffer );
+}
+</code></pre><p>VulkanFinish &#x7C7B;&#x4F3C; VulkanClear&#xFF0C;&#x5E76;&#x4E0D;&#x8FDB;&#x884C;&#x771F;&#x6B63;&#x7684;&#x6E32;&#x67D3;&#xFF0C;&#x53EA;&#x662F;&#x5C06; FrameBuffer &#x4E2D; Image &#x7684; Layout &#x66F4;&#x65B0;&#x4E3A;&#x662F;&#x548C;&#x5448;&#x73B0;&#x7684;&#x5E03;&#x5C40;&#xFF0C;&#x540C;&#x65F6;&#x56E0;&#x4E3A;&#x662F;&#x6700;&#x540E;&#x7684; Pass&#xFF0C;&#x6240;&#x4EE5;&#x4E0D;&#x7528;&#x6E05;&#x9664;&#x7F13;&#x5B58;&#xFF1B;</p>
+<h3 id="modelrenderer">ModelRenderer</h3>
+<p>&#x4E0A;&#x8FF0;&#x4E24;&#x4E2A; Renderer &#x53EA;&#x662F;&#x70ED;&#x8EAB;&#xFF0C;&#x8FD9;&#x6B21;&#x6765;&#x770B;&#x6E32;&#x67D3;&#x6A21;&#x578B;&#x7684; Renderer &#x5982;&#x4F55;&#x7EC4;&#x7EC7;&#x3002;</p>
+<ol>
+<li><p>&#x7C7B;&#x58F0;&#x660E;</p>
+<pre><code> class ModelRenderer: public RendererBase
+ {
+ public:
+     ModelRenderer(VulkanRenderDevice&amp; vkDev, const char* modelFile, const char* textureFile, uint32_t uniformDataSize);
+     ModelRenderer(VulkanRenderDevice&amp; vkDev, bool useDepth, VkBuffer storageBuffer, VkDeviceMemory storageBufferMemory, uint32_t vertexBufferSize, uint32_t indexBufferSize, VulkanImage texture, VkSampler textureSampler, const std::vector&lt;const char*&gt;&amp; shaderFiles, uint32_t uniformDataSize, bool useGeneralTextureLayout = true, VulkanImage externalDepth = { .image = VK_NULL_HANDLE }, bool deleteMeshData = true);
+     virtual ~ModelRenderer();
+
+     virtual void fillCommandBuffer(VkCommandBuffer commandBuffer, size_t currentImage) override;
+
+     void updateUniformBuffer(VulkanRenderDevice&amp; vkDev, uint32_t currentImage, const void* data, const size_t dataSize);
+
+     // HACK to allow sharing textures between multiple ModelRenderers
+     void freeTextureSampler() { textureSampler_ = VK_NULL_HANDLE; }
+
+ private:
+     bool useGeneralTextureLayout_ = false;
+     bool isExternalDepth_ = false;
+     bool deleteMeshData_ = true;
+
+     size_t vertexBufferSize_;
+     size_t indexBufferSize_;
+
+     // 6. Storage Buffer with index and vertex data
+     VkBuffer storageBuffer_;
+     VkDeviceMemory storageBufferMemory_;
+
+     VkSampler textureSampler_;
+     VulkanImage texture_;
+
+     bool createDescriptorSet(VulkanRenderDevice&amp; vkDev, uint32_t uniformDataSize);
+ };
+</code></pre><p> &#x76F8;&#x5BF9;&#x4E8E;&#x7236;&#x7C7B;&#xFF0C;&#x65B0;&#x589E;&#x4E86;&#x4EE5;&#x4E0B;&#x65B9;&#x6CD5;&#x548C;&#x5C5E;&#x6027;&#xFF1A;</p>
+<ol>
+<li>updateUniformBuffer&#xFF0C;&#x66F4;&#x65B0; uniform &#x53D8;&#x91CF;&#xFF1B;</li>
+<li>vertexBufferSize<em>&#x3001;indexBufferSize</em>&#x3001;storageBuffer<em>&#x3001;storageBufferMemory</em>&#xFF0C;&#x5B58;&#x50A8;&#x9876;&#x70B9;&#xFF1B;</li>
+<li>textureSampler<em>&#x3001;texture</em>&#xFF0C;&#x6A21;&#x578B;&#x7EB9;&#x7406;&#xFF1B;</li>
+</ol>
+</li>
+<li><p>&#x6784;&#x9020;&#x65B9;&#x6CD5;</p>
+<pre><code> ModelRenderer::ModelRenderer(VulkanRenderDevice&amp; vkDev, const char* modelFile, const char* textureFile, uint32_t uniformDataSize): RendererBase(vkDev, VulkanImage())
+ {
+     // Resource loading part
+     if (!createTexturedVertexBuffer(vkDev, modelFile, &amp;storageBuffer_, &amp;storageBufferMemory_, &amp;vertexBufferSize_, &amp;indexBufferSize_))
+     {
+         printf(&quot;ModelRenderer: createTexturedVertexBuffer() failed\n&quot;);
+         exit(EXIT_FAILURE);
+     }
+
+     createTextureImage(vkDev, textureFile, texture_.image, texture_.imageMemory);
+     createImageView(vkDev.device, texture_.image, VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_ASPECT_COLOR_BIT, &amp;texture_.imageView);
+     createTextureSampler(vkDev.device, &amp;textureSampler_);
+
+     if (!createDepthResources(vkDev, vkDev.framebufferWidth, vkDev.framebufferHeight, depthTexture_) ||
+         !createColorAndDepthRenderPass(vkDev, true, &amp;renderPass_, RenderPassCreateInfo()) ||
+         !createUniformBuffers(vkDev, uniformDataSize) ||
+         !createColorAndDepthFramebuffers(vkDev, renderPass_, depthTexture_.imageView, swapchainFramebuffers_) ||
+         !createDescriptorPool(vkDev, 1, 2, 1, &amp;descriptorPool_) ||
+         !createDescriptorSet(vkDev, uniformDataSize) ||
+         !createPipelineLayout(vkDev.device, descriptorSetLayout_, &amp;pipelineLayout_) ||
+         !createGraphicsPipeline(vkDev, renderPass_, pipelineLayout_, {&quot;data/shaders/chapter03/VK02.vert&quot;, &quot;data/shaders/chapter03/VK02.frag&quot;, &quot;data/shaders/chapter03/VK02.geom&quot; }, &amp;graphicsPipeline_))
+     {
+         printf(&quot;ModelRenderer: failed to create pipeline\n&quot;);
+         exit(EXIT_FAILURE);
+     }
+ }
+</code></pre><ol>
+<li>&#x52A0;&#x8F7D;&#x9876;&#x70B9;&#x6570;&#x7EC4;&#x7684; storage buffer&#xFF1B;</li>
+<li>&#x52A0;&#x8F7D;&#x7EB9;&#x7406; texture&#xFF1B;</li>
+<li>&#x521B;&#x5EFA; uniform buffer&#x3001;descriptor set&#x3001;descriptor set layout&#x3001;pipeline&#x3001;render pass&#x3001;framebuffer&#x3001;depth image&#xFF1B;</li>
+</ol>
+</li>
+<li><p>createDescriptorSet</p>
+<pre><code> bool ModelRenderer::createDescriptorSet(VulkanRenderDevice&amp; vkDev, uint32_t uniformDataSize)
+ {
+     const std::array&lt;VkDescriptorSetLayoutBinding, 4&gt; bindings = {
+         descriptorSetLayoutBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_VERTEX_BIT),
+         descriptorSetLayoutBinding(1, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, VK_SHADER_STAGE_VERTEX_BIT),
+         descriptorSetLayoutBinding(2, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, VK_SHADER_STAGE_VERTEX_BIT),
+         descriptorSetLayoutBinding(3, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT)
+     };
+
+     const VkDescriptorSetLayoutCreateInfo layoutInfo = {
+         .sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO,
+         .pNext = nullptr,
+         .flags = 0,
+         .bindingCount = static_cast&lt;uint32_t&gt;(bindings.size()),
+         .pBindings = bindings.data()
+     };
+
+     VK_CHECK(vkCreateDescriptorSetLayout(vkDev.device, &amp;layoutInfo, nullptr, &amp;descriptorSetLayout_));
+
+     std::vector&lt;VkDescriptorSetLayout&gt; layouts(vkDev.swapchainImages.size(), descriptorSetLayout_);
+
+     const VkDescriptorSetAllocateInfo allocInfo = {
+         .sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO,
+         .pNext = nullptr,
+         .descriptorPool = descriptorPool_,
+         .descriptorSetCount = static_cast&lt;uint32_t&gt;(vkDev.swapchainImages.size()),
+         .pSetLayouts = layouts.data()
+     };
+
+     descriptorSets_.resize(vkDev.swapchainImages.size());
+
+     VK_CHECK(vkAllocateDescriptorSets(vkDev.device, &amp;allocInfo, descriptorSets_.data()));
+
+     for (size_t i = 0; i &lt; vkDev.swapchainImages.size(); i++)
+     {
+         VkDescriptorSet ds = descriptorSets_[i];
+
+         const VkDescriptorBufferInfo bufferInfo  = { uniformBuffers_[i], 0, uniformDataSize };
+         const VkDescriptorBufferInfo bufferInfo2 = { storageBuffer_, 0, vertexBufferSize_ };
+         const VkDescriptorBufferInfo bufferInfo3 = { storageBuffer_, vertexBufferSize_, indexBufferSize_ };
+         const VkDescriptorImageInfo  imageInfo   = { textureSampler_, texture_.imageView, useGeneralTextureLayout_ ? VK_IMAGE_LAYOUT_GENERAL : VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL };
+
+         const std::array&lt;VkWriteDescriptorSet, 4&gt; descriptorWrites = {
+             bufferWriteDescriptorSet(ds, &amp;bufferInfo,  0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER),
+             bufferWriteDescriptorSet(ds, &amp;bufferInfo2, 1, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER),
+             bufferWriteDescriptorSet(ds, &amp;bufferInfo3, 2, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER),
+             imageWriteDescriptorSet( ds, &amp;imageInfo,   3)
+         };
+
+         vkUpdateDescriptorSets(vkDev.device, static_cast&lt;uint32_t&gt;(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
+     }
+
+     return true;
+ }
+</code></pre><p> descriptorSet&#xFF0C;&#x5BF9;&#x4E8E;&#x6BCF;&#x4E2A; layer&#xFF0C;&#x662F;&#x6700;&#x4E0D;&#x4E00;&#x6837;&#x7684;&#x90E8;&#x5206;&#xFF0C;&#x7531;&#x5404;&#x4E2A; layer &#x81EA;&#x5DF1;&#x8D1F;&#x8D23;&#x5355;&#x72EC;&#x5B9E;&#x73B0;&#xFF0C;&#x6B65;&#x9AA4;&#x5982;&#x4E0B;&#xFF1A;</p>
+<ol>
+<li>&#x786E;&#x5B9A; bindings&#xFF0C;&#x4E3B;&#x8981;&#x5305;&#x62EC;&#x5BF9;&#x5E94; buffer &#x7684;&#x7C7B;&#x578B;&#xFF0C;&#x88AB;&#x4F7F;&#x7528;&#x7684; shader &#x7C7B;&#x578B;&#xFF1B;</li>
+<li>&#x6839;&#x636E; bindings&#xFF0C;&#x521B;&#x5EFA; descriptorSetLayout&#xFF1B;</li>
+<li>&#x6839;&#x636E; descriptorSetLayout&#xFF0C;&#x521B;&#x5EFA; descriptorSet &#x6570;&#x7EC4;&#xFF1B;</li>
+<li>&#x901A;&#x8FC7; vkUpdateDescriptorSets&#xFF0C;&#x586B;&#x5145; buffer &#x5230; descriptorSet &#x4E2D;&#xFF1B;</li>
+</ol>
+</li>
+<li><p>updateUniformBuffer</p>
+<pre><code> void ModelRenderer::updateUniformBuffer(VulkanRenderDevice&amp; vkDev, uint32_t currentImage, const void* data, const size_t dataSize)
+ {
+     uploadBufferData(vkDev, uniformBuffersMemory_[currentImage], 0, data, dataSize);
+ }
+</code></pre><p> &#x66F4;&#x65B0; uniform &#x53D8;&#x91CF;&#xFF1B;</p>
+</li>
+<li><p>fillCommandBuffer</p>
+<pre><code> void ModelRenderer::fillCommandBuffer(VkCommandBuffer commandBuffer, size_t currentImage)
+ {
+     EASY_FUNCTION();
+
+     beginRenderPass(commandBuffer, currentImage);
+
+     vkCmdDraw(commandBuffer, static_cast&lt;uint32_t&gt;(indexBufferSize_ / (sizeof(unsigned int))), 1, 0, 0);
+     vkCmdEndRenderPass(commandBuffer);
+ }
+</code></pre><p> &#x53D1;&#x8D77; DrawCall;</p>
+</li>
+</ol>
+<h3 id="vulkancanvas">VulkanCanvas</h3>
+<p>&#x5BF9;&#x4E8E;&#x8C03;&#x8BD5;&#x6765;&#x8BF4;&#xFF0C;line &#x548C; plane &#x662F;&#x5F88;&#x5E38;&#x7528;&#x7684;&#x624B;&#x6BB5;&#xFF0C;&#x4F46;&#x662F;&#x5E76;&#x4E0D;&#x80FD;&#x5728; vulkan &#x4E2D;&#x5F88;&#x65B9;&#x4FBF;&#x7684;&#x753B;&#x51FA;&#xFF0C;&#x672C;&#x6A21;&#x5757;&#x662F;&#x5B9E;&#x73B0;&#x5373;&#x65F6;&#x6A21;&#x5F0F;&#x4E0B;&#x7684;&#x753B;&#x7EBF;&#x548C;&#x753B;&#x5E73;&#x9762;&#x64CD;&#x4F5C;&#xFF1B;</p>
+<ol>
+<li><p>&#x7C7B;&#x5B9A;&#x4E49;</p>
+<pre><code> class VulkanCanvas: public RendererBase
+ {
+ public:
+     explicit VulkanCanvas(VulkanRenderDevice&amp; vkDev, VulkanImage depth);
+     virtual ~VulkanCanvas();
+
+     virtual void fillCommandBuffer(VkCommandBuffer commandBuffer, size_t currentImage) override;
+
+     void clear();
+     void line(const vec3&amp; p1, const vec3&amp; p2, const vec4&amp; c);
+     void plane3d(const vec3&amp; orig, const vec3&amp; v1, const vec3&amp; v2, int n1, int n2, float s1, float s2, const vec4&amp; color, const vec4&amp; outlineColor);
+     void updateBuffer(VulkanRenderDevice&amp; vkDev, size_t currentImage);
+     void updateUniformBuffer(VulkanRenderDevice&amp; vkDev, const glm::mat4&amp; modelViewProj , float time, uint32_t currentImage);
+
+ private:
+     struct VertexData
+     {
+         vec3 position;
+         vec4 color;
+     };
+
+     struct UniformBuffer
+     {
+         glm::mat4 mvp;
+         float time;
+     };
+
+     bool createDescriptorSet(VulkanRenderDevice&amp; vkDev);
+
+     std::vector&lt;VertexData&gt; lines_;
+
+     // 7. Storage Buffer with index and vertex data
+     std::vector&lt;VkBuffer&gt; storageBuffer_;
+     std::vector&lt;VkDeviceMemory&gt; storageBufferMemory_;
+
+     static constexpr unsigned kMaxLinesCount = 65536;
+     static constexpr unsigned kMaxLinesDataSize = kMaxLinesCount * sizeof(VulkanCanvas::VertexData) * 2;
+ };
+</code></pre><p> &#x8FD9;&#x91CC;&#x4E3B;&#x8981;&#x7684;&#x4E0D;&#x540C;&#x70B9;&#x5728;&#x4E8E;&#x65B0;&#x589E;&#x4E86; line&#x3001;plane3d &#x7B49;&#xFF0C;&#x548C;&#x51E0;&#x4F55;&#x7ED8;&#x5236;&#x76F8;&#x5173;&#x7684;&#x65B9;&#x6CD5;&#xFF0C;&#x4EE5;&#x53CA; lines_&#xFF0C;&#x4FDD;&#x5B58;&#x9876;&#x70B9;&#x7684;&#x5C5E;&#x6027;&#xFF1B;</p>
+</li>
+<li><p>&#x6784;&#x9020;&#x51FD;&#x6570;</p>
+<pre><code> VulkanCanvas::VulkanCanvas(VulkanRenderDevice&amp; vkDev, VulkanImage depth): RendererBase(vkDev, depth)
+ {
+     const size_t imgCount = vkDev.swapchainImages.size();
+
+     storageBuffer_.resize(imgCount);
+     storageBufferMemory_.resize(imgCount);
+
+     for(size_t i = 0 ; i &lt; imgCount ; i++)
+     {
+         if (!createBuffer(vkDev.device, vkDev.physicalDevice, kMaxLinesDataSize,
+             VK_BUFFER_USAGE_STORAGE_BUFFER_BIT,
+             VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+             storageBuffer_[i], storageBufferMemory_[i]))
+         {
+             printf(&quot;VaulkanCanvas: createBuffer() failed\n&quot;);
+             exit(EXIT_FAILURE);
+         }
+     }
+
+     if (!createColorAndDepthRenderPass(vkDev, (depth.image != VK_NULL_HANDLE), &amp;renderPass_, RenderPassCreateInfo()) ||
+         !createUniformBuffers(vkDev, sizeof(UniformBuffer)) ||
+         !createColorAndDepthFramebuffers(vkDev, renderPass_, depth.imageView, swapchainFramebuffers_) ||
+         !createDescriptorPool(vkDev, 1, 1, 0, &amp;descriptorPool_) ||
+         !createDescriptorSet(vkDev) ||
+         !createPipelineLayout(vkDev.device, descriptorSetLayout_, &amp;pipelineLayout_) ||
+         !createGraphicsPipeline(vkDev, renderPass_, pipelineLayout_, { &quot;data/shaders/chapter04/Lines.vert&quot;, &quot;data/shaders/chapter04/Lines.frag&quot; }, &amp;graphicsPipeline_, VK_PRIMITIVE_TOPOLOGY_LINE_LIST, (depth.image != VK_NULL_HANDLE), true ))
+     {
+         printf(&quot;VulkanCanvas: failed to create pipeline\n&quot;);
+         exit(EXIT_FAILURE);
+     }
+ }
+</code></pre><p> &#x6CE8;&#x610F;&#xFF1A;</p>
+<ol>
+<li>&#x7531;&#x4E8E;&#x9876;&#x70B9;&#x6570;&#x636E;&#x662F;&#x52A8;&#x6001;&#x53D8;&#x5316;&#x7684;&#xFF0C;&#x6240;&#x4EE5;&#x8FD9;&#x91CC;&#x9700;&#x8981;&#x6BCF;&#x4E00;&#x4E2A; swapChainImage &#x90FD;&#x5BF9;&#x5E94;&#x4E00;&#x4E2A; storageBuffer&#xFF0C;&#x5E76;&#x4E14;&#x4E3A;&#x4E86;&#x66F4;&#x65B0;&#x6570;&#x636E;&#x65B9;&#x4FBF;&#xFF0C;&#x800C;&#x4E14;&#x6570;&#x636E;&#x91CF;&#x4E0D;&#x5927;&#x7684;&#x60C5;&#x51B5;&#x4E0B;&#xFF0C;&#x76F4;&#x63A5;&#x91C7;&#x7528; VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT &#x6807;&#x5FD7;&#xFF0C;&#x521B;&#x5EFA; buffer&#xFF1B;</li>
+<li>createGraphicsPipeline &#x65B9;&#x6CD5;&#x4E2D;&#x7684; &#x56FE;&#x5143;&#x7C7B;&#x578B;&#x9009;&#x62E9; VK_PRIMITIVE_TOPOLOGY_LINE_LIST&#xFF1B;</li>
+</ol>
+</li>
+<li><p>createDescriptorSet</p>
+<pre><code> bool VulkanCanvas::createDescriptorSet(VulkanRenderDevice&amp; vkDev)
+ {
+     const std::array&lt;VkDescriptorSetLayoutBinding, 2&gt; bindings = {
+         descriptorSetLayoutBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_VERTEX_BIT),
+         descriptorSetLayoutBinding(1, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, VK_SHADER_STAGE_VERTEX_BIT)
+     };
+
+     const VkDescriptorSetLayoutCreateInfo layoutInfo = {
+         .sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO,
+         .pNext = nullptr,
+         .flags = 0,
+         .bindingCount = static_cast&lt;uint32_t&gt;(bindings.size()),
+         .pBindings = bindings.data()
+     };
+
+     VK_CHECK(vkCreateDescriptorSetLayout(vkDev.device, &amp;layoutInfo, nullptr, &amp;descriptorSetLayout_));
+
+     std::vector&lt;VkDescriptorSetLayout&gt; layouts(vkDev.swapchainImages.size(), descriptorSetLayout_);
+
+     const VkDescriptorSetAllocateInfo allocInfo = {
+         .sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO,
+         .pNext = nullptr,
+         .descriptorPool = descriptorPool_,
+         .descriptorSetCount = static_cast&lt;uint32_t&gt;(vkDev.swapchainImages.size()),
+         .pSetLayouts = layouts.data()
+     };
+
+     descriptorSets_.resize(vkDev.swapchainImages.size());
+
+     VK_CHECK(vkAllocateDescriptorSets(vkDev.device, &amp;allocInfo, descriptorSets_.data()));
+
+     for (size_t i = 0; i &lt; vkDev.swapchainImages.size(); i++)
+     {
+         VkDescriptorSet ds = descriptorSets_[i];
+
+         const VkDescriptorBufferInfo bufferInfo  = { uniformBuffers_[i], 0, sizeof(UniformBuffer) };
+         const VkDescriptorBufferInfo bufferInfo2 = { storageBuffer_[i], 0, kMaxLinesDataSize };
+
+         const std::array&lt;VkWriteDescriptorSet, 2&gt; descriptorWrites = {
+             bufferWriteDescriptorSet(ds, &amp;bufferInfo,    0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER),
+             bufferWriteDescriptorSet(ds, &amp;bufferInfo2, 1, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER)
+         };
+
+         vkUpdateDescriptorSets(vkDev.device, static_cast&lt;uint32_t&gt;(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
+     }
+
+     return true;
+ }
+</code></pre><p> &#x521B;&#x5EFA; DescriptorSet&#xFF0C;&#x9664;&#x4E86;&#x6CE8;&#x610F;&#x6BCF;&#x4E2A; swapChainImage &#x6709;&#x81EA;&#x5DF1;&#x7684; storageBuffer &#x4E4B;&#x5916;&#xFF0C;&#x6CA1;&#x6709;&#x4EC0;&#x4E48;&#x7279;&#x522B;&#x7684;&#x70B9;&#xFF1B;</p>
+</li>
+<li><p>fillCommandBuffer</p>
+<pre><code> void VulkanCanvas::fillCommandBuffer(VkCommandBuffer commandBuffer, size_t currentImage)
+ {
+     EASY_FUNCTION();
+
+     if (lines_.empty())
+         return;
+
+     beginRenderPass(commandBuffer, currentImage);
+
+     vkCmdDraw( commandBuffer, static_cast&lt;uint32_t&gt;(lines_.size()), 1, 0, 0 );
+     vkCmdEndRenderPass( commandBuffer );
+ }
+</code></pre><p> &#x586B;&#x5145;&#x7ED8;&#x5236;&#x547D;&#x4EE4;</p>
+</li>
+<li><p>updateBuffer</p>
+<pre><code> void VulkanCanvas::updateBuffer(VulkanRenderDevice&amp; vkDev, size_t currentImage)
+ {
+     if (lines_.empty())
+         return;
+
+     const VkDeviceSize bufferSize = lines_.size() * sizeof(VertexData);
+
+     uploadBufferData(vkDev, storageBufferMemory_[currentImage], 0, lines_.data(), bufferSize);
+ }
+</code></pre><p> &#x66F4;&#x65B0;&#x9876;&#x70B9;&#x7F13;&#x51B2;&#xFF1B;</p>
+</li>
+<li><p>updateUniformBuffer</p>
+<p> void VulkanCanvas::updateUniformBuffer(VulkanRenderDevice&amp; vkDev, const glm::mat4&amp; modelViewProj, float time, uint32_t currentImage)
+ {</p>
+<pre><code> const UniformBuffer ubo = {
+     .mvp = modelViewProj,
+     .time = time
+ };
+
+ uploadBufferData(vkDev, uniformBuffersMemory_[currentImage], 0, &amp;ubo, sizeof(ubo));
+</code></pre><p> }</p>
+<p>&#x66F4;&#x65B0; Uniform &#x7F13;&#x51B2;&#xFF1B;</p>
+</li>
+<li><p>&#x7ED8;&#x5236;&#x7EBF;&#x3001;&#x9762;&#xFF0C;&#x4EE5;&#x53CA;&#x6E05;&#x7A7A;</p>
+<pre><code> void VulkanCanvas::clear()
+ {
+     lines_.clear();
+ }
+
+ void VulkanCanvas::line(const vec3&amp; p1, const vec3&amp; p2, const vec4&amp; c)
+ {
+     lines_.push_back( { .position = p1, .color = c } );
+     lines_.push_back( { .position = p2, .color = c } );
+ }
+
+ void VulkanCanvas::plane3d(const vec3&amp; o, const vec3&amp; v1, const vec3&amp; v2, int n1, int n2, float s1, float s2, const vec4&amp; color, const vec4&amp; outlineColor)
+ {
+     line(o - s1 / 2.0f * v1 - s2 / 2.0f * v2, o - s1 / 2.0f * v1 + s2 / 2.0f * v2, outlineColor);
+     line(o + s1 / 2.0f * v1 - s2 / 2.0f * v2, o + s1 / 2.0f * v1 + s2 / 2.0f * v2, outlineColor);
+
+     line(o - s1 / 2.0f * v1 + s2 / 2.0f * v2, o + s1 / 2.0f * v1 + s2 / 2.0f * v2, outlineColor);
+     line(o - s1 / 2.0f * v1 - s2 / 2.0f * v2, o + s1 / 2.0f * v1 - s2 / 2.0f * v2, outlineColor);
+
+     for (int i = 1; i &lt; n1; i++)
+     {
+         float t = ((float)i - (float)n1 / 2.0f) * s1 / (float)n1;
+         const vec3 o1 = o + t * v1;
+         line(o1 - s2 / 2.0f * v2, o1 + s2 / 2.0f * v2, color);
+     }
+
+     for (int i = 1; i &lt; n2; i++)
+     {
+         const float t = ((float)i - (float)n2 / 2.0f) * s2 / (float)n2;
+         const vec3 o2 = o + t * v2;
+         line(o2 - s1 / 2.0f * v1, o2 + s1 / 2.0f * v1, color);
+     }
+ }
+</code></pre><p> &#x8FD9;&#x91CC;&#x5206;&#x5F00;&#x8BF4;&#xFF1A;</p>
+<ol>
+<li>clear &#x6E05;&#x7A7A;&#x51FD;&#x6570;&#xFF0C;&#x6E05;&#x7A7A;&#x6570;&#x636E;&#xFF0C;&#x8FD9;&#x91CC;&#x7684;&#x5B9E;&#x73B0;&#x903B;&#x8F91;&#x5E76;&#x4E0D;&#x652F;&#x6301;&#x5728;&#x6BCF;&#x4E00;&#x5E27;&#x91CC;&#x52A8;&#x6001;&#x4FEE;&#x6539;&#x3001;&#x6E05;&#x9664;&#x6570;&#x636E;&#xFF1B;</li>
+<li>line &#x5212;&#x7EBF;&#x51FD;&#x6570;&#xFF0C;&#x8BBE;&#x7F6E;&#x7EBF;&#x7684;&#x8D77;&#x70B9;&#x548C;&#x7EC8;&#x70B9;&#xFF1B;</li>
+<li>plane3d &#x7ED8;&#x5236;&#x5E73;&#x9762;&#xFF0C;o &#x662F;&#x4E2D;&#x5FC3;&#x70B9;&#xFF0C;&#x4E00;&#x822C;&#x662F; (0,y,0) &#x5F62;&#x5F0F;&#xFF0C;&#x8868;&#x793A;&#x6CBF;&#x7740; y &#x8F74;&#x7684;&#x4F4D;&#x7F6E;&#xFF0C;&#x7136;&#x540E; v1 &#x548C; v2 &#x662F;&#x6269;&#x5C55;&#x7684;&#x4E24;&#x4E2A;&#x65B9;&#x5411;&#xFF0C;&#x4E00;&#x822C;&#x7528; (1,0,0) &#x548C; (0,0,1)&#xFF0C;&#x8868;&#x793A;&#x6CBF;&#x7740; x &#x8F74;&#x548C; z &#x8F74;&#x6269;&#x5C55;&#xFF0C;&#x5176;&#x5B9E;&#x5C31;&#x662F;&#x4EE5; y &#x8F74;&#x4E3A;&#x4E2D;&#x5FC3;&#xFF0C;&#x6269;&#x5C55;&#x4E00;&#x4E2A;&#x548C; y &#x8F74;&#x5782;&#x76F4;&#x7684;&#x5E73;&#x9762;&#xFF0C;s &#x8868;&#x793A;&#x6269;&#x5C55;&#x7684;&#x500D;&#x6570;&#xFF0C;n &#x8868;&#x793A;&#x7EC6;&#x5206;&#x6210;&#x591A;&#x5C11;&#x7F51;&#x683C;&#xFF1B;</li>
+</ol>
+</li>
+</ol>
+<h3 id="vulkanimgui">VulkanImGui</h3>
+<ol>
+<li><p>&#x7C7B;&#x5B9A;&#x4E49;</p>
+<pre><code> class ImGuiRenderer: public RendererBase
+ {
+ public:
+     explicit ImGuiRenderer(VulkanRenderDevice&amp; vkDev);
+     explicit ImGuiRenderer(VulkanRenderDevice&amp; vkDev, const std::vector&lt;VulkanTexture&gt;&amp; textures);
+     virtual ~ImGuiRenderer();
+
+     virtual void fillCommandBuffer(VkCommandBuffer commandBuffer, size_t currentImage) override;
+     void updateBuffers(VulkanRenderDevice&amp; vkDev, uint32_t currentImage, const ImDrawData* imguiDrawData);
+
+ private:
+     const ImDrawData* drawData = nullptr;
+
+     bool createDescriptorSet(VulkanRenderDevice&amp; vkDev);
+
+     /* Descriptor set with multiple textures (for offscreen buffer display etc.) */
+     bool createMultiDescriptorSet(VulkanRenderDevice&amp; vkDev);
+
+     std::vector&lt;VulkanTexture&gt; extTextures_;
+
+     // storage buffer with index and vertex data
+     VkDeviceSize bufferSize_;
+     std::vector&lt;VkBuffer&gt; storageBuffer_;
+     std::vector&lt;VkDeviceMemory&gt; storageBufferMemory_;
+
+     VkSampler fontSampler_;
+     VulkanImage font_;
+ };
+</code></pre><p> &#x6CE8;&#x610F; updateBuffers &#x51FD;&#x6570;&#x7684; ImDrawData &#x53C2;&#x6570;&#xFF0C;&#x91CC;&#x9762;&#x4FDD;&#x7559;&#x4E86;&#x7ED8;&#x5236; ImGUI &#x6240;&#x9700;&#x8981;&#x7684;&#x5168;&#x90E8;&#x6570;&#x636E;&#xFF0C;&#x5E76;&#x5C06;&#x5176;&#x4FDD;&#x5B58;&#x5728; <code>const ImDrawData* drawData = nullptr;</code> &#x5C5E;&#x6027;&#x4E2D;&#xFF1B;</p>
+</li>
+<li><p>createDescriptorSet</p>
+<pre><code> constexpr uint32_t ImGuiVtxBufferSize = 512 * 1024 * sizeof(ImDrawVert);
+ constexpr uint32_t ImGuiIdxBufferSize = 512 * 1024 * sizeof(uint32_t);
+
+ bool ImGuiRenderer::createDescriptorSet(VulkanRenderDevice&amp; vkDev)
+ {
+     const std::array&lt;VkDescriptorSetLayoutBinding, 4&gt; bindings = {
+         descriptorSetLayoutBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_VERTEX_BIT),
+         descriptorSetLayoutBinding(1, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, VK_SHADER_STAGE_VERTEX_BIT),
+         descriptorSetLayoutBinding(2, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, VK_SHADER_STAGE_VERTEX_BIT),
+         descriptorSetLayoutBinding(3, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT)
+     };
+
+     const VkDescriptorSetLayoutCreateInfo layoutInfo = {
+         .sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO,
+         .pNext = nullptr,
+         .flags = 0,
+         .bindingCount = static_cast&lt;uint32_t&gt;(bindings.size()),
+         .pBindings = bindings.data()
+     };
+
+     VK_CHECK(vkCreateDescriptorSetLayout(vkDev.device, &amp;layoutInfo, nullptr, &amp;descriptorSetLayout_));
+
+     std::vector&lt;VkDescriptorSetLayout&gt; layouts(vkDev.swapchainImages.size(), descriptorSetLayout_);
+
+     const VkDescriptorSetAllocateInfo allocInfo = {
+         .sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO,
+         .pNext = nullptr,
+         .descriptorPool = descriptorPool_,
+         .descriptorSetCount = static_cast&lt;uint32_t&gt;(vkDev.swapchainImages.size()),
+         .pSetLayouts = layouts.data()
+     };
+
+     descriptorSets_.resize(vkDev.swapchainImages.size());
+
+     VK_CHECK(vkAllocateDescriptorSets(vkDev.device, &amp;allocInfo, descriptorSets_.data()));
+
+     for (size_t i = 0; i &lt; vkDev.swapchainImages.size(); i++)
+     {
+         VkDescriptorSet ds = descriptorSets_[i];
+         const VkDescriptorBufferInfo bufferInfo  = { uniformBuffers_[i], 0, sizeof(mat4) };
+         const VkDescriptorBufferInfo bufferInfo2 = { storageBuffer_[i], 0, ImGuiVtxBufferSize };
+         const VkDescriptorBufferInfo bufferInfo3 = { storageBuffer_[i], ImGuiVtxBufferSize, ImGuiIdxBufferSize };
+         const VkDescriptorImageInfo  imageInfo   = { fontSampler_, font_.imageView, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL };
+
+         const std::array&lt;VkWriteDescriptorSet, 4&gt; descriptorWrites = {
+             bufferWriteDescriptorSet(ds, &amp;bufferInfo,  0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER),
+             bufferWriteDescriptorSet(ds, &amp;bufferInfo2, 1, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER),
+             bufferWriteDescriptorSet(ds, &amp;bufferInfo3, 2, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER),
+             imageWriteDescriptorSet( ds, &amp;imageInfo,   3)
+         };
+
+         vkUpdateDescriptorSets(vkDev.device, static_cast&lt;uint32_t&gt;(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
+     }
+
+     return true;
+ }
+</code></pre><p> &#x548C;&#x4E4B;&#x524D;&#x7684;&#x51FD;&#x6570;&#x7C7B;&#x4F3C;&#xFF0C;&#x9700;&#x8981;&#x6CE8;&#x610F;&#x7684;&#x662F;&#xFF0C;&#x8FD9;&#x91CC;&#x4E00;&#x5F00;&#x59CB;&#x8BBE;&#x5B9A;&#x4E86; ImGuiVtxBufferSize &#x548C; ImGuiIdxBufferSize&#xFF0C;&#x9884;&#x5148;&#x5206;&#x914D;&#x4E86;&#x9876;&#x70B9;&#x7F13;&#x51B2;&#x548C;&#x7D22;&#x5F15;&#x7F13;&#x51B2;&#x7684;&#x5927;&#x5C0F;&#xFF1B;</p>
+</li>
+<li><p>&#x6784;&#x9020;&#x51FD;&#x6570;</p>
+<pre><code> ImGuiRenderer::ImGuiRenderer(VulkanRenderDevice&amp; vkDev): RendererBase(vkDev, VulkanImage())
+ {
+     // Resource loading
+     ImGuiIO&amp; io = ImGui::GetIO();
+     createFontTexture(io, &quot;data/OpenSans-Light.ttf&quot;, vkDev, font_.image, font_.imageMemory);
+
+     createImageView(vkDev.device, font_.image, VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_ASPECT_COLOR_BIT, &amp;font_.imageView);
+     createTextureSampler(vkDev.device, &amp;fontSampler_);
+
+     // Buffer allocation
+     const size_t imgCount = vkDev.swapchainImages.size();
+
+     storageBuffer_.resize(imgCount);
+     storageBufferMemory_.resize(imgCount);
+
+     bufferSize_ = ImGuiVtxBufferSize + ImGuiIdxBufferSize;
+
+     for(size_t i = 0 ; i &lt; imgCount ; i++)
+     {
+         if (!createBuffer(vkDev.device, vkDev.physicalDevice, bufferSize_,
+             VK_BUFFER_USAGE_STORAGE_BUFFER_BIT,
+             VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+             storageBuffer_[i], storageBufferMemory_[i]))
+         {
+             printf(&quot;ImGuiRenderer: createBuffer() failed\n&quot;);
+             exit(EXIT_FAILURE);
+         }
+     }
+
+     // Pipeline creation
+     if (!createColorAndDepthRenderPass(vkDev, false, &amp;renderPass_, RenderPassCreateInfo()) ||
+         !createColorAndDepthFramebuffers(vkDev, renderPass_, VK_NULL_HANDLE, swapchainFramebuffers_) ||
+         !createUniformBuffers(vkDev, sizeof(mat4)) ||
+         !createDescriptorPool(vkDev, 1, 2, 1, &amp;descriptorPool_) ||
+         !createDescriptorSet(vkDev) ||
+         !createPipelineLayout(vkDev.device, descriptorSetLayout_, &amp;pipelineLayout_) ||
+         !createGraphicsPipeline(vkDev, renderPass_, pipelineLayout_,
+             { &quot;data/shaders/chapter04/imgui.vert&quot;, &quot;data/shaders/chapter04/imgui.frag&quot; }, &amp;graphicsPipeline_, VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST,
+             true, true, true))
+     {
+         printf(&quot;ImGuiRenderer: pipeline creation failed\n&quot;);
+         exit(EXIT_FAILURE);
+     }
+ }
+</code></pre><p> &#x4E3B;&#x8981;&#x5206;&#x4E3A;&#x4E09;&#x90E8;&#x5206;&#xFF1A;</p>
+<ol>
+<li>font_&#xFF0C;&#x52A0;&#x8F7D;&#x5B57;&#x4F53;&#x7EB9;&#x7406;&#xFF1B;</li>
+<li>storageBuffer_&#xFF0C;&#x5206;&#x914D;&#x51E0;&#x4F55;&#x6570;&#x636E;&#x7F13;&#x5B58;&#xFF1B;</li>
+<li>graphicsPipeline_&#xFF0C;&#x521B;&#x5EFA;&#x7ED8;&#x56FE;&#x7BA1;&#x7EBF;&#xFF1B;</li>
+</ol>
+</li>
+<li><p>createFontTexture</p>
+<pre><code> bool createFontTexture(ImGuiIO&amp; io, const char* fontFile, VulkanRenderDevice&amp; vkDev, VkImage&amp; textureImage, VkDeviceMemory&amp; textureImageMemory)
+ {
+     // Build texture atlas
+     ImFontConfig cfg = ImFontConfig();
+     cfg.FontDataOwnedByAtlas = false;
+     cfg.RasterizerMultiply = 1.5f;
+     cfg.SizePixels = 768.0f / 32.0f;
+     cfg.PixelSnapH = true;
+     cfg.OversampleH = 4;
+     cfg.OversampleV = 4;
+     ImFont* Font = io.Fonts-&gt;AddFontFromFileTTF(fontFile, cfg.SizePixels, &amp;cfg);
+
+     unsigned char* pixels = nullptr;
+     int texWidth = 1, texHeight = 1;
+     io.Fonts-&gt;GetTexDataAsRGBA32(&amp;pixels, &amp;texWidth, &amp;texHeight);
+
+     if (!pixels || !createTextureImageFromData(vkDev, textureImage, textureImageMemory, pixels, texWidth, texHeight, VK_FORMAT_R8G8B8A8_UNORM))
+     {
+         printf(&quot;Failed to load texture\n&quot;); fflush(stdout);
+         return false;
+     }
+
+     io.Fonts-&gt;TexID = (ImTextureID)0;
+     io.FontDefault = Font;
+     io.DisplayFramebufferScale = ImVec2(1, 1);
+
+     return true;
+ }
+</code></pre><p> &#x6DFB;&#x52A0;&#x5B57;&#x4F53;&#x65F6;&#xFF0C;&#x4F7F;&#x7528;&#x5230;&#x4E86; createFontTexture &#x51FD;&#x6570;&#xFF0C;&#x8FD9;&#x4E2A;&#x51FD;&#x6570;&#x4E3B;&#x8981;&#x662F;&#x7ED9; io &#x7684; Fonts-&gt;TexID &#x548C; FontDefault &#x8D4B;&#x503C;&#xFF0C;Fonts-&gt;TexID &#x8D4B;&#x503C;&#x9ED8;&#x8BA4; 0 &#x5373;&#x53EF;&#xFF0C;FontDefault &#x8D4B;&#x503C;&#x9700;&#x8981;&#x901A;&#x8FC7; io.Fonts-&gt;AddFontFromFileTTF &#x52A0;&#x8F7D; ttf &#x5B57;&#x4F53;&#x6587;&#x4EF6;&#xFF0C;&#x540C;&#x65F6;&#x6211;&#x4EEC;&#x901A;&#x8FC7; io.Fonts-&gt;GetTexDataAsRGBA32 &#x83B7;&#x53D6; BitMap&#xFF0C;&#x5E76;&#x6784;&#x9020;&#x7EB9;&#x7406;&#x5BF9;&#x8C61;&#xFF1B;</p>
+</li>
+<li><p>fillCommandBuffer</p>
+<pre><code> void ImGuiRenderer::fillCommandBuffer(VkCommandBuffer commandBuffer, size_t currentImage)
+ {
+     EASY_FUNCTION();
+
+     beginRenderPass(commandBuffer, currentImage);
+
+     ImVec2 clipOff = drawData-&gt;DisplayPos;         // (0,0) unless using multi-viewports
+     ImVec2 clipScale = drawData-&gt;FramebufferScale; // (1,1) unless using retina display which are often (2,2)
+
+     int vtxOffset = 0;
+     int idxOffset = 0;
+
+     for (int n = 0; n &lt; drawData-&gt;CmdListsCount; n++)
+     {
+         const ImDrawList* cmdList = drawData-&gt;CmdLists[n];
+
+         for (int cmd = 0; cmd &lt; cmdList-&gt;CmdBuffer.Size ; cmd++)
+         {
+             const ImDrawCmd* pcmd = &amp;cmdList-&gt;CmdBuffer[cmd];
+
+             addImGuiItem(framebufferWidth_, framebufferHeight_, commandBuffer, pcmd, clipOff, clipScale, idxOffset, vtxOffset, extTextures_, pipelineLayout_);
+         }
+         idxOffset += cmdList-&gt;IdxBuffer.Size;
+         vtxOffset += cmdList-&gt;VtxBuffer.Size;
+     }
+
+     vkCmdEndRenderPass(commandBuffer);
+ }
+</code></pre><p> &#x8FD9;&#x91CC;&#x901A;&#x8FC7; addImGuiItem &#x51FD;&#x6570;&#x89E3;&#x6790;&#x6BCF;&#x4E00;&#x6761; ImCMD</p>
+</li>
+<li><p>addImGuiItem</p>
+<pre><code> void addImGuiItem(uint32_t width, uint32_t height, VkCommandBuffer commandBuffer, const ImDrawCmd* pcmd, ImVec2 clipOff, ImVec2 clipScale, int idxOffset, int vtxOffset, const std::vector&lt;VulkanTexture&gt;&amp; textures, VkPipelineLayout pipelineLayout)
+ {
+     if (pcmd-&gt;UserCallback)
+         return;
+
+     // Project scissor/clipping rectangles into framebuffer space
+     ImVec4 clipRect;
+     clipRect.x = (pcmd-&gt;ClipRect.x - clipOff.x) * clipScale.x;
+     clipRect.y = (pcmd-&gt;ClipRect.y - clipOff.y) * clipScale.y;
+     clipRect.z = (pcmd-&gt;ClipRect.z - clipOff.x) * clipScale.x;
+     clipRect.w = (pcmd-&gt;ClipRect.w - clipOff.y) * clipScale.y;
+
+     if (clipRect.x &lt; width &amp;&amp; clipRect.y &lt; height &amp;&amp; clipRect.z &gt;= 0.0f &amp;&amp; clipRect.w &gt;= 0.0f)
+     {
+         if (clipRect.x &lt; 0.0f) clipRect.x = 0.0f;
+         if (clipRect.y &lt; 0.0f) clipRect.y = 0.0f;
+         // Apply scissor/clipping rectangle
+         const VkRect2D scissor = {
+             .offset = { .x = (int32_t)(clipRect.x), .y = (int32_t)(clipRect.y) },
+             .extent = { .width = (uint32_t)(clipRect.z - clipRect.x), .height = (uint32_t)(clipRect.w - clipRect.y) }
+         };
+         vkCmdSetScissor(commandBuffer, 0, 1, &amp;scissor);
+
+         // this is added in the Chapter 6: Using descriptor indexing in Vulkan to render an ImGui UI
+         if (textures.size() &gt; 0)
+         {
+             uint32_t texture = (uint32_t)(intptr_t)pcmd-&gt;TextureId;
+             vkCmdPushConstants(commandBuffer, pipelineLayout, VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(uint32_t), (const void*)&amp;texture);
+         }
+
+         vkCmdDraw(commandBuffer,
+             pcmd-&gt;ElemCount,
+             1,
+             pcmd-&gt;IdxOffset + idxOffset,
+             pcmd-&gt;VtxOffset + vtxOffset);
+     }
+ }
+</code></pre><p> &#x8FD9;&#x91CC;&#x6CE8;&#x610F;&#x4E24;&#x70B9;&#xFF1A;</p>
+<ol>
+<li>&#x4F7F;&#x7528; vkCmdSetScissor &#x8BBE;&#x5B9A;&#x88C1;&#x526A;&#x7A97;&#x53E3;&#xFF0C;&#x8FD9;&#x91CC;&#x5728;&#x8C03;&#x7528; createGraphicsPipeline &#x51FD;&#x6570;&#x65F6;&#xFF0C;&#x8BBE;&#x7F6E;&#x4E86; dynamicScissorState &#x53C2;&#x6570;&#x4E3A; true&#xFF1B;</li>
+<li><p>&#x6CE8;&#x610F; vkCmdDraw &#x6700;&#x540E;&#x4E24;&#x4E2A;&#x53C2;&#x6570;&#x5206;&#x522B;&#x8868;&#x793A; firstVerticle &#x548C; firstInstance&#xFF0C;&#x4E4D;&#x4E00;&#x770B;&#x975E;&#x5E38;&#x8FF7;&#x60D1;&#xFF0C;&#x5176;&#x5B9E;&#x7406;&#x89E3;&#x4E86; ImGUI &#x7684;&#x6BCF;&#x6761;&#x547D;&#x4EE4;&#x7684;&#x6570;&#x636E;&#x7ED3;&#x6784;&#x540E;&#x5C31;&#x4E0D;&#x96BE;&#x7406;&#x89E3;&#x4E86;&#xFF0C;&#x9644;&#x4E0A; imgui.vert &#x7684;&#x4EE3;&#x7801;&#xFF1A;</p>
+<pre><code> #version 460
+
+ layout(location = 0) out vec2 uv;
+ layout(location = 1) out vec4 color;
+
+ struct ImDrawVert{ float x, y, u, v; uint color; };
+
+ layout(binding = 0) uniform  UniformBuffer { mat4   inMtx; } ubo;
+ layout(binding = 1) readonly buffer SBO    { ImDrawVert data[]; }             sbo;
+ layout(binding = 2) readonly buffer IBO    { uint   data[]; } ibo;
+
+ void main()
+ {
+     uint idx = ibo.data[gl_VertexIndex] + gl_BaseInstance;
+
+     ImDrawVert v = sbo.data[idx];
+     uv     = vec2(v.u, v.v);
+     color  = unpackUnorm4x8(v.color);
+     gl_Position = ubo.inMtx * vec4(v.x, v.y, 0.0, 1.0);
+ }
+</code></pre><ol>
+<li>pcmd-&gt;ElemCount&#xFF0C;&#x8BBE;&#x5B9A;&#x4E86; gl_VertexIndex &#x7684;&#x7ED3;&#x675F;&#x8303;&#x56F4;&#x662F;  pcmd-&gt;ElemCount;</li>
+<li>pcmd-&gt;IdxOffset + idxOffset&#xFF0C;&#x8BBE;&#x5B9A;&#x4E86; gl_VertexIndex &#x7684;&#x5F00;&#x59CB;&#x8303;&#x56F4;&#x662F;  pcmd-&gt;IdxOffset + idxOffset&#xFF0C;&#x6240;&#x4EE5;&#x76EE;&#x524D; gl_VertexIndex &#x7684;&#x8303;&#x56F4;&#x662F;[pcmd-&gt;IdxOffset + idxOffset, pcmd-&gt;ElemCount];</li>
+<li>pcmd-&gt;VtxOffset + vtxOffset&#xFF0C;&#x8BBE;&#x5B9A;&#x4E86; gl_BaseInstance &#x7684;&#x503C;&#xFF1B;</li>
+</ol>
+</li>
+</ol>
+</li>
+<li><p>updateBuffers</p>
+<pre><code> void ImGuiRenderer::updateBuffers(VulkanRenderDevice&amp; vkDev, uint32_t currentImage, const ImDrawData* imguiDrawData)
+ {
+     drawData = imguiDrawData;
+
+     const float L = drawData-&gt;DisplayPos.x;
+     const float R = drawData-&gt;DisplayPos.x + drawData-&gt;DisplaySize.x;
+     const float T = drawData-&gt;DisplayPos.y;
+     const float B = drawData-&gt;DisplayPos.y + drawData-&gt;DisplaySize.y;
+
+     const mat4 inMtx = glm::ortho(L, R, T, B);
+
+     uploadBufferData(vkDev, uniformBuffersMemory_[currentImage], 0, glm::value_ptr(inMtx), sizeof(mat4));
+
+     void* data = nullptr;
+     vkMapMemory(vkDev.device, storageBufferMemory_[currentImage], 0, bufferSize_, 0, &amp;data);
+
+     ImDrawVert* vtx = (ImDrawVert*)data;
+     for (int n = 0; n &lt; drawData-&gt;CmdListsCount; n++)
+     {
+         const ImDrawList* cmdList = drawData-&gt;CmdLists[n];
+         memcpy(vtx, cmdList-&gt;VtxBuffer.Data, cmdList-&gt;VtxBuffer.Size * sizeof(ImDrawVert));
+         vtx += cmdList-&gt;VtxBuffer.Size;
+     }
+
+     uint32_t* idx = (uint32_t*)((uint8_t*)data + ImGuiVtxBufferSize);
+     for (int n = 0; n &lt; drawData-&gt;CmdListsCount; n++)
+     {
+         const ImDrawList* cmdList = drawData-&gt;CmdLists[n];
+         const uint16_t* src = (const uint16_t*)cmdList-&gt;IdxBuffer.Data;
+
+         for (int j = 0; j &lt; cmdList-&gt;IdxBuffer.Size; j++)
+             *idx++ = (uint32_t)*src++;
+     }
+
+     vkUnmapMemory(vkDev.device, storageBufferMemory_[currentImage]);
+ }
+</code></pre><p> &#x6CE8;&#x610F;&#xFF1A;</p>
+<ol>
+<li>imguiDrawData &#x7684;&#x6570;&#x636E;&#x662F;&#x5728;&#x5916;&#x9762;&#x8BBE;&#x5B9A;&#x597D;&#x4E86;&#xFF0C;&#x7136;&#x540E;&#x4F20;&#x8FDB;&#x6765;&#xFF0C;&#x8BE5;&#x51FD;&#x6570;&#x53EA;&#x662F;&#x8D77;&#x5230;&#x4E00;&#x4E2A;&#x66F4;&#x65B0;&#x51E0;&#x4F55;&#x6570;&#x636E;&#x7684;&#x4F5C;&#x7528;&#xFF1B;</li>
+<li>&#x904D;&#x5386; drawData&#xFF0C;&#x586B;&#x5145;&#x51E0;&#x4F55;&#x6570;&#x636E;&#x7F13;&#x51B2;&#xFF1B;</li>
+</ol>
+</li>
+</ol>
 
                                 
                                 </section>
@@ -307,7 +1215,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"引擎架构之 Vulkan Renderer 封装","level":"1.3.1","depth":2,"next":{"title":"RHI 跨平台","level":"1.4","depth":1,"path":"RHI/README.md","ref":"RHI/README.md","articles":[]},"previous":{"title":"引擎架构","level":"1.3","depth":1,"path":"engine/README.md","ref":"engine/README.md","articles":[{"title":"引擎架构之 Vulkan Renderer 封装","level":"1.3.1","depth":2,"path":"engine/vulkanRenderer.md","ref":"engine/vulkanRenderer.md","articles":[]}]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"engine/vulkanRenderer.md","mtime":"2021-12-14T09:48:00.863Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2021-12-14T09:49:21.669Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"引擎架构之 Vulkan Renderer 封装","level":"1.3.1","depth":2,"next":{"title":"RHI 跨平台","level":"1.4","depth":1,"path":"RHI/README.md","ref":"RHI/README.md","articles":[]},"previous":{"title":"引擎架构","level":"1.3","depth":1,"path":"engine/README.md","ref":"engine/README.md","articles":[{"title":"引擎架构之 Vulkan Renderer 封装","level":"1.3.1","depth":2,"path":"engine/vulkanRenderer.md","ref":"engine/vulkanRenderer.md","articles":[]}]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"engine/vulkanRenderer.md","mtime":"2021-12-15T09:52:35.403Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2021-12-15T09:54:31.543Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>
