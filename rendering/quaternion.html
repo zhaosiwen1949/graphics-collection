@@ -1,0 +1,439 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>四元数 · GitBook</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="../rayTracing/" />
+    
+    
+    <link rel="prev" href="camera.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    背景介绍
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="../graphicsAPI/">
+            
+                <a href="../graphicsAPI/">
+            
+                    
+                    图形 API
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1" data-path="../graphicsAPI/difference.html">
+            
+                <a href="../graphicsAPI/difference.html">
+            
+                    
+                    OpenGL 与 Vulkan 的区别
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2" data-path="../graphicsAPI/vulkanAPI.html">
+            
+                <a href="../graphicsAPI/vulkanAPI.html">
+            
+                    
+                    Vulkan API 梳理
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="../engine/">
+            
+                <a href="../engine/">
+            
+                    
+                    引擎架构
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1" data-path="../engine/vulkanRenderer.html">
+            
+                <a href="../engine/vulkanRenderer.html">
+            
+                    
+                    引擎架构之 Vulkan Renderer 封装
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="../RHI/">
+            
+                <a href="../RHI/">
+            
+                    
+                    RHI 跨平台
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    渲染技术
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.1" data-path="camera.html">
+            
+                <a href="camera.html">
+            
+                    
+                    摄像机基础
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.5.2" data-path="quaternion.html">
+            
+                <a href="quaternion.html">
+            
+                    
+                    四元数
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" data-path="../rayTracing/">
+            
+                <a href="../rayTracing/">
+            
+                    
+                    光线追踪
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >四元数</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="&#x56DB;&#x5143;&#x6570;">&#x56DB;&#x5143;&#x6570;</h1>
+<p>&#x53C2;&#x8003;&#x8D44;&#x6599;&#xFF1A;</p>
+<ol>
+<li><a href="https://eater.net/quaternions/" target="_blank">eater.net/quaternions</a></li>
+<li><a href="https://www.bilibili.com/video/BV1SW411y7W1" target="_blank">&#x56DB;&#x5143;&#x6570;&#x7684;&#x53EF;&#x89C6;&#x5316;</a><h2 id="&#x501F;&#x52A9;&#x56DB;&#x5143;&#x6570;&#x4E58;&#x6CD5;&#x7684;&#x4E09;&#x7EF4;&#x7A7A;&#x95F4;&#x65CB;&#x8F6C;">&#x501F;&#x52A9;&#x56DB;&#x5143;&#x6570;&#x4E58;&#x6CD5;&#x7684;&#x4E09;&#x7EF4;&#x7A7A;&#x95F4;&#x65CB;&#x8F6C;</h2>
+</li>
+</ol>
+<p>&#x4E09;&#x7EF4;&#x7A7A;&#x95F4;&#x7684;&#x70B9;&#xFF0C;&#x501F;&#x52A9;&#x56DB;&#x5143;&#x6570;&#x4E58;&#x6CD5;&#xFF0C;&#x53EF;&#x4EE5;&#x5FEB;&#x901F;&#x8FDB;&#x884C;&#x65CB;&#x8F6C;&#x53D8;&#x6362;&#xFF0C;&#x4E0B;&#x9762;&#x4F1A;&#x4ECB;&#x7ECD;&#x53D8;&#x6362;&#x7684;&#x6D41;&#x7A0B;&#xFF1A;</p>
+<ol>
+<li>&#x5047;&#x8BBE;&#x4E09;&#x7EF4;&#x7A7A;&#x95F4;&#x4E2D;&#x6709;&#x4E00;&#x70B9; $P(a, b, c)$&#xFF0C;&#x901A;&#x8FC7; Stereographic Projection&#xFF0C;&#x5FC5;&#x7136;&#x5BF9;&#x5E94;&#x7740;&#x56DB;&#x7EF4;&#x7A7A;&#x95F4;&#x4E2D;&#x5355;&#x4F4D;&#x7403;&#x4E0A;&#x7684;&#x4E00;&#x4E2A;&#x56DB;&#x5143;&#x6570; $p(\cos\theta, \sin\theta(x\pmb i+y\pmb j+z\pmb k))$&#xFF0C;&#x6CE8;&#x610F;&#xFF1A;$a&#x3001;b&#x3001;c$ &#x548C; $x&#x3001;y&#x3001;z$ &#x4E4B;&#x524D;&#x5E76;&#x65E0;&#x76F8;&#x7B49;&#x5173;&#x7CFB;&#xFF1B;</li>
+<li>&#x56DB;&#x5143;&#x6570; $p$ &#x5206;&#x522B;&#x8FDB;&#x884C;&#x5DE6;&#x4E58;&#x548C;&#x53F3;&#x4E58;&#x7684;&#x53D8;&#x6362; $p^\prime=qpq^{-1}$&#xFF0C;&#x5728;&#x56DB;&#x7EF4;&#x7A7A;&#x95F4;&#x4E2D;&#x610F;&#x5473;&#x7740;&#x5BF9;&#x4E8E; $p$ &#x70B9;&#x5206;&#x522B;&#x8FDB;&#x884C; $q$ &#x548C; $q^{-1}$ &#x7684;&#x56DB;&#x7EF4;&#x65CB;&#x8F6C;&#x53D8;&#x6362;&#xFF0C;&#x56E0;&#x4E3A; $p$ &#x70B9;&#x5728;&#x56DB;&#x7EF4;&#x5355;&#x4F4D;&#x7403;&#x4E0A;&#xFF0C;&#x6240;&#x4EE5;&#x8FDB;&#x884C;&#x56DB;&#x7EF4;&#x65CB;&#x8F6C;&#x540E;&#xFF0C;&#x4ECD;&#x7136;&#x5728;&#x56DB;&#x7EF4;&#x5355;&#x4F4D;&#x7403;&#x4E0A;&#xFF0C;&#x6240;&#x4EE5;&#x65CB;&#x8F6C;&#x540E;&#x7684;&#x70B9; $p^\prime(\cos\theta^\prime, \sin\theta^\prime(x^\prime\pmb i+y^\prime\pmb j+z^\prime\pmb k))$&#xFF0C;&#x4ECD;&#x7136;&#x53EF;&#x4EE5;&#x901A;&#x8FC7; Stereographic Projection &#x6620;&#x5C04;&#x5230;&#x4E09;&#x7EF4;&#x7A7A;&#x95F4;&#x4E0A;&#x7684;&#x4E00;&#x4E2A;&#x70B9; $P^\prime(a^\prime, b^\prime, c^\prime)$&#xFF1B;</li>
+<li>&#x5F53;&#x56DB;&#x5143;&#x6570; $p$ &#x5728;&#x56DB;&#x7EF4;&#x7A7A;&#x95F4;&#x4E0A;&#x8FDB;&#x884C;&#x5DE6;&#x4E58;&#x548C;&#x53F3;&#x4E58;&#x53D8;&#x6362; $p^\prime=qpq^{-1}$ &#x7684;&#x65F6;&#x5019;&#xFF08;&#x5176;&#x4E2D;&#xFF0C;$q=(\cos\frac{\omega}{2}, \sin\frac{\omega}{2}(d\pmb i+e\pmb j+f\pmb k))$&#x3001;$q^{-1}=(\cos\frac{-\omega}{2}, \sin\frac{-\omega}{2}(d\pmb i+e\pmb j+f\pmb k))$&#xFF09;&#xFF0C;&#x56DB;&#x7EF4;&#x5355;&#x4F4D;&#x7403;&#x6620;&#x5C04;&#x5230;&#x4E09;&#x7EF4;&#x7A7A;&#x95F4;&#x4E0A;&#x7684;&#x70B9; $P$&#xFF0C;&#x4F1A;&#x6CBF;&#x7740;&#x4E09;&#x7EF4;&#x7A7A;&#x95F4;&#x4E0A;&#x8F74; $\vec{A}(d, e, f)$&#xFF0C;&#x6309;&#x7167;&#x53F3;&#x624B;&#x5B9A;&#x5219;&#x987A;&#x65F6;&#x9488;&#x65CB;&#x8F6C; $\omega$ &#x89D2;&#x5EA6;&#xFF0C;&#x6700;&#x7EC8;&#x65CB;&#x8F6C;&#x5230;&#x70B9; $P^\prime$&#xFF1B;</li>
+<li>&#x7EFC;&#x4E0A;&#x6240;&#x8FF0;&#xFF0C;&#x501F;&#x52A9;&#x56DB;&#x7EF4;&#x5355;&#x4F4D;&#x7403;&#x4E0A;&#x7684;&#x53D8;&#x6362;&#xFF0C;&#x53EF;&#x4EE5;&#x63CF;&#x8FF0;&#x4E09;&#x7EF4;&#x7A7A;&#x95F4;&#x4E2D;&#x70B9;&#x7684;&#x65CB;&#x8F6C;&#xFF0C;&#x6574;&#x4F53;&#x601D;&#x8DEF;&#x5C31;&#x662F;&#xFF1A;&#x9996;&#x5148;&#x6839;&#x636E;&#x4E09;&#x7EF4;&#x7A7A;&#x95F4;&#x4E2D;&#x7684;&#x4E00;&#x70B9; $P(a, b, c)$&#xFF0C;&#x901A;&#x8FC7; Stereographic Projection &#x627E;&#x5230;&#x5BF9;&#x5E94;&#x7684;&#x56DB;&#x7EF4;&#x5355;&#x4F4D;&#x7403;&#x4E0A;&#x7684;&#x56DB;&#x5143;&#x6570; $p(\cos\theta, \sin\theta(x\pmb i+y\pmb j+z\pmb k))$&#xFF0C;&#x7136;&#x540E;&#x901A;&#x8FC7;&#x8BA1;&#x7B97; $p^\prime=qpq^{-1}$&#xFF0C;&#x5F97;&#x5230;&#x65B0;&#x7684;&#x56DB;&#x5143;&#x6570; $p^\prime(\cos\theta^\prime, \sin\theta^\prime(x^\prime\pmb i+y^\prime\pmb j+z^\prime\pmb k))$&#xFF0C;&#x518D;&#x901A;&#x8FC7; Stereographic Projection&#xFF0C;&#x6620;&#x5C04;&#x56DE;&#x4E09;&#x7EF4;&#x7A7A;&#x95F4;&#x4E2D;&#x7684; $P^\prime(a^\prime, b^\prime, c^\prime)$ &#x70B9;&#xFF0C;&#x6B64;&#x65F6;&#x70B9; $P^\prime$ &#x5C31;&#x662F;&#x70B9; $P$ &#x65CB;&#x8F6C;&#x540E;&#x7684;&#x7ED3;&#x679C;&#xFF1B;</li>
+</ol>
+<h2 id="&#x7B80;&#x5316;&#x540E;&#x7684;&#x8FC7;&#x7A0B;">&#x7B80;&#x5316;&#x540E;&#x7684;&#x8FC7;&#x7A0B;</h2>
+<p>&#x4E0D;&#x96BE;&#x770B;&#x51FA;&#xFF0C;&#x4E0A;&#x8FF0;&#x8FC7;&#x7A0B;&#x4E2D;&#x9700;&#x8981;&#x5C06;&#x4E09;&#x7EF4;&#x7A7A;&#x95F4;&#x548C;&#x56DB;&#x7EF4;&#x5355;&#x4F4D;&#x7403;&#x4E0A;&#x7684;&#x70B9;&#xFF0C;&#x6765;&#x56DE;&#x901A;&#x8FC7; Stereographic Projection&#xFF0C;&#x8FDB;&#x884C;&#x6620;&#x5C04;&#x8FD0;&#x7B97;&#xFF0C;&#x8BA1;&#x7B97;&#x8D77;&#x6765;&#x4F1A;&#x76F8;&#x5F53;&#x9EBB;&#x70E6;&#xFF0C;&#x6709;&#x6CA1;&#x6709;&#x529E;&#x6CD5;&#x80FD;&#x7B80;&#x5316;&#x8FD9;&#x79CD;&#x8FD0;&#x7B97;&#xFF1F;
+&#x8FD9;&#x91CC;&#x6211;&#x4EEC;&#x8981;&#x501F;&#x52A9;&#x4E8E;&#x4E00;&#x4E2A;&#x7279;&#x6B8A;&#x7684;&#x7403;&#x9762;&#xFF0C;&#x4E5F;&#x5C31;&#x662F;&#x4E09;&#x7EF4;&#x7A7A;&#x95F4;&#x4E2D;&#x7684;&#x5355;&#x4F4D;&#x7403;&#x9762;&#xFF0C;&#x8FD9;&#x4E2A;&#x7403;&#x9762;&#x4E0A;&#x4EFB;&#x610F;&#x4E00;&#x70B9; $H(u, v, w)$&#xFF0C;&#x901A;&#x8FC7; Stereographic Projection&#xFF0C;&#x5BF9;&#x5E94;&#x4E8E;&#x56DB;&#x7EF4;&#x5355;&#x4F4D;&#x7403;&#x4E0A;&#x7684;&#x70B9; $h(\cos{90^\degree}, \sin{90^\degree}(u\pmb i+v\pmb j+w\pmb k))$&#xFF0C;&#x4E5F;&#x5C31;&#x662F; $h(0, u\pmb i, v\pmb j, w\pmb k)$&#xFF0C;&#x4E0B;&#x9762;&#x5229;&#x7528;&#x8FD9;&#x4E2A;&#x89C4;&#x5F8B;&#xFF0C;&#x7B80;&#x5316;&#x4E0A;&#x9762;&#x7684;&#x8BA1;&#x7B97;&#xFF1A;</p>
+<ol>
+<li>&#x627E;&#x5230;&#x4E0E;&#x70B9; $P(a, b, c)$ &#x5728;&#x540C;&#x4E00;&#x65B9;&#x5411;&#x4E0A;&#x7684;&#x4E09;&#x7EF4;&#x5355;&#x4F4D;&#x7403;&#x9762;&#x4E0A;&#x7684;&#x70B9; $H(u, v, w)$&#xFF0C;&#x5176;&#x4E2D;
+$$
+|P|=\sqrt{a^2+b^2+c^2},
+u=\frac{a}{|P|},
+v=\frac{b}{|P|},
+w=\frac{c}{|P|},
+H(u, v, w)=\frac{P(a, b, c)}{|P|}
+$$</li>
+<li>&#x70B9; $H(u, v, w)$ &#x5BF9;&#x5E94;&#x7684;&#x56DB;&#x5143;&#x6570;&#x4E3A; $h(0, u\pmb i, v\pmb j, w\pmb k)$&#xFF0C;&#x8FDB;&#x884C;&#x56DB;&#x5143;&#x6570;&#x5DE6;&#x53F3;&#x4E58;&#x8FD0;&#x7B97; $h^\prime=qhq^{-1}$&#xFF0C;&#x6240;&#x5F97; $h^\prime=(0, u^\prime\pmb i, v^\prime\pmb j, w^\prime\pmb k)$&#xFF1B;</li>
+<li>$h^\prime$ &#x5BF9;&#x5E94;&#x7684;&#x4E09;&#x7EF4;&#x7A7A;&#x95F4;&#x4E0A;&#x7684;&#x70B9;&#x4E3A; $H^\prime(u^\prime, v^\prime, w^\prime)$&#xFF1B;</li>
+<li>&#xFF0C;&#x56E0;&#x4E3A;&#x5728;&#x4E09;&#x7EF4;&#x7A7A;&#x95F4;&#x4E2D;&#xFF0C;&#x53EA;&#x662F;&#x8FDB;&#x884C;&#x65CB;&#x8F6C;&#xFF0C;&#x5E76;&#x6CA1;&#x4E0E;&#x8FDB;&#x884C;&#x4F38;&#x7F29;&#xFF0C;&#x6240;&#x4EE5;&#x70B9; $P(a, b, c)$ &#x65CB;&#x8F6C;&#x540E;&#x7684;&#x70B9; $P^\prime(a^\prime, b^\prime, c^\prime)=|P|\times{H^\prime(u^\prime, v^\prime, w^\prime)}$&#xFF0C;&#x6240;&#x4EE5;
+$$
+a^\prime=|P|\times{u^\prime},
+b^\prime=|P|\times{v^\prime},
+c^\prime=|P|\times{w^\prime}
+$$</li>
+<li>&#x7EFC;&#x4E0A;&#x6240;&#x8FF0;&#xFF0C;&#x6839;&#x636E;&#x70B9; $P(a, b, c)$ &#x6784;&#x9020;&#x56DB;&#x5143;&#x6570; $p(0, a\pmb i, b\pmb j, c\pmb k)=|P|\times{h(0, u\pmb i, v\pmb j, w\pmb k)}$&#xFF0C;&#x7531;&#x4E8E;&#x7ECF;&#x8FC7;&#x56DB;&#x5143;&#x6570;&#x53D8;&#x6362;&#x540E;&#xFF08;&#x5176;&#x4E2D;&#xFF0C;$q=(\cos\frac{\omega}{2}, \sin\frac{\omega}{2}(d\pmb i+e\pmb j+f\pmb k))$&#x3001;$q^{-1}=(\cos\frac{-\omega}{2}, \sin\frac{-\omega}{2}(d\pmb i+e\pmb j+f\pmb k))$&#xFF0C;&#x56DB;&#x7EF4;&#x5355;&#x4F4D;&#x7403;&#x6620;&#x5C04;&#x5230;&#x4E09;&#x7EF4;&#x7A7A;&#x95F4;&#x4E0A;&#x7684;&#x70B9; $P$&#xFF0C;&#x4F1A;&#x6CBF;&#x7740;&#x4E09;&#x7EF4;&#x7A7A;&#x95F4;&#x4E0A;&#x8F74; $\vec{A}(d, e, f)$&#xFF0C;&#x6309;&#x7167;&#x53F3;&#x624B;&#x5B9A;&#x5219;&#x987A;&#x65F6;&#x9488;&#x65CB;&#x8F6C; $\omega$ &#x89D2;&#x5EA6;&#xFF0C;&#x6700;&#x7EC8;&#x65CB;&#x8F6C;&#x5230;&#x70B9; $P^\prime$&#xFF09;
+ $$<br> \begin{aligned}
+ h^\prime&amp;=qhq^{-1}\
+ &amp;=(0, u^\prime\pmb i, v^\prime\pmb j, w^\prime\pmb k)
+ \end{aligned}
+ $$<br> &#x6240;&#x4EE5;
+ $$
+ \begin{aligned}
+ |P|\times{h^\prime}&amp;=|P|\times{qhq^{-1}}\
+ &amp;=q(|P|\times{h})q^{-1}\
+ &amp;=qpq^{-1}
+ \end{aligned}
+ $$
+ $$
+ \begin{aligned}
+ |P|\times{h^\prime}&amp;=|P|\times{(0, u^\prime\pmb i, v^\prime\pmb j, w^\prime\pmb k)}\
+ &amp;=(0, a^\prime\pmb i, b^\prime\pmb j, c^\prime\pmb k)\
+ &amp;=p^\prime
+ \end{aligned}
+ $$
+ &#x56E0;&#x6B64;
+ $$
+ \begin{aligned}
+ p^\prime=qpq^{-1}
+ \end{aligned}
+ $$
+ &#x901A;&#x8FC7;&#x6784;&#x9020;&#x56DB;&#x5143;&#x6570; $p(0, a\pmb i, b\pmb j, c\pmb k)$&#xFF0C;&#x76F4;&#x63A5;&#x901A;&#x8FC7; $p^\prime=qpq^{-1}$ &#x8BA1;&#x7B97;&#x51FA;&#x65B0;&#x7684;&#x56DB;&#x5143;&#x6570; $p^\prime=(0, a^\prime\pmb i, b^\prime\pmb j, c^\prime\pmb k)$&#xFF0C;&#x53EF;&#x4EE5;&#x76F4;&#x63A5;&#x622A;&#x53D6;&#x5176;&#x4E2D;&#x865A;&#x90E8;&#xFF0C;&#x5F97;&#x5230;&#x65CB;&#x8F6C;&#x540E;&#x7684;&#x70B9; $P^\prime(a^\prime, b^\prime, c^\prime)$&#x3002;</li>
+</ol>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="camera.html" class="navigation navigation-prev " aria-label="Previous page: 摄像机基础">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="../rayTracing/" class="navigation navigation-next " aria-label="Next page: 光线追踪">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"四元数","level":"1.5.2","depth":2,"next":{"title":"光线追踪","level":"1.6","depth":1,"path":"rayTracing/README.md","ref":"rayTracing/README.md","articles":[]},"previous":{"title":"摄像机基础","level":"1.5.1","depth":2,"path":"rendering/camera.md","ref":"rendering/camera.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"rendering/quaternion.md","mtime":"2021-12-20T14:05:18.377Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2021-12-20T14:06:20.248Z"},"basePath":"..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+
