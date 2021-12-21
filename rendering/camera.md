@@ -218,5 +218,104 @@ Camera 类中持有 CameraPositionerInterface 类的实例，用来切换不同�
 
 			cameraPosition_ += moveSpeed_ * static_cast<float>(deltaSeconds);
 		}
+	update 方法每一帧都会被调用，传入帧与帧之间间隔的时间、当前鼠标的位置，以及鼠标是否被按下：
+	1. 当鼠标被按下时，会根据当前传入的鼠标位置，与上一帧之间的插值，构造旋转用的四元数，这里有三点需要注意：
+		1. 四元数的构造函数 glm::quat(angle.x, angle.y, angle.z)，这里需要分别传入绕 x 轴旋转的角度、绕 y 轴旋转的角度和绕 z 轴旋转的角度，注意这里需要传入 radiance ，也就是弧度值，另外需要引用欧拉角的头文件 `#include "glm/gtx/euler_angles.hpp"`；
+		2. 四元数乘以一个三维向量，直接就是得到该三维向量旋转后的结果，这里的乘法运算被重载了；
+
+				//rotate vector
+				vec3 qrot(vec4 q, vec3 v)
+				{
+				    return v + 2.0*cross(q.xyz, cross(q.xyz,v) + q.w*v);
+				}
+				//rotate vector (alternative)
+				vec3 qrot_2(vec4 q, vec3 v)
+				{
+				    return v*(q.w*q.w - dot(q.xyz,q.xyz)) + 2.0*q.xyz*dot(q.xyz,v) +    
+				          2.0*q.w*cross(q.xyz,v);
+				}
+
+		3. 四元数乘以一个四元数，得到的是两个四元数旋转合并后的四元数；
+	2. 调用 setUpVector，保证摄像机不会出现上下翻转的情况；
+	3. 更新鼠标位置；
+	4. 通过 glm::mat4_cast 获取旋转矩阵，根据旋转矩阵，解析出 forword、up、right 方向；
+	5. 下面一段是模拟加减速的过程，不再赘述；
+
+综上，一个基本的 Camera 类就配置完成了，下面我们看一下应该怎么使用：
+1. 首先，声明 Camera 与具体实现类，并且保存当前的鼠标状态；
+
+		CameraPositioner_FirstPerson positioner( vec3(0.0f), vec3(0.0f, 0.0f, -1.0f), vec3(0.0f, 1.0f, 0.0f));	
+		//positioner.setPosition(vec3(0.0f, 0.0f, 0.0f));  
+		Camera camera(positioner);  
+
+		struct MouseState  
+		{  
+			glm::vec2 pos = glm::vec2(0.0f);  
+			bool pressedLeft = false;  
+		} mouseState;
+
+2. 设置监听窗口鼠标事件的回调函数，更新鼠标状态
+
+		glfwSetCursorPosCallback(
+			window,
+			[](auto* window, double x, double y)
+			{
+				int width, height;
+				glfwGetFramebufferSize(window, &width, &height);
+				mouseState.pos.x = static_cast<float>(x / width);
+				mouseState.pos.y = static_cast<float>(y / height);
+			}
+		);
+
+		glfwSetMouseButtonCallback(
+			window,
+			[](auto* window, int button, int action, int mods)
+			{
+				if (button == GLFW_MOUSE_BUTTON_LEFT)
+					mouseState.pressedLeft = action == GLFW_PRESS;
+			}
+		);
+
+3. 设置监听按键的回调函数，更新摄像机的前进方向
+
+		glfwSetKeyCallback(
+			window,
+			[](GLFWwindow* window, int key, int scancode, int action, int mods)
+			{
+				const bool pressed = action != GLFW_RELEASE;
+				if (key == GLFW_KEY_ESCAPE && pressed)
+					glfwSetWindowShouldClose(window, GLFW_TRUE);
+				if (key == GLFW_KEY_W)
+					positioner.movement_.forward_ = pressed;
+				if (key == GLFW_KEY_S)
+					positioner.movement_.backward_ = pressed;
+				if (key == GLFW_KEY_A)
+					positioner.movement_.left_ = pressed;
+				if (key == GLFW_KEY_D)
+					positioner.movement_.right_ = pressed;
+				if (key == GLFW_KEY_1)
+					positioner.movement_.up_ = pressed;
+				if (key == GLFW_KEY_2)
+					positioner.movement_.down_ = pressed;
+				if (mods & GLFW_MOD_SHIFT)
+					positioner.movement_.fastSpeed_ = pressed;
+				if (key == GLFW_KEY_SPACE)
+					positioner.setUpVector(vec3(0.0f, 1.0f, 0.0f));
+			}
+		);
+	
+4. 在渲染循环的开始，更新摄像机的状态
+
+		while (!glfwWindowShouldClose(window))
+		{
+			positioner.update(deltaSeconds, mouseState.pos, mouseState.pressedLeft);
+		
+5. 获取更新后的视图矩阵，并更新 Uniform 变量
+
+		const mat4 p = glm::perspective(45.0f, ratio, 0.1f, 1000.0f);
+		const mat4 view = camera.getViewMatrix();
+
+		const PerFrameData perFrameData = { .view = view, .proj = p, .cameraPos = glm::vec4(camera.getPosition(), 1.0f) };
+		glNamedBufferSubData(perFrameDataBuffer, 0, kUniformBufferSize, &perFrameData);
 	
 	
