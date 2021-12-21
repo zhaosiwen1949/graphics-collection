@@ -10,5 +10,6 @@
 * [渲染技术](rendering/README.md)
     * [摄像机基础](rendering/camera.md)
     * [四元数](rendering/quaternion.md)
+    * [FPS](rendering/FPS.md)
 * [光线追踪](rayTracing/README.md)
 
