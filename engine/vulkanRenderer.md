@@ -893,3 +893,243 @@ VulkanFinish 类似 VulkanClear，并不进行真正的渲染，只是将 FrameB
 	注意：
 	1. imguiDrawData 的数据是在外面设定好了，然后传进来，该函数只是起到一个更新几何数据的作用；
 	2. 遍历 drawData，填充几何数据缓冲；
+
+### VulkanCube
+通过 Cube，绘制场景背景
+1. 类声明
+
+		class CubeRenderer: public RendererBase
+		{
+		public:
+			CubeRenderer(VulkanRenderDevice& vkDev, VulkanImage inDepthTexture, const char* textureFile);
+			virtual ~CubeRenderer();
+
+			virtual void fillCommandBuffer(VkCommandBuffer commandBuffer, size_t currentImage) override;
+
+			void updateUniformBuffer(VulkanRenderDevice& vkDev, uint32_t currentImage, const mat4& m);
+
+		private:
+			VkSampler textureSampler;
+			VulkanImage texture;
+
+			bool createDescriptorSet(VulkanRenderDevice& vkDev);
+		};
+
+	主要新增一个 texture，用来保存 cubemap；
+
+2. 构造函数
+
+		CubeRenderer::CubeRenderer(VulkanRenderDevice& vkDev, VulkanImage inDepthTexture, const char* textureFile): RendererBase(vkDev, inDepthTexture)
+		{
+			// Resource loading
+			createCubeTextureImage(vkDev, textureFile, texture.image, texture.imageMemory);
+
+			createImageView(vkDev.device, texture.image, VK_FORMAT_R32G32B32A32_SFLOAT, VK_IMAGE_ASPECT_COLOR_BIT, &texture.imageView, VK_IMAGE_VIEW_TYPE_CUBE, 6);
+			createTextureSampler(vkDev.device, &textureSampler);
+
+			// Pipeline initialization
+			if (!createColorAndDepthRenderPass(vkDev, true, &renderPass_, RenderPassCreateInfo()) ||
+				!createUniformBuffers(vkDev, sizeof(mat4)) ||
+				!createColorAndDepthFramebuffers(vkDev, renderPass_, depthTexture_.imageView, swapchainFramebuffers_) ||
+				!createDescriptorPool(vkDev, 1, 0, 1, &descriptorPool_) ||
+				!createDescriptorSet(vkDev) ||
+				!createPipelineLayout(vkDev.device, descriptorSetLayout_, &pipelineLayout_) ||
+				!createGraphicsPipeline(vkDev, renderPass_, pipelineLayout_, { "data/shaders/chapter04/VKCube.vert", "data/shaders/chapter04/VKCube.frag" }, &graphicsPipeline_))
+			{
+				printf("CubeRenderer: failed to create pipeline\n");
+				exit(EXIT_FAILURE);
+			}
+		}
+	
+	通过 createCubeTextureImage 函数创建一个 cubemap 的纹理对象；
+
+3. shared/UtilsVulkan.cpp
+
+		bool createCubeTextureImage(VulkanRenderDevice& vkDev, const char* filename, VkImage& textureImage, VkDeviceMemory& textureImageMemory, uint32_t* width, uint32_t* height)
+		{
+			int w, h, comp;
+			const float* img = stbi_loadf(filename, &w, &h, &comp, 3);
+			std::vector<float> img32(w * h * 4);
+
+			float24to32(w, h, img, img32.data());
+
+			if (!img) {
+				printf("Failed to load [%s] texture\n", filename); fflush(stdout);
+				return false;
+			}
+
+			stbi_image_free((void*)img);
+
+			Bitmap in(w, h, 4, eBitmapFormat_Float, img32.data());
+			Bitmap out = convertEquirectangularMapToVerticalCross(in);
+
+			Bitmap cube = convertVerticalCrossToCubeMapFaces(out);
+
+			if (width && height)
+			{
+				*width = w;
+				*height = h;
+			}
+
+			return createTextureImageFromData(vkDev, textureImage, textureImageMemory,
+				cube.data_.data(), cube.w_, cube.h_,
+				VK_FORMAT_R32G32B32A32_SFLOAT,
+				6, VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT);
+		}
+
+		bool createImageView(VkDevice device, VkImage image, VkFormat format, VkImageAspectFlags aspectFlags, VkImageView* imageView, VkImageViewType viewType, uint32_t layerCount, uint32_t mipLevels)
+		{
+			const VkImageViewCreateInfo viewInfo =
+			{
+				.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
+				.pNext = nullptr,
+				.flags = 0,
+				.image = image,
+				.viewType = viewType,
+				.format = format,
+				.subresourceRange =
+				{
+					.aspectMask = aspectFlags,
+					.baseMipLevel = 0,
+					.levelCount = mipLevels,
+					.baseArrayLayer = 0,
+					.layerCount = layerCount
+				}
+			};
+
+			return (vkCreateImageView(device, &viewInfo, nullptr, imageView) == VK_SUCCESS);
+		}
+
+	注意，这里生成 cubemap texture 的过程和普通的 texture 的过程没什么区别，主要是通过 layerCount 设置为 6，在生成 image 和 imageView 是都需要设置 6 个面（+x、-x、+y、-y、+z、-z）；
+
+4. 其他方法
+
+		bool CubeRenderer::createDescriptorSet(VulkanRenderDevice& vkDev)
+		{
+			const std::array<VkDescriptorSetLayoutBinding, 2> bindings = {
+				descriptorSetLayoutBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_VERTEX_BIT),
+				descriptorSetLayoutBinding(1, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT)
+			};
+
+			const VkDescriptorSetLayoutCreateInfo layoutInfo = {
+				.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO,
+				.pNext = nullptr,
+				.flags = 0,
+				.bindingCount = static_cast<uint32_t>(bindings.size()),
+				.pBindings = bindings.data()
+			};
+
+			VK_CHECK(vkCreateDescriptorSetLayout(vkDev.device, &layoutInfo, nullptr, &descriptorSetLayout_));
+
+			std::vector<VkDescriptorSetLayout> layouts(vkDev.swapchainImages.size(), descriptorSetLayout_);
+
+			const VkDescriptorSetAllocateInfo allocInfo = {
+				.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO,
+				.pNext = nullptr,
+				.descriptorPool = descriptorPool_,
+				.descriptorSetCount = static_cast<uint32_t>(vkDev.swapchainImages.size()),
+				.pSetLayouts = layouts.data()
+			};
+
+			descriptorSets_.resize(vkDev.swapchainImages.size());
+
+			VK_CHECK(vkAllocateDescriptorSets(vkDev.device, &allocInfo, descriptorSets_.data()));
+
+			for (size_t i = 0; i < vkDev.swapchainImages.size(); i++)
+			{
+				VkDescriptorSet ds = descriptorSets_[i];
+
+				const VkDescriptorBufferInfo bufferInfo  = { uniformBuffers_[i], 0, sizeof(mat4) };
+				const VkDescriptorImageInfo  imageInfo   = { textureSampler, texture.imageView, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL };
+
+				const std::array<VkWriteDescriptorSet, 2> descriptorWrites = {
+					bufferWriteDescriptorSet(ds, &bufferInfo,  0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER),
+					imageWriteDescriptorSet( ds, &imageInfo,   1)
+				};
+
+				vkUpdateDescriptorSets(vkDev.device, static_cast<uint32_t>(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
+			}
+
+			return true;
+		}
+
+		void CubeRenderer::fillCommandBuffer(VkCommandBuffer commandBuffer, size_t currentImage)
+		{
+			EASY_FUNCTION();
+
+			beginRenderPass(commandBuffer, currentImage);
+
+			vkCmdDraw(commandBuffer, 36, 1, 0, 0);
+
+			vkCmdEndRenderPass(commandBuffer);
+		}
+
+		void CubeRenderer::updateUniformBuffer(VulkanRenderDevice& vkDev, uint32_t currentImage, const mat4& m)
+		{
+			uploadBufferData(vkDev, uniformBuffersMemory_[currentImage], 0, glm::value_ptr(m), sizeof(mat4));
+		}
+
+	其余部分和其他 Renderer 基本一致，注意我们会将 mvp 矩阵，传递给 cubemap，以便用来采样；
+
+5. shader
+
+		// VKCude.vert
+		#version 460 core
+
+		layout (location=0) out vec3 dir;
+
+		layout(binding = 0) uniform UniformBuffer
+		{
+			mat4 mvp;
+		} ubo;
+
+		const vec3 pos[8] = vec3[8](
+			vec3(-1.0,-1.0, 1.0),
+			vec3( 1.0,-1.0, 1.0),
+			vec3( 1.0, 1.0, 1.0),
+			vec3(-1.0, 1.0, 1.0),
+
+			vec3(-1.0,-1.0,-1.0),
+			vec3( 1.0,-1.0,-1.0),
+			vec3( 1.0, 1.0,-1.0),
+			vec3(-1.0, 1.0,-1.0)
+		);
+
+		const int indices[36] = int[36](
+			// front
+			0, 1, 2, 2, 3, 0,
+			// right
+			1, 5, 6, 6, 2, 1,
+			// back
+			7, 6, 5, 5, 4, 7,
+			// left
+			4, 0, 3, 3, 7, 4,
+			// bottom
+			4, 5, 1, 1, 0, 4,
+			// top
+			3, 2, 6, 6, 7, 3
+		);
+
+		void main()
+		{
+			float cubeSize = 10.0;
+			int idx = indices[gl_VertexIndex];
+			gl_Position = ubo.mvp * vec4(cubeSize * pos[idx], 1.0);
+			dir = pos[idx].xyz;
+		}
+
+		//VKCube.frag
+		#version 460 core
+
+		layout (location=0) in vec3 dir;
+
+		layout (location=0) out vec4 outColor;
+
+		layout (binding=1) uniform samplerCube texture1;
+
+		void main()
+		{
+			outColor = texture(texture1, dir);
+		};
+	
+	通过 Shader 可以看出来，其实就是将摄像机放到一个大立方体里面，然后从里往外看；
