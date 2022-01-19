@@ -25,6 +25,7 @@
 14. 创建描述符分配池 DescriptorPool，其中主要分配 DescriptorSet 的数量，以及 Uniform Buffer、Storage Buffer 和 Image Sampler 的数量，注意这里每一个 swapChain 上的 framebuffer 都都一个单独的DescriptorSet，并且会影响其他资源乘以对应的数量；
 15. 创建 DescriptorSetLayout，描述资源布局；
 16. 根据 DescriptorSetLayout，从 DescriptorPool 中，创建 DescriptorSet，最后通过 vkUpdateDescriptorSets，将真正的 buffer 数据更新到 DescriptorSet 中；
+![描述符集](/resources/images/descriptor.png)
 17. 创建 GraphicsPipeline 之前，先创建 PipelineLayout，PipelineLayout 主要描述 DescriptorSetLayout 和 PushContantRange，类似描述了函数的入参类型；
 18. 创建 RenderPass，RenderPass 主要描述三部分内容，重点是如何输出，类似函数的返回值类型：
     1. color、depth、stencil attachment description，描述在 RenderPass 整个前后的 layout 分别是什么，注意这里并未和具体 framebuffer 绑定；

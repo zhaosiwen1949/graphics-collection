@@ -9,4 +9,5 @@
 * RHI 跨平台封装（Filament、MethaneKit、bgfx、The-Forge）  
 * 渲染技术（GAMES202、RTR4）  
 * 光线追踪（PBRTv3、webgpu-renderer）
+* 全局光照（https://github.com/EmbarkStudios/kajiya）
 

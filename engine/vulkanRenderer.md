@@ -1133,3 +1133,482 @@ VulkanFinish 类似 VulkanClear，并不进行真正的渲染，只是将 FrameB
 		};
 	
 	通过 Shader 可以看出来，其实就是将摄像机放到一个大立方体里面，然后从里往外看；
+
+### VulkanMultiMeshRenderer
+Vulkan 间接绘制的 Renderer，对于多个 Mesh，可以调用一次 DrawCall，从而降低性能瓶颈
+
+1. 类声明
+
+		class MultiMeshRenderer: public RendererBase
+		{
+		public:
+			virtual void fillCommandBuffer(VkCommandBuffer commandBuffer, size_t currentImage) override;
+
+			MultiMeshRenderer(
+				VulkanRenderDevice& vkDev,
+				const char* meshFile,
+				const char* drawDataFile,
+				const char* materialFile,
+				const char* vtxShaderFile,
+				const char* fragShaderFile);
+
+			void updateIndirectBuffers(VulkanRenderDevice& vkDev, size_t currentImage, bool* visibility = nullptr);
+
+			void updateGeometryBuffers(VulkanRenderDevice& vkDev, uint32_t vertexCount, uint32_t indexCount, const void* vertices, const void* indices);
+			void updateMaterialBuffer(VulkanRenderDevice& vkDev, uint32_t materialSize, const void* materialData);
+
+			void updateUniformBuffer(VulkanRenderDevice& vkDev, size_t currentImage, const mat4& m);
+			void updateDrawDataBuffer(VulkanRenderDevice& vkDev, size_t currentImage, uint32_t drawDataSize, const void* drawData);
+			void updateCountBuffer(VulkanRenderDevice& vkDev, size_t currentImage, uint32_t itemCount);
+
+			virtual ~MultiMeshRenderer();
+
+			uint32_t vertexBufferSize_;
+			uint32_t indexBufferSize_;
+
+		private:
+			VulkanRenderDevice& vkDev;
+
+			uint32_t maxVertexBufferSize_;
+			uint32_t maxIndexBufferSize_;
+
+			uint32_t maxShapes_;
+
+			uint32_t maxDrawDataSize_;
+			uint32_t maxMaterialSize_;
+
+			// 6. Storage Buffer with index and vertex data
+			VkBuffer storageBuffer_;
+			VkDeviceMemory storageBufferMemory_;
+
+			VkBuffer materialBuffer_;
+			VkDeviceMemory materialBufferMemory_;
+
+			std::vector<VkBuffer> indirectBuffers_;
+			std::vector<VkDeviceMemory> indirectBuffersMemory_;
+
+			std::vector<VkBuffer> drawDataBuffers_;
+			std::vector<VkDeviceMemory> drawDataBuffersMemory_;
+
+			// Buffer for draw count
+			std::vector<VkBuffer> countBuffers_;
+			std::vector<VkDeviceMemory> countBuffersMemory_;
+
+			/* DrawData loaded from file. Converted to indirectBuffers[] and uploaded to drawDataBuffers[] */
+			std::vector<DrawData> shapes;
+			MeshData meshData_;
+
+			bool createDescriptorSet(VulkanRenderDevice& vkDev);
+
+			void loadDrawData(const char* drawDataFile);
+		};
+
+	首先，看下私有属性部分：
+	1. maxXXX_ 等，一些固定的最大限制值；
+	2. storageBuffer_、storageBufferMemory_，用来存储 indexData 和 vertexData；
+	3. materialBuffer_、materialBufferMemory_，用来存储材质数据；
+	4. indirectBuffers_、indirectBuffersMemory_，每帧的间接绘制命令；
+	5. drawDataBuffers_、drawDataBuffersMemory_，每帧变更的 mesh 数据；
+	6. countBuffers_、countBuffersMemory_，每帧的 DrawCount；
+	7. std::vector<DrawData> shapes，从 drawData 文件读取的，每个 mesh 对应的信息；
+	8. MeshData meshData_，从 mesh 文件读取的，合并后的几何数据；
+
+2. createDescriptorSet
+
+		bool MultiMeshRenderer::createDescriptorSet(VulkanRenderDevice& vkDev)
+		{
+			const std::array<VkDescriptorSetLayoutBinding, 5> bindings = {
+				descriptorSetLayoutBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_VERTEX_BIT),
+				/* vertices [part of this.storageBuffer] */
+				descriptorSetLayoutBinding(1, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, VK_SHADER_STAGE_VERTEX_BIT),
+				/* indices [part of this.storageBuffer] */
+				descriptorSetLayoutBinding(2, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, VK_SHADER_STAGE_VERTEX_BIT),
+				/* draw data [this.drawDataBuffer] */
+				descriptorSetLayoutBinding(3, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, VK_SHADER_STAGE_VERTEX_BIT),
+				/* material data [this.materialBuffer] */
+				descriptorSetLayoutBinding(4, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, VK_SHADER_STAGE_FRAGMENT_BIT)
+			};
+
+			const VkDescriptorSetLayoutCreateInfo layoutInfo = {
+				.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO,
+				.pNext = nullptr,
+				.flags = 0,
+				.bindingCount = static_cast<uint32_t>(bindings.size()),
+				.pBindings = bindings.data()
+			};
+
+			VK_CHECK(vkCreateDescriptorSetLayout(vkDev.device, &layoutInfo, nullptr, &descriptorSetLayout_));
+
+			std::vector<VkDescriptorSetLayout> layouts(vkDev.swapchainImages.size(), descriptorSetLayout_);
+
+			const VkDescriptorSetAllocateInfo allocInfo = {
+				.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO,
+				.pNext = nullptr,
+				.descriptorPool = descriptorPool_,
+				.descriptorSetCount = static_cast<uint32_t>(vkDev.swapchainImages.size()),
+				.pSetLayouts = layouts.data()
+			};
+
+			descriptorSets_.resize(vkDev.swapchainImages.size());
+
+			VK_CHECK(vkAllocateDescriptorSets(vkDev.device, &allocInfo, descriptorSets_.data()));
+
+			for (size_t i = 0; i < vkDev.swapchainImages.size(); i++)
+			{
+				VkDescriptorSet ds = descriptorSets_[i];
+
+				const VkDescriptorBufferInfo bufferInfo  = { uniformBuffers_[i], 0, sizeof(mat4) };
+				const VkDescriptorBufferInfo bufferInfo2 = { storageBuffer_, 0, maxVertexBufferSize_ };
+				const VkDescriptorBufferInfo bufferInfo3 = { storageBuffer_, maxVertexBufferSize_, maxIndexBufferSize_ };
+				const VkDescriptorBufferInfo bufferInfo4 = { drawDataBuffers_[i], 0, maxDrawDataSize_ };
+				const VkDescriptorBufferInfo bufferInfo5 = { materialBuffer_, 0, maxMaterialSize_ };
+
+				const std::array<VkWriteDescriptorSet, 5> descriptorWrites = {
+					bufferWriteDescriptorSet(ds, &bufferInfo,  0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER),
+					bufferWriteDescriptorSet(ds, &bufferInfo2, 1, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER),
+					bufferWriteDescriptorSet(ds, &bufferInfo3, 2, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER),
+					bufferWriteDescriptorSet(ds, &bufferInfo4, 3, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER),
+					bufferWriteDescriptorSet(ds, &bufferInfo5, 4, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER)
+				};
+
+				vkUpdateDescriptorSets(vkDev.device, static_cast<uint32_t>(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
+			}
+
+			return true;
+		}
+
+		//VK01.vert
+		#version 460
+
+		layout(location = 0) out vec3 uvw;
+
+		struct ImDrawVert   { float x, y, z; float u, v; float nx, ny, nz; };
+		struct DrawData {
+			uint mesh;
+			uint material;
+			uint lod;
+			uint indexOffset;
+			uint vertexOffset;
+			uint transformIndex;
+		};
+		struct MaterialData { uint tex2D; };
+
+		layout(binding = 0) uniform  UniformBuffer { mat4   inMtx; } ubo;
+		layout(binding = 1) readonly buffer SBO    { ImDrawVert data[]; } sbo;
+		layout(binding = 2) readonly buffer IBO    { uint   data[]; } ibo;
+		layout(binding = 3) readonly buffer DrawBO { DrawData data[]; } drawDataBuffer;
+
+		void main()
+		{
+			DrawData dd = drawDataBuffer.data[gl_BaseInstance];
+
+			uint refIdx = dd.indexOffset + gl_VertexIndex;
+			ImDrawVert v = sbo.data[ibo.data[refIdx] + dd.vertexOffset];
+
+			uvw = normalize(vec3(v.x, v.y, v.z));
+
+		//	mat4 xfrm(1.0); // = transpose(drawDataBuffer.data[gl_BaseInstance].xfrm);
+
+			gl_Position = ubo.inMtx /* xfrm*/ * vec4(v.x, v.y, v.z, 1.0);
+		}
+	
+	这里和之前的创建 descriptorSet 的过程类似，可以看出，主要将 uniform、顶点、索引和偏移信息传递进来；
+
+3. updateXXXBuffer
+
+		void MultiMeshRenderer::updateUniformBuffer(VulkanRenderDevice& vkDev, size_t currentImage, const mat4& m)
+		{
+			uploadBufferData(vkDev, uniformBuffersMemory_[currentImage], 0, glm::value_ptr(m), sizeof(mat4));
+		}
+
+		void MultiMeshRenderer::updateGeometryBuffers(VulkanRenderDevice& vkDev, uint32_t vertexCount, uint32_t indexCount, const void* vertices, const void* indices)
+		{
+			uploadBufferData(vkDev, storageBufferMemory_, 0, vertices, vertexCount);
+			uploadBufferData(vkDev, storageBufferMemory_, maxVertexBufferSize_, indices, indexCount);
+		}
+
+		void MultiMeshRenderer::updateDrawDataBuffer(VulkanRenderDevice& vkDev, size_t currentImage, uint32_t drawDataSize, const void* drawData)
+		{
+			uploadBufferData(vkDev, drawDataBuffersMemory_[currentImage], 0, drawData, drawDataSize);
+		}
+
+		void MultiMeshRenderer::updateMaterialBuffer(VulkanRenderDevice& vkDev, uint32_t materialSize, const void* materialData)
+		{
+		}
+
+		void MultiMeshRenderer::updateCountBuffer(VulkanRenderDevice& vkDev, size_t currentImage, uint32_t itemCount)
+		{
+			uploadBufferData(vkDev, countBuffersMemory_[currentImage], 0, &itemCount, sizeof(uint32_t));
+		}
+
+	上述 buffer，都是 HOST 可见的，直接通过 upload 方法更新；
+
+4. updateIndirectBuffers
+
+		void MultiMeshRenderer::updateIndirectBuffers(VulkanRenderDevice& vkDev, size_t currentImage, bool* visibility)
+		{
+			VkDrawIndirectCommand* data = nullptr;
+			vkMapMemory(vkDev.device, indirectBuffersMemory_[currentImage], 0, 2 * sizeof(VkDrawIndirectCommand), 0, (void **)&data);
+
+			for (uint32_t i = 0 ; i < maxShapes_ ; i++)
+			{
+				const uint32_t j = shapes[i].meshIndex;
+				const uint32_t lod = shapes[i].LOD;
+				data[i] = {
+					.vertexCount = meshData_.meshes_[j].getLODIndicesCount(lod),
+					.instanceCount = visibility ? (visibility[i] ? 1u : 0u) : 1u,
+					.firstVertex = 0,
+					.firstInstance = i
+				};
+			}
+			vkUnmapMemory(vkDev.device, indirectBuffersMemory_[currentImage]);
+		}
+	
+	更新间接绘制命令参数的 indirectBuffersMemory_；
+
+5. fillCommandBuffer
+
+		void MultiMeshRenderer::fillCommandBuffer(VkCommandBuffer commandBuffer, size_t currentImage)
+		{
+			beginRenderPass(commandBuffer, currentImage);
+			/* For CountKHR (Vulkan 1.1) we may use indirect rendering with GPU-based object counter */
+			/// vkCmdDrawIndirectCountKHR(commandBuffer, indirectBuffers_[currentImage], 0, countBuffers_[currentImage], 0, maxShapes_, sizeof(VkDrawIndirectCommand));
+			/* For Vulkan 1.0 vkCmdDrawIndirect is enough */
+			vkCmdDrawIndirect(commandBuffer, indirectBuffers_[currentImage], 0, maxShapes_, sizeof(VkDrawIndirectCommand));
+
+			vkCmdEndRenderPass(commandBuffer);
+		}
+
+	调用 vkCmdDrawIndirect，触发间接绘制；
+
+6. 构造函数
+
+		MultiMeshRenderer::MultiMeshRenderer(
+			VulkanRenderDevice& vkDev,
+			const char* meshFile,
+			const char* drawDataFile,
+			const char* materialFile,
+			const char* vertShaderFile,
+			const char* fragShaderFile) :
+			vkDev(vkDev),
+			RendererBase(vkDev, VulkanImage())
+		{
+			if (!createColorAndDepthRenderPass(vkDev, false, &renderPass_, RenderPassCreateInfo()))
+			{
+				printf("Failed to create render pass\n");
+				exit(EXIT_FAILURE);
+			}
+
+			framebufferWidth_ = vkDev.framebufferWidth;
+			framebufferHeight_ = vkDev.framebufferHeight;
+
+			createDepthResources(vkDev, framebufferWidth_, framebufferHeight_, depthTexture_);
+
+			loadDrawData(drawDataFile);
+
+			MeshFileHeader header = loadMeshData(meshFile, meshData_);
+
+			const uint32_t indirectDataSize = maxShapes_ * sizeof(VkDrawIndirectCommand);
+			maxDrawDataSize_ = maxShapes_ * sizeof(DrawData);
+			maxMaterialSize_ = 1024;
+
+			countBuffers_.resize(vkDev.swapchainImages.size());
+			countBuffersMemory_.resize(vkDev.swapchainImages.size());
+
+			drawDataBuffers_.resize(vkDev.swapchainImages.size());
+			drawDataBuffersMemory_.resize(vkDev.swapchainImages.size());
+
+			indirectBuffers_.resize(vkDev.swapchainImages.size());
+			indirectBuffersMemory_.resize(vkDev.swapchainImages.size());
+
+			if (!createBuffer(vkDev.device, vkDev.physicalDevice, maxMaterialSize_,
+				VK_BUFFER_USAGE_STORAGE_BUFFER_BIT,
+				VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+				materialBuffer_, materialBufferMemory_))
+			{
+				printf("Cannot create material buffer\n");
+				fflush(stdout);
+				exit(EXIT_FAILURE);
+			}
+
+			maxVertexBufferSize_ = header.vertexDataSize;
+			maxIndexBufferSize_ = header.indexDataSize;
+
+			VkPhysicalDeviceProperties devProps;
+		        vkGetPhysicalDeviceProperties(vkDev.physicalDevice, &devProps);
+			const uint32_t offsetAlignment = static_cast<uint32_t>(devProps.limits.minStorageBufferOffsetAlignment);
+			if ((maxVertexBufferSize_ & (offsetAlignment - 1)) != 0)
+			{
+				int floats = (offsetAlignment - (maxVertexBufferSize_ & (offsetAlignment - 1))) / sizeof(float);
+				for (int ii = 0; ii < floats; ii++)
+					meshData_.vertexData_.push_back(0);
+				maxVertexBufferSize_ = (maxVertexBufferSize_ + offsetAlignment) & ~(offsetAlignment - 1);
+			}
+
+			if (!createBuffer(vkDev.device, vkDev.physicalDevice, maxVertexBufferSize_ + maxIndexBufferSize_,
+				VK_BUFFER_USAGE_STORAGE_BUFFER_BIT,
+				VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+				storageBuffer_, storageBufferMemory_))
+			{
+				printf("Cannot create vertex/index buffer\n"); fflush(stdout);
+				exit(EXIT_FAILURE);
+			}
+
+			updateGeometryBuffers(vkDev, header.vertexDataSize, header.indexDataSize, meshData_.vertexData_.data(), meshData_.indexData_.data());
+
+			for (size_t i = 0; i < vkDev.swapchainImages.size(); i++)
+			{
+				if (!createBuffer(vkDev.device, vkDev.physicalDevice, indirectDataSize,
+					VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT, // | VK_BUFFER_USAGE_STORAGE_BUFFER_BIT,
+					VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, /* for debugging we make it host-visible */
+					indirectBuffers_[i], indirectBuffersMemory_[i]))
+				{
+					printf("Cannot create indirect buffer\n"); fflush(stdout);
+					exit(EXIT_FAILURE);
+				}
+
+				updateIndirectBuffers(vkDev, i);
+
+				if (!createBuffer(vkDev.device, vkDev.physicalDevice, maxDrawDataSize_,
+					VK_BUFFER_USAGE_STORAGE_BUFFER_BIT,
+					VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, /* for debugging we make it host-visible */
+					drawDataBuffers_[i], drawDataBuffersMemory_[i]))
+				{
+					printf("Cannot create draw data buffer\n"); fflush(stdout);
+					exit(EXIT_FAILURE);
+				}
+
+				updateDrawDataBuffer(vkDev, i, maxDrawDataSize_, shapes.data());
+
+				if (!createBuffer(vkDev.device, vkDev.physicalDevice, sizeof(uint32_t),
+					VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT,
+					VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, /* for debugging we make it host-visible */
+					countBuffers_[i], countBuffersMemory_[i]))
+				{
+					printf("Cannot create count buffer\n");
+					fflush(stdout);
+					exit(EXIT_FAILURE);
+				}
+
+				updateCountBuffer(vkDev, i, maxShapes_);
+			}
+
+			if (!createUniformBuffers(vkDev, sizeof(mat4)) ||
+				!createColorAndDepthFramebuffers(vkDev, renderPass_, VK_NULL_HANDLE, swapchainFramebuffers_) ||
+				!createDescriptorPool(vkDev, 1, 4, 0, &descriptorPool_) ||
+				!createDescriptorSet(vkDev) ||
+				!createPipelineLayout(vkDev.device, descriptorSetLayout_, &pipelineLayout_) ||
+				!createGraphicsPipeline(vkDev, renderPass_, pipelineLayout_, { vertShaderFile, fragShaderFile }, &graphicsPipeline_))
+			{
+				printf("Failed to create pipeline\n"); fflush(stdout);
+				exit(EXIT_FAILURE);
+			}
+		}
+
+	一步步分析，构造器做了什么：
+	1. createColorAndDepthRenderPass，构造renderPass；
+	2. createDepthResources，创建深度缓冲；
+	3. loadDrawData(drawDataFile)，加载 drawData 文件到 shapes 变量：
+
+			void MultiMeshRenderer::loadDrawData(const char* drawDataFile)
+			{
+				FILE* f = fopen(drawDataFile, "rb");
+
+				if (!f) {
+					printf("Unable to open draw data file. Run MeshConvert first\n");
+					exit(255);
+				}
+
+				fseek(f, 0, SEEK_END);
+				size_t fsize = ftell(f);
+				fseek(f, 0, SEEK_SET);
+				maxShapes_ = static_cast<uint32_t>(fsize / sizeof(DrawData));
+
+				printf("Reading draw data items: %d\n", (int)maxShapes_); fflush(stdout);
+
+				shapes.resize(maxShapes_);
+
+				if (fread(shapes.data(), sizeof(DrawData), maxShapes_, f) != maxShapes_) {
+					printf("Unable to read draw data\n");
+					exit(255);
+				}
+
+				fclose(f);
+			}
+	4. MeshFileHeader header = loadMeshData(meshFile, meshData_)，加载 mesh 文件到 meshData_ 变量；
+
+			MeshFileHeader loadMeshData(const char* meshFile, MeshData& out)
+			{
+				MeshFileHeader header;
+
+				FILE* f = fopen(meshFile, "rb");
+
+				assert(f); // Did you forget to run "Ch5_Tool05_MeshConvert"?
+
+				if (!f)
+				{
+					printf("Cannot open %s. Did you forget to run \"Ch5_Tool05_MeshConvert\"?\n", meshFile);
+					exit(EXIT_FAILURE);
+				}
+
+				if (fread(&header, 1, sizeof(header), f) != sizeof(header))
+				{
+					printf("Unable to read mesh file header\n");
+					exit(EXIT_FAILURE);
+				}
+
+				out.meshes_.resize(header.meshCount);
+				if (fread(out.meshes_.data(), sizeof(Mesh), header.meshCount, f) != header.meshCount)
+				{
+					printf("Could not read mesh descriptors\n");
+					exit(EXIT_FAILURE);
+				}
+				out.boxes_.resize(header.meshCount);
+				if (fread(out.boxes_.data(), sizeof(BoundingBox), header.meshCount, f) != header.meshCount)
+				{
+					printf("Could not read bounding boxes\n");
+					exit(255);
+				}
+
+				out.indexData_.resize(header.indexDataSize / sizeof(uint32_t));
+				out.vertexData_.resize(header.vertexDataSize / sizeof(float));
+
+				if ((fread(out.indexData_.data(), 1, header.indexDataSize, f) != header.indexDataSize) ||
+					(fread(out.vertexData_.data(), 1, header.vertexDataSize, f) != header.vertexDataSize))
+				{
+					printf("Unable to read index/vertex data\n");
+					exit(255);
+				}
+
+				fclose(f);
+
+				return header;
+			}
+	5. 创建 storageBuffer，存储顶点和索引数据，注意这里要对使用的内存进行对齐，下面解释一下为什么要对齐，以及如何对齐：
+		1. 为什么要对齐，简而言之，是为了让 CPU/GPU 的读取更有效率，参考[C/C++内存对齐详解](http://www.codebaoku.com/tech/tech-memory-align.html);
+		2. 如何进行对齐，首先我们要想对齐在数学上的本质是什么？其实就是模运算，比如以 4 字节对齐，那么
+				
+				1 -> 4
+				2 -> 4
+				3 -> 4
+				4 -> 4
+				5 -> 8
+				6 -> 8
+				7 -> 8
+				8 -> 8
+			对齐，其实就是把模运算里面空缺的部分补齐，我们再来看下具体代码：
+
+				const uint32_t offsetAlignment = static_cast<uint32_t>(devProps.limits.minStorageBufferOffsetAlignment);
+				if ((maxVertexBufferSize_ & (offsetAlignment - 1)) != 0)
+				{
+					int floats = (offsetAlignment - (maxVertexBufferSize_ & (offsetAlignment - 1))) / sizeof(float);
+					for (int ii = 0; ii < floats; ii++)
+						meshData_.vertexData_.push_back(0);
+					maxVertexBufferSize_ = (maxVertexBufferSize_ + offsetAlignment) & ~(offsetAlignment - 1);
+				}
+			`maxVertexBufferSize_ & (offsetAlignment - 1)`，本质上等于以下模运算：`maxVertexBufferSize_ % offsetAlignment`，也就是获取按照 offsetAlignment 求模后的余数，
+			对于`(maxVertexBufferSize_ + offsetAlignment) & ~(offsetAlignment - 1)`，其实是先把当前的数字扩大一个 offsetAlignment 的大小，然后再把求模后多余的部分截断，这里的原理可以参考这篇文章：[C++内存对齐-位运算公式](https://blog.csdn.net/weixin_50523841/article/details/121871878);
+	6. 创建并更新 drawData、count 和 indirect Buffer；
+	7. 其余方法和一般 renderer 类似；  
+	
+	注意，这里为了使用方便，把 mesh、drawData、count、indirect 为了方便，把 buffer 声明成 HOST 可见的，其实对于 CPU 之后不会再读写更改的数据，可以通过 stagingBuffer 直接复制到 GPU 中，可以提升性能，其中和 compute shader 结合后，尤其可以在 GPU 端自己完成 Cull 和 LOD 的计算等，可以减轻 CPU 端的性能负担；
