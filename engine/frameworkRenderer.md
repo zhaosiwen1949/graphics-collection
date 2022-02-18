@@ -1,4 +1,4 @@
-# 引擎架构之 FrameworkRenderer 封装
+ # 引擎架构之 FrameworkRenderer 封装
 
 VulkanApp（[引擎架构之应用封装](engine/application.md)）主要封装了在 Vulkan 绘制中，每次绘制都一定会使用的部分，主要包括 FrameBuffer、SwapChain 及其 Image 对象、Device 和 Graphic\Compute Queue、Command Pool 和 Command Buffer，以及创建 Vulkan 资源的通用方法 VulkanResource（该对象介绍参见 [引擎架构之资源管理](engine/resource.md)），并且把 Vulkan 从准备上下文资源，一直到提交到呈现队列的过程都封装好了，甚至提供好了 Command 录制的上下文环境，留给 Renderer 处理的就剩 DescriptorSet、Pipeline、RenderPass 以及 DrawCall 的提交。
 
