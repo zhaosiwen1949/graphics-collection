@@ -174,6 +174,71 @@
             
         </li>
     
+        <li class="chapter " data-level="1.3.2" data-path="../engine/sceneData.html">
+            
+                <a href="../engine/sceneData.html">
+            
+                    
+                    引擎架构之场景数据
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.3" data-path="../engine/application.html">
+            
+                <a href="../engine/application.html">
+            
+                    
+                    引擎架构之应用封装
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.4" data-path="../engine/resource.html">
+            
+                <a href="../engine/resource.html">
+            
+                    
+                    引擎架构之资源管理
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.5" data-path="../engine/frameworkRenderer.html">
+            
+                <a href="../engine/frameworkRenderer.html">
+            
+                    
+                    引擎架构之 FrameworkRenderer 封装
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.6" data-path="../engine/postprocessorRenderer.html">
+            
+                <a href="../engine/postprocessorRenderer.html">
+            
+                    
+                    引擎架构之 后处理 Renderer 封装
+            
+                </a>
+            
+
+            
+        </li>
+    
 
             </ul>
             
@@ -225,6 +290,32 @@
             
                     
                     四元数
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3" data-path="FPS.html">
+            
+                <a href="FPS.html">
+            
+                    
+                    FPS
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.4" data-path="grid.html">
+            
+                <a href="grid.html">
+            
+                    
+                    二维细分网格
             
                 </a>
             
@@ -510,6 +601,107 @@ private:
 
      cameraPosition_ += moveSpeed_ * static_cast&lt;float&gt;(deltaSeconds);
  }
+</code></pre><p> update &#x65B9;&#x6CD5;&#x6BCF;&#x4E00;&#x5E27;&#x90FD;&#x4F1A;&#x88AB;&#x8C03;&#x7528;&#xFF0C;&#x4F20;&#x5165;&#x5E27;&#x4E0E;&#x5E27;&#x4E4B;&#x95F4;&#x95F4;&#x9694;&#x7684;&#x65F6;&#x95F4;&#x3001;&#x5F53;&#x524D;&#x9F20;&#x6807;&#x7684;&#x4F4D;&#x7F6E;&#xFF0C;&#x4EE5;&#x53CA;&#x9F20;&#x6807;&#x662F;&#x5426;&#x88AB;&#x6309;&#x4E0B;&#xFF1A;</p>
+<ol>
+<li><p>&#x5F53;&#x9F20;&#x6807;&#x88AB;&#x6309;&#x4E0B;&#x65F6;&#xFF0C;&#x4F1A;&#x6839;&#x636E;&#x5F53;&#x524D;&#x4F20;&#x5165;&#x7684;&#x9F20;&#x6807;&#x4F4D;&#x7F6E;&#xFF0C;&#x4E0E;&#x4E0A;&#x4E00;&#x5E27;&#x4E4B;&#x95F4;&#x7684;&#x63D2;&#x503C;&#xFF0C;&#x6784;&#x9020;&#x65CB;&#x8F6C;&#x7528;&#x7684;&#x56DB;&#x5143;&#x6570;&#xFF0C;&#x8FD9;&#x91CC;&#x6709;&#x4E09;&#x70B9;&#x9700;&#x8981;&#x6CE8;&#x610F;&#xFF1A;</p>
+<ol>
+<li>&#x56DB;&#x5143;&#x6570;&#x7684;&#x6784;&#x9020;&#x51FD;&#x6570; glm::quat(angle.x, angle.y, angle.z)&#xFF0C;&#x8FD9;&#x91CC;&#x9700;&#x8981;&#x5206;&#x522B;&#x4F20;&#x5165;&#x7ED5; x &#x8F74;&#x65CB;&#x8F6C;&#x7684;&#x89D2;&#x5EA6;&#x3001;&#x7ED5; y &#x8F74;&#x65CB;&#x8F6C;&#x7684;&#x89D2;&#x5EA6;&#x548C;&#x7ED5; z &#x8F74;&#x65CB;&#x8F6C;&#x7684;&#x89D2;&#x5EA6;&#xFF0C;&#x6CE8;&#x610F;&#x8FD9;&#x91CC;&#x9700;&#x8981;&#x4F20;&#x5165; radiance &#xFF0C;&#x4E5F;&#x5C31;&#x662F;&#x5F27;&#x5EA6;&#x503C;&#xFF0C;&#x53E6;&#x5916;&#x9700;&#x8981;&#x5F15;&#x7528;&#x6B27;&#x62C9;&#x89D2;&#x7684;&#x5934;&#x6587;&#x4EF6; <code>#include &quot;glm/gtx/euler_angles.hpp&quot;</code>&#xFF1B;</li>
+<li><p>&#x56DB;&#x5143;&#x6570;&#x4E58;&#x4EE5;&#x4E00;&#x4E2A;&#x4E09;&#x7EF4;&#x5411;&#x91CF;&#xFF0C;&#x76F4;&#x63A5;&#x5C31;&#x662F;&#x5F97;&#x5230;&#x8BE5;&#x4E09;&#x7EF4;&#x5411;&#x91CF;&#x65CB;&#x8F6C;&#x540E;&#x7684;&#x7ED3;&#x679C;&#xFF0C;&#x8FD9;&#x91CC;&#x7684;&#x4E58;&#x6CD5;&#x8FD0;&#x7B97;&#x88AB;&#x91CD;&#x8F7D;&#x4E86;&#xFF1B;</p>
+<pre><code> //rotate vector
+ vec3 qrot(vec4 q, vec3 v)
+ {
+     return v + 2.0*cross(q.xyz, cross(q.xyz,v) + q.w*v);
+ }
+ //rotate vector (alternative)
+ vec3 qrot_2(vec4 q, vec3 v)
+ {
+     return v*(q.w*q.w - dot(q.xyz,q.xyz)) + 2.0*q.xyz*dot(q.xyz,v) +    
+           2.0*q.w*cross(q.xyz,v);
+ }
+</code></pre></li>
+<li><p>&#x56DB;&#x5143;&#x6570;&#x4E58;&#x4EE5;&#x4E00;&#x4E2A;&#x56DB;&#x5143;&#x6570;&#xFF0C;&#x5F97;&#x5230;&#x7684;&#x662F;&#x4E24;&#x4E2A;&#x56DB;&#x5143;&#x6570;&#x65CB;&#x8F6C;&#x5408;&#x5E76;&#x540E;&#x7684;&#x56DB;&#x5143;&#x6570;&#xFF1B;</p>
+</li>
+</ol>
+</li>
+<li>&#x8C03;&#x7528; setUpVector&#xFF0C;&#x4FDD;&#x8BC1;&#x6444;&#x50CF;&#x673A;&#x4E0D;&#x4F1A;&#x51FA;&#x73B0;&#x4E0A;&#x4E0B;&#x7FFB;&#x8F6C;&#x7684;&#x60C5;&#x51B5;&#xFF1B;</li>
+<li>&#x66F4;&#x65B0;&#x9F20;&#x6807;&#x4F4D;&#x7F6E;&#xFF1B;</li>
+<li>&#x901A;&#x8FC7; glm::mat4_cast &#x83B7;&#x53D6;&#x65CB;&#x8F6C;&#x77E9;&#x9635;&#xFF0C;&#x6839;&#x636E;&#x65CB;&#x8F6C;&#x77E9;&#x9635;&#xFF0C;&#x89E3;&#x6790;&#x51FA; forword&#x3001;up&#x3001;right &#x65B9;&#x5411;&#xFF1B;</li>
+<li>&#x4E0B;&#x9762;&#x4E00;&#x6BB5;&#x662F;&#x6A21;&#x62DF;&#x52A0;&#x51CF;&#x901F;&#x7684;&#x8FC7;&#x7A0B;&#xFF0C;&#x4E0D;&#x518D;&#x8D58;&#x8FF0;&#xFF1B;</li>
+</ol>
+</li>
+</ol>
+<p>&#x7EFC;&#x4E0A;&#xFF0C;&#x4E00;&#x4E2A;&#x57FA;&#x672C;&#x7684; Camera &#x7C7B;&#x5C31;&#x914D;&#x7F6E;&#x5B8C;&#x6210;&#x4E86;&#xFF0C;&#x4E0B;&#x9762;&#x6211;&#x4EEC;&#x770B;&#x4E00;&#x4E0B;&#x5E94;&#x8BE5;&#x600E;&#x4E48;&#x4F7F;&#x7528;&#xFF1A;</p>
+<ol>
+<li><p>&#x9996;&#x5148;&#xFF0C;&#x58F0;&#x660E; Camera &#x4E0E;&#x5177;&#x4F53;&#x5B9E;&#x73B0;&#x7C7B;&#xFF0C;&#x5E76;&#x4E14;&#x4FDD;&#x5B58;&#x5F53;&#x524D;&#x7684;&#x9F20;&#x6807;&#x72B6;&#x6001;&#xFF1B;</p>
+<pre><code> CameraPositioner_FirstPerson positioner( vec3(0.0f), vec3(0.0f, 0.0f, -1.0f), vec3(0.0f, 1.0f, 0.0f));    
+ //positioner.setPosition(vec3(0.0f, 0.0f, 0.0f));  
+ Camera camera(positioner);  
+
+ struct MouseState  
+ {  
+     glm::vec2 pos = glm::vec2(0.0f);  
+     bool pressedLeft = false;  
+ } mouseState;
+</code></pre></li>
+<li><p>&#x8BBE;&#x7F6E;&#x76D1;&#x542C;&#x7A97;&#x53E3;&#x9F20;&#x6807;&#x4E8B;&#x4EF6;&#x7684;&#x56DE;&#x8C03;&#x51FD;&#x6570;&#xFF0C;&#x66F4;&#x65B0;&#x9F20;&#x6807;&#x72B6;&#x6001;</p>
+<pre><code> glfwSetCursorPosCallback(
+     window,
+     [](auto* window, double x, double y)
+     {
+         int width, height;
+         glfwGetFramebufferSize(window, &amp;width, &amp;height);
+         mouseState.pos.x = static_cast&lt;float&gt;(x / width);
+         mouseState.pos.y = static_cast&lt;float&gt;(y / height);
+     }
+ );
+
+ glfwSetMouseButtonCallback(
+     window,
+     [](auto* window, int button, int action, int mods)
+     {
+         if (button == GLFW_MOUSE_BUTTON_LEFT)
+             mouseState.pressedLeft = action == GLFW_PRESS;
+     }
+ );
+</code></pre></li>
+<li><p>&#x8BBE;&#x7F6E;&#x76D1;&#x542C;&#x6309;&#x952E;&#x7684;&#x56DE;&#x8C03;&#x51FD;&#x6570;&#xFF0C;&#x66F4;&#x65B0;&#x6444;&#x50CF;&#x673A;&#x7684;&#x524D;&#x8FDB;&#x65B9;&#x5411;</p>
+<pre><code> glfwSetKeyCallback(
+     window,
+     [](GLFWwindow* window, int key, int scancode, int action, int mods)
+     {
+         const bool pressed = action != GLFW_RELEASE;
+         if (key == GLFW_KEY_ESCAPE &amp;&amp; pressed)
+             glfwSetWindowShouldClose(window, GLFW_TRUE);
+         if (key == GLFW_KEY_W)
+             positioner.movement_.forward_ = pressed;
+         if (key == GLFW_KEY_S)
+             positioner.movement_.backward_ = pressed;
+         if (key == GLFW_KEY_A)
+             positioner.movement_.left_ = pressed;
+         if (key == GLFW_KEY_D)
+             positioner.movement_.right_ = pressed;
+         if (key == GLFW_KEY_1)
+             positioner.movement_.up_ = pressed;
+         if (key == GLFW_KEY_2)
+             positioner.movement_.down_ = pressed;
+         if (mods &amp; GLFW_MOD_SHIFT)
+             positioner.movement_.fastSpeed_ = pressed;
+         if (key == GLFW_KEY_SPACE)
+             positioner.setUpVector(vec3(0.0f, 1.0f, 0.0f));
+     }
+ );
+</code></pre></li>
+<li><p>&#x5728;&#x6E32;&#x67D3;&#x5FAA;&#x73AF;&#x7684;&#x5F00;&#x59CB;&#xFF0C;&#x66F4;&#x65B0;&#x6444;&#x50CF;&#x673A;&#x7684;&#x72B6;&#x6001;</p>
+<pre><code> while (!glfwWindowShouldClose(window))
+ {
+     positioner.update(deltaSeconds, mouseState.pos, mouseState.pressedLeft);
+</code></pre></li>
+<li><p>&#x83B7;&#x53D6;&#x66F4;&#x65B0;&#x540E;&#x7684;&#x89C6;&#x56FE;&#x77E9;&#x9635;&#xFF0C;&#x5E76;&#x66F4;&#x65B0; Uniform &#x53D8;&#x91CF;</p>
+<pre><code> const mat4 p = glm::perspective(45.0f, ratio, 0.1f, 1000.0f);
+ const mat4 view = camera.getViewMatrix();
+
+ const PerFrameData perFrameData = { .view = view, .proj = p, .cameraPos = glm::vec4(camera.getPosition(), 1.0f) };
+ glNamedBufferSubData(perFrameDataBuffer, 0, kUniformBufferSize, &amp;perFrameData);
 </code></pre></li>
 </ol>
 
@@ -555,7 +747,7 @@ private:
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"摄像机基础","level":"1.5.1","depth":2,"next":{"title":"四元数","level":"1.5.2","depth":2,"path":"rendering/quaternion.md","ref":"rendering/quaternion.md","articles":[]},"previous":{"title":"渲染技术","level":"1.5","depth":1,"path":"rendering/README.md","ref":"rendering/README.md","articles":[{"title":"摄像机基础","level":"1.5.1","depth":2,"path":"rendering/camera.md","ref":"rendering/camera.md","articles":[]},{"title":"四元数","level":"1.5.2","depth":2,"path":"rendering/quaternion.md","ref":"rendering/quaternion.md","articles":[]}]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"rendering/camera.md","mtime":"2021-12-16T10:43:55.766Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2021-12-20T14:06:20.248Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"摄像机基础","level":"1.5.1","depth":2,"next":{"title":"四元数","level":"1.5.2","depth":2,"path":"rendering/quaternion.md","ref":"rendering/quaternion.md","articles":[]},"previous":{"title":"渲染技术","level":"1.5","depth":1,"path":"rendering/README.md","ref":"rendering/README.md","articles":[{"title":"摄像机基础","level":"1.5.1","depth":2,"path":"rendering/camera.md","ref":"rendering/camera.md","articles":[]},{"title":"四元数","level":"1.5.2","depth":2,"path":"rendering/quaternion.md","ref":"rendering/quaternion.md","articles":[]},{"title":"FPS","level":"1.5.3","depth":2,"path":"rendering/FPS.md","ref":"rendering/FPS.md","articles":[]},{"title":"二维细分网格","level":"1.5.4","depth":2,"path":"rendering/grid.md","ref":"rendering/grid.md","articles":[]}]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"rendering/camera.md","mtime":"2021-12-21T09:31:10.131Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2022-02-23T12:30:00.796Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

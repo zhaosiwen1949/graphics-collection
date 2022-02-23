@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <title>引擎架构 · GitBook</title>
+        <title>FPS · GitBook</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
         <meta name="generator" content="GitBook 3.2.3">
@@ -57,10 +57,10 @@
     <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
 
     
-    <link rel="next" href="vulkanRenderer.html" />
+    <link rel="next" href="grid.html" />
     
     
-    <link rel="prev" href="../graphicsAPI/vulkanAPI.html" />
+    <link rel="prev" href="quaternion.html" />
     
 
     </head>
@@ -147,9 +147,9 @@
             
         </li>
     
-        <li class="chapter active" data-level="1.3" data-path="./">
+        <li class="chapter " data-level="1.3" data-path="../engine/">
             
-                <a href="./">
+                <a href="../engine/">
             
                     
                     引擎架构
@@ -161,9 +161,9 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.3.1" data-path="vulkanRenderer.html">
+        <li class="chapter " data-level="1.3.1" data-path="../engine/vulkanRenderer.html">
             
-                <a href="vulkanRenderer.html">
+                <a href="../engine/vulkanRenderer.html">
             
                     
                     引擎架构之 Vulkan Renderer 封装
@@ -174,9 +174,9 @@
             
         </li>
     
-        <li class="chapter " data-level="1.3.2" data-path="sceneData.html">
+        <li class="chapter " data-level="1.3.2" data-path="../engine/sceneData.html">
             
-                <a href="sceneData.html">
+                <a href="../engine/sceneData.html">
             
                     
                     引擎架构之场景数据
@@ -187,9 +187,9 @@
             
         </li>
     
-        <li class="chapter " data-level="1.3.3" data-path="application.html">
+        <li class="chapter " data-level="1.3.3" data-path="../engine/application.html">
             
-                <a href="application.html">
+                <a href="../engine/application.html">
             
                     
                     引擎架构之应用封装
@@ -200,9 +200,9 @@
             
         </li>
     
-        <li class="chapter " data-level="1.3.4" data-path="resource.html">
+        <li class="chapter " data-level="1.3.4" data-path="../engine/resource.html">
             
-                <a href="resource.html">
+                <a href="../engine/resource.html">
             
                     
                     引擎架构之资源管理
@@ -213,9 +213,9 @@
             
         </li>
     
-        <li class="chapter " data-level="1.3.5" data-path="frameworkRenderer.html">
+        <li class="chapter " data-level="1.3.5" data-path="../engine/frameworkRenderer.html">
             
-                <a href="frameworkRenderer.html">
+                <a href="../engine/frameworkRenderer.html">
             
                     
                     引擎架构之 FrameworkRenderer 封装
@@ -226,9 +226,9 @@
             
         </li>
     
-        <li class="chapter " data-level="1.3.6" data-path="postprocessorRenderer.html">
+        <li class="chapter " data-level="1.3.6" data-path="../engine/postprocessorRenderer.html">
             
-                <a href="postprocessorRenderer.html">
+                <a href="../engine/postprocessorRenderer.html">
             
                     
                     引擎架构之 后处理 Renderer 封装
@@ -257,9 +257,9 @@
             
         </li>
     
-        <li class="chapter " data-level="1.5" data-path="../rendering/">
+        <li class="chapter " data-level="1.5" data-path="./">
             
-                <a href="../rendering/">
+                <a href="./">
             
                     
                     渲染技术
@@ -271,9 +271,9 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.5.1" data-path="../rendering/camera.html">
+        <li class="chapter " data-level="1.5.1" data-path="camera.html">
             
-                <a href="../rendering/camera.html">
+                <a href="camera.html">
             
                     
                     摄像机基础
@@ -284,9 +284,9 @@
             
         </li>
     
-        <li class="chapter " data-level="1.5.2" data-path="../rendering/quaternion.html">
+        <li class="chapter " data-level="1.5.2" data-path="quaternion.html">
             
-                <a href="../rendering/quaternion.html">
+                <a href="quaternion.html">
             
                     
                     四元数
@@ -297,9 +297,9 @@
             
         </li>
     
-        <li class="chapter " data-level="1.5.3" data-path="../rendering/FPS.html">
+        <li class="chapter active" data-level="1.5.3" data-path="FPS.html">
             
-                <a href="../rendering/FPS.html">
+                <a href="FPS.html">
             
                     
                     FPS
@@ -310,9 +310,9 @@
             
         </li>
     
-        <li class="chapter " data-level="1.5.4" data-path="../rendering/grid.html">
+        <li class="chapter " data-level="1.5.4" data-path="grid.html">
             
-                <a href="../rendering/grid.html">
+                <a href="grid.html">
             
                     
                     二维细分网格
@@ -371,7 +371,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href=".." >引擎架构</a>
+        <a href=".." >FPS</a>
     </h1>
 </div>
 
@@ -386,16 +386,79 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 id="&#x5F15;&#x64CE;&#x67B6;&#x6784;">&#x5F15;&#x64CE;&#x67B6;&#x6784;</h1>
-<ul>
-<li>&#x6218;&#x706B;&#x5F15;&#x64CE;</li>
-<li>3D Graphics Rendering Cookbook</li>
-<li>Filament (<a href="https://github.com/google/filament" target="_blank">https://github.com/google/filament</a>)</li>
-<li>Horde3D (<a href="https://github.com/horde3d/Horde3D" target="_blank">https://github.com/horde3d/Horde3D</a>)</li>
-<li>Urho3D (<a href="https://github.com/urho3d/Urho3D" target="_blank">https://github.com/urho3d/Urho3D</a>)</li>
-<li>OpenSceneGraph (<a href="https://github.com/openscenegraph/OpenSceneGraph" target="_blank">https://github.com/openscenegraph/OpenSceneGraph</a>)</li>
-<li>VulkanSceneGraph (<a href="https://github.com/vsg-dev/VulkanSceneGraph" target="_blank">https://github.com/vsg-dev/VulkanSceneGraph</a>)</li>
-</ul>
+                                <h1 id="fps">FPS</h1>
+<p>&#x672C;&#x8282;&#x4EF6;&#x6570;&#x5982;&#x4F55;&#x6784;&#x9020;&#x4E00;&#x4E2A;&#x8BA1;&#x7B97; FPS &#x7684;&#x7C7B;</p>
+<h2 id="&#x7C7B;&#x58F0;&#x660E;">&#x7C7B;&#x58F0;&#x660E;</h2>
+<pre><code>    class FramesPerSecondCounter
+    {
+    public:
+        explicit FramesPerSecondCounter(float avgInterval = 0.5f)
+        :avgInterval_(avgInterval)
+        {
+            assert(avgInterval &gt; 0.0f);
+        }
+
+        bool tick(float deltaSeconds, bool frameRendered = true)
+        {
+            if (frameRendered)
+                numFrames_++;
+
+            accumulatedTime_ += deltaSeconds;
+
+            if (accumulatedTime_ &gt; avgInterval_)
+            {
+                currentFPS_ = static_cast&lt;float&gt;(numFrames_ / accumulatedTime_);
+                if (printFPS_)
+                    printf(&quot;FPS: %.1f\n&quot;, currentFPS_);
+                numFrames_ = 0;
+                accumulatedTime_ = 0;
+                return true;
+            }
+
+            return false;
+        }
+
+        inline float getFPS() const { return currentFPS_; }
+
+        bool printFPS_ = true;
+
+    private:
+        const float avgInterval_ = 0.5f;
+        unsigned int numFrames_ = 0;
+        double accumulatedTime_ = 0;
+        float currentFPS_ = 0.0f;
+    };
+
+&#x8FD9;&#x91CC;&#x4E3B;&#x8981;&#x8BF4;&#x660E;&#x4E0B;&#x51E0;&#x4E2A;&#x79C1;&#x6709;&#x5C5E;&#x6027;&#x7684;&#x610F;&#x4E49;&#xFF1A;
+1. avgInterval_&#xFF0C;&#x7EDF;&#x8BA1;&#x65F6;&#x95F4;&#x7A97;&#x53E3;&#xFF0C;&#x9ED8;&#x8BA4; 0.5s &#x7EDF;&#x8BA1;&#x4E00;&#x6B21;&#xFF1B;
+2. numFrames_&#xFF0C;&#x7EDF;&#x8BA1;&#x7A97;&#x53E3;&#x5185;&#xFF0C;&#x5F53;&#x524D;&#x7ED8;&#x5236;&#x4E86;&#x591A;&#x5C11;&#x5E27;&#xFF1B;
+3. accumulatedTime_&#xFF0C;&#x7EDF;&#x8BA1;&#x7A97;&#x53E3;&#x5185;&#xFF0C;&#x5F53;&#x524D;&#x5DF2;&#x7ECF;&#x8FC7;&#x4E86;&#x591A;&#x5C11;&#x65F6;&#x95F4;&#xFF1B;
+4. currentFPS_&#xFF0C;&#x8BA1;&#x7B97;&#x51FA;&#x6765;&#x7684; FPS &#x662F;&#x591A;&#x5C11;&#xFF1B;
+
+&#x5BF9;&#x4E8E; tick &#x65B9;&#x6CD5;&#xFF0C;&#x4E3B;&#x8981;&#x662F;&#xFF1A;
+1. &#x7D2F;&#x52A0; numFrames_ &#x7A97;&#x53E3;&#x5185;&#x7684;&#x6E32;&#x67D3;&#x5E27;&#x6570;&#xFF1B;
+2. &#x7D2F;&#x52A0; accumulatedTime_ &#x7A97;&#x53E3;&#x6E32;&#x67D3;&#x7684;&#x65F6;&#x95F4;&#xFF1B;
+3. &#x5982;&#x679C; accumulatedTime_ &#x8D85;&#x8FC7;&#x4E86;&#x7A97;&#x53E3;&#x7684;&#x5927;&#x5C0F;&#xFF0C;&#x5219;&#x8BA1;&#x7B97; FPS&#xFF0C;&#x5E76;&#x66F4;&#x65B0; currentFPS_&#xFF0C;&#x540C;&#x65F6;&#x91CD;&#x7F6E; numFrames_&#x3001;accumulatedTime_&#xFF0C;&#x8FDB;&#x5165;&#x4E0B;&#x4E00;&#x6B21;&#x8BA1;&#x7B97;&#x5468;&#x671F;&#xFF1B;
+</code></pre><h2 id="&#x5982;&#x4F55;&#x4F7F;&#x7528;">&#x5982;&#x4F55;&#x4F7F;&#x7528;</h2>
+<ol>
+<li><p>&#x58F0;&#x660E;&#x597D;&#x5F53;&#x524D;&#x65F6;&#x95F4;&#x3001;&#x65F6;&#x95F4;&#x95F4;&#x9694;&#x548C; FPS &#x7C7B;</p>
+<pre><code> double timeStamp = glfwGetTime();
+ float deltaSeconds = 0.0f;
+
+ FramesPerSecondCounter fpsCounter(0.5f);
+</code></pre></li>
+<li><p>&#x5728;&#x4E3B;&#x5FAA;&#x73AF;&#x4E2D;&#xFF0C;&#x66F4;&#x65B0;&#x65F6;&#x95F4;&#x95F4;&#x9694;&#xFF0C;&#x5E76;&#x8C03;&#x7528; tick &#x65B9;&#x6CD5;</p>
+<pre><code> while (!glfwWindowShouldClose(window))
+ {
+     fpsCounter.tick(deltaSeconds);
+
+     positioner.update(deltaSeconds, mouseState.pos, mouseState.pressedLeft);
+
+     const double newTimeStamp = glfwGetTime();
+     deltaSeconds = static_cast&lt;float&gt;(newTimeStamp - timeStamp);
+     timeStamp = newTimeStamp;
+</code></pre></li>
+</ol>
 
                                 
                                 </section>
@@ -423,12 +486,12 @@
 
             
                 
-                <a href="../graphicsAPI/vulkanAPI.html" class="navigation navigation-prev " aria-label="Previous page: Vulkan API 梳理">
+                <a href="quaternion.html" class="navigation navigation-prev " aria-label="Previous page: 四元数">
                     <i class="fa fa-angle-left"></i>
                 </a>
                 
                 
-                <a href="vulkanRenderer.html" class="navigation navigation-next " aria-label="Next page: 引擎架构之 Vulkan Renderer 封装">
+                <a href="grid.html" class="navigation navigation-next " aria-label="Next page: 二维细分网格">
                     <i class="fa fa-angle-right"></i>
                 </a>
                 
@@ -439,7 +502,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"引擎架构","level":"1.3","depth":1,"next":{"title":"引擎架构之 Vulkan Renderer 封装","level":"1.3.1","depth":2,"path":"engine/vulkanRenderer.md","ref":"engine/vulkanRenderer.md","articles":[]},"previous":{"title":"Vulkan API 梳理","level":"1.2.2","depth":2,"path":"graphicsAPI/vulkanAPI.md","ref":"graphicsAPI/vulkanAPI.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"engine/README.md","mtime":"2021-11-20T03:30:48.160Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2022-02-23T12:30:00.796Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"FPS","level":"1.5.3","depth":2,"next":{"title":"二维细分网格","level":"1.5.4","depth":2,"path":"rendering/grid.md","ref":"rendering/grid.md","articles":[]},"previous":{"title":"四元数","level":"1.5.2","depth":2,"path":"rendering/quaternion.md","ref":"rendering/quaternion.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"rendering/FPS.md","mtime":"2021-12-21T09:57:51.079Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2022-02-23T12:30:00.796Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

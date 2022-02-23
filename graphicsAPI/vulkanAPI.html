@@ -174,6 +174,71 @@
             
         </li>
     
+        <li class="chapter " data-level="1.3.2" data-path="../engine/sceneData.html">
+            
+                <a href="../engine/sceneData.html">
+            
+                    
+                    引擎架构之场景数据
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.3" data-path="../engine/application.html">
+            
+                <a href="../engine/application.html">
+            
+                    
+                    引擎架构之应用封装
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.4" data-path="../engine/resource.html">
+            
+                <a href="../engine/resource.html">
+            
+                    
+                    引擎架构之资源管理
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.5" data-path="../engine/frameworkRenderer.html">
+            
+                <a href="../engine/frameworkRenderer.html">
+            
+                    
+                    引擎架构之 FrameworkRenderer 封装
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.6" data-path="../engine/postprocessorRenderer.html">
+            
+                <a href="../engine/postprocessorRenderer.html">
+            
+                    
+                    引擎架构之 后处理 Renderer 封装
+            
+                </a>
+            
+
+            
+        </li>
+    
 
             </ul>
             
@@ -225,6 +290,32 @@
             
                     
                     四元数
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3" data-path="../rendering/FPS.html">
+            
+                <a href="../rendering/FPS.html">
+            
+                    
+                    FPS
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.4" data-path="../rendering/grid.html">
+            
+                <a href="../rendering/grid.html">
+            
+                    
+                    二维细分网格
             
                 </a>
             
@@ -323,7 +414,8 @@
 <li>&#x521B;&#x5EFA; Uniform &#x7F13;&#x5B58; createUniformBuffers&#xFF1B;</li>
 <li>&#x521B;&#x5EFA;&#x63CF;&#x8FF0;&#x7B26;&#x5206;&#x914D;&#x6C60; DescriptorPool&#xFF0C;&#x5176;&#x4E2D;&#x4E3B;&#x8981;&#x5206;&#x914D; DescriptorSet &#x7684;&#x6570;&#x91CF;&#xFF0C;&#x4EE5;&#x53CA; Uniform Buffer&#x3001;Storage Buffer &#x548C; Image Sampler &#x7684;&#x6570;&#x91CF;&#xFF0C;&#x6CE8;&#x610F;&#x8FD9;&#x91CC;&#x6BCF;&#x4E00;&#x4E2A; swapChain &#x4E0A;&#x7684; framebuffer &#x90FD;&#x90FD;&#x4E00;&#x4E2A;&#x5355;&#x72EC;&#x7684;DescriptorSet&#xFF0C;&#x5E76;&#x4E14;&#x4F1A;&#x5F71;&#x54CD;&#x5176;&#x4ED6;&#x8D44;&#x6E90;&#x4E58;&#x4EE5;&#x5BF9;&#x5E94;&#x7684;&#x6570;&#x91CF;&#xFF1B;</li>
 <li>&#x521B;&#x5EFA; DescriptorSetLayout&#xFF0C;&#x63CF;&#x8FF0;&#x8D44;&#x6E90;&#x5E03;&#x5C40;&#xFF1B;</li>
-<li>&#x6839;&#x636E; DescriptorSetLayout&#xFF0C;&#x4ECE; DescriptorPool &#x4E2D;&#xFF0C;&#x521B;&#x5EFA; DescriptorSet&#xFF0C;&#x6700;&#x540E;&#x901A;&#x8FC7; vkUpdateDescriptorSets&#xFF0C;&#x5C06;&#x771F;&#x6B63;&#x7684; buffer &#x6570;&#x636E;&#x66F4;&#x65B0;&#x5230; DescriptorSet &#x4E2D;&#xFF1B;</li>
+<li>&#x6839;&#x636E; DescriptorSetLayout&#xFF0C;&#x4ECE; DescriptorPool &#x4E2D;&#xFF0C;&#x521B;&#x5EFA; DescriptorSet&#xFF0C;&#x6700;&#x540E;&#x901A;&#x8FC7; vkUpdateDescriptorSets&#xFF0C;&#x5C06;&#x771F;&#x6B63;&#x7684; buffer &#x6570;&#x636E;&#x66F4;&#x65B0;&#x5230; DescriptorSet &#x4E2D;&#xFF1B;
+<img src="../resources/images/descriptor.png" alt="&#x63CF;&#x8FF0;&#x7B26;&#x96C6;"></li>
 <li>&#x521B;&#x5EFA; GraphicsPipeline &#x4E4B;&#x524D;&#xFF0C;&#x5148;&#x521B;&#x5EFA; PipelineLayout&#xFF0C;PipelineLayout &#x4E3B;&#x8981;&#x63CF;&#x8FF0; DescriptorSetLayout &#x548C; PushContantRange&#xFF0C;&#x7C7B;&#x4F3C;&#x63CF;&#x8FF0;&#x4E86;&#x51FD;&#x6570;&#x7684;&#x5165;&#x53C2;&#x7C7B;&#x578B;&#xFF1B;</li>
 <li>&#x521B;&#x5EFA; RenderPass&#xFF0C;RenderPass &#x4E3B;&#x8981;&#x63CF;&#x8FF0;&#x4E09;&#x90E8;&#x5206;&#x5185;&#x5BB9;&#xFF0C;&#x91CD;&#x70B9;&#x662F;&#x5982;&#x4F55;&#x8F93;&#x51FA;&#xFF0C;&#x7C7B;&#x4F3C;&#x51FD;&#x6570;&#x7684;&#x8FD4;&#x56DE;&#x503C;&#x7C7B;&#x578B;&#xFF1A;<ol>
 <li>color&#x3001;depth&#x3001;stencil attachment description&#xFF0C;&#x63CF;&#x8FF0;&#x5728; RenderPass &#x6574;&#x4E2A;&#x524D;&#x540E;&#x7684; layout &#x5206;&#x522B;&#x662F;&#x4EC0;&#x4E48;&#xFF0C;&#x6CE8;&#x610F;&#x8FD9;&#x91CC;&#x5E76;&#x672A;&#x548C;&#x5177;&#x4F53; framebuffer &#x7ED1;&#x5B9A;&#xFF1B;</li>
@@ -409,7 +501,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Vulkan API 梳理","level":"1.2.2","depth":2,"next":{"title":"引擎架构","level":"1.3","depth":1,"path":"engine/README.md","ref":"engine/README.md","articles":[{"title":"引擎架构之 Vulkan Renderer 封装","level":"1.3.1","depth":2,"path":"engine/vulkanRenderer.md","ref":"engine/vulkanRenderer.md","articles":[]}]},"previous":{"title":"OpenGL 与 Vulkan 的区别","level":"1.2.1","depth":2,"path":"graphicsAPI/difference.md","ref":"graphicsAPI/difference.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"graphicsAPI/vulkanAPI.md","mtime":"2021-12-14T10:50:09.067Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2021-12-20T14:06:20.248Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Vulkan API 梳理","level":"1.2.2","depth":2,"next":{"title":"引擎架构","level":"1.3","depth":1,"path":"engine/README.md","ref":"engine/README.md","articles":[{"title":"引擎架构之 Vulkan Renderer 封装","level":"1.3.1","depth":2,"path":"engine/vulkanRenderer.md","ref":"engine/vulkanRenderer.md","articles":[]},{"title":"引擎架构之场景数据","level":"1.3.2","depth":2,"path":"engine/sceneData.md","ref":"engine/sceneData.md","articles":[]},{"title":"引擎架构之应用封装","level":"1.3.3","depth":2,"path":"engine/application.md","ref":"engine/application.md","articles":[]},{"title":"引擎架构之资源管理","level":"1.3.4","depth":2,"path":"engine/resource.md","ref":"engine/resource.md","articles":[]},{"title":"引擎架构之 FrameworkRenderer 封装","level":"1.3.5","depth":2,"path":"engine/frameworkRenderer.md","ref":"engine/frameworkRenderer.md","articles":[]},{"title":"引擎架构之 后处理 Renderer 封装","level":"1.3.6","depth":2,"path":"engine/postprocessorRenderer.md","ref":"engine/postprocessorRenderer.md","articles":[]}]},"previous":{"title":"OpenGL 与 Vulkan 的区别","level":"1.2.1","depth":2,"path":"graphicsAPI/difference.md","ref":"graphicsAPI/difference.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"graphicsAPI/vulkanAPI.md","mtime":"2022-01-12T10:41:25.713Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2022-02-23T12:30:00.796Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

@@ -1,0 +1,1473 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>引擎架构之场景数据 · GitBook</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="application.html" />
+    
+    
+    <link rel="prev" href="vulkanRenderer.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    背景介绍
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="../graphicsAPI/">
+            
+                <a href="../graphicsAPI/">
+            
+                    
+                    图形 API
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1" data-path="../graphicsAPI/difference.html">
+            
+                <a href="../graphicsAPI/difference.html">
+            
+                    
+                    OpenGL 与 Vulkan 的区别
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2" data-path="../graphicsAPI/vulkanAPI.html">
+            
+                <a href="../graphicsAPI/vulkanAPI.html">
+            
+                    
+                    Vulkan API 梳理
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    引擎架构
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1" data-path="vulkanRenderer.html">
+            
+                <a href="vulkanRenderer.html">
+            
+                    
+                    引擎架构之 Vulkan Renderer 封装
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.3.2" data-path="sceneData.html">
+            
+                <a href="sceneData.html">
+            
+                    
+                    引擎架构之场景数据
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.3" data-path="application.html">
+            
+                <a href="application.html">
+            
+                    
+                    引擎架构之应用封装
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.4" data-path="resource.html">
+            
+                <a href="resource.html">
+            
+                    
+                    引擎架构之资源管理
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.5" data-path="frameworkRenderer.html">
+            
+                <a href="frameworkRenderer.html">
+            
+                    
+                    引擎架构之 FrameworkRenderer 封装
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.6" data-path="postprocessorRenderer.html">
+            
+                <a href="postprocessorRenderer.html">
+            
+                    
+                    引擎架构之 后处理 Renderer 封装
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="../RHI/">
+            
+                <a href="../RHI/">
+            
+                    
+                    RHI 跨平台
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" data-path="../rendering/">
+            
+                <a href="../rendering/">
+            
+                    
+                    渲染技术
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.1" data-path="../rendering/camera.html">
+            
+                <a href="../rendering/camera.html">
+            
+                    
+                    摄像机基础
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.2" data-path="../rendering/quaternion.html">
+            
+                <a href="../rendering/quaternion.html">
+            
+                    
+                    四元数
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3" data-path="../rendering/FPS.html">
+            
+                <a href="../rendering/FPS.html">
+            
+                    
+                    FPS
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.4" data-path="../rendering/grid.html">
+            
+                <a href="../rendering/grid.html">
+            
+                    
+                    二维细分网格
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" data-path="../rayTracing/">
+            
+                <a href="../rayTracing/">
+            
+                    
+                    光线追踪
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >引擎架构之场景数据</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="&#x5F15;&#x64CE;&#x67B6;&#x6784;&#x4E4B;&#x573A;&#x666F;&#x6570;&#x636E;">&#x5F15;&#x64CE;&#x67B6;&#x6784;&#x4E4B;&#x573A;&#x666F;&#x6570;&#x636E;</h1>
+<h2 id="&#x6574;&#x4F53;&#x67B6;&#x6784;">&#x6574;&#x4F53;&#x67B6;&#x6784;</h2>
+<p>&#x573A;&#x666F;&#x6570;&#x636E;&#x4E3B;&#x8981;&#x5206;&#x4E3A;&#x4E09;&#x5927;&#x90E8;&#x5206;&#xFF0C;&#x51E0;&#x4F55;&#x6570;&#x636E;&#x3001;&#x6750;&#x8D28;&#x6570;&#x636E;&#xFF0C;&#x4EE5;&#x53CA;&#x628A;&#x4E24;&#x8005;&#x8054;&#x7CFB;&#x8D77;&#x6765;&#x7684;&#x573A;&#x666F;&#x6570;&#x636E;&#xFF1A;</p>
+<ol>
+<li>&#x51E0;&#x4F55;&#x6570;&#x636E;&#xFF0C;&#x4E3B;&#x8981;&#x5B58;&#x50A8;&#x9876;&#x70B9;&#x3001;&#x9876;&#x70B9;&#x7D22;&#x5F15;&#x7B49;&#x51E0;&#x4F55;&#x4FE1;&#x606F;&#xFF0C;&#x4EE5; MeshData &#x4F5C;&#x4E3A;&#x4E3B;&#x8981;&#x7ED3;&#x6784;&#x7C7B;&#x578B;&#xFF1B;</li>
+<li>&#x6750;&#x8D28;&#x6570;&#x636E;&#xFF0C;&#x4E3B;&#x8981;&#x5B58;&#x50A8;&#x6750;&#x8D28;&#x7684;&#x63CF;&#x8FF0;&#x4FE1;&#x606F;&#xFF0C;&#x4EE5; PBR &#x6E32;&#x67D3;&#x9700;&#x8981;&#x7684;&#x5C5E;&#x6027;&#x4E3A;&#x4E3B;&#xFF0C;&#x5305;&#x62EC;&#x6570;&#x503C;&#x548C;&#x8D34;&#x56FE;&#xFF1B;</li>
+<li>&#x573A;&#x666F;&#x6570;&#x636E;&#xFF0C;&#x4E3B;&#x8981;&#x4EE5; Node &#x8282;&#x70B9;&#x4F5C;&#x4E3A;&#x6700;&#x5C0F;&#x7ED3;&#x6784;&#xFF0C;&#x8282;&#x70B9;&#x6709;&#x7236;&#x5B50;&#x5144;&#x5F1F;&#x5173;&#x7CFB;&#xFF0C;&#x8282;&#x70B9;&#x53EF;&#x4EE5;&#x5173;&#x8054;&#x51E0;&#x4F55;&#x6570;&#x636E;&#x548C;&#x6750;&#x8D28;&#x6570;&#x636E;&#xFF0C;&#x4E5F;&#x53EF;&#x4EE5;&#x4E0D;&#x5173;&#x8054;&#xFF0C;&#x8282;&#x70B9;&#x7684; transfrom &#x53D8;&#x5316;&#xFF0C;&#x4F1A;&#x5F71;&#x54CD;&#x6240;&#x6709;&#x7684;&#x5B50;&#x8282;&#x70B9;&#xFF0C;&#x5176;&#x5185;&#x6DB5;&#x662F;&#x7528;&#x4E00;&#x79CD;&#x6811;&#x5F62;&#x7236;&#x5B50;&#x5173;&#x7CFB;&#x56FE;&#x6765;&#x63CF;&#x8FF0;&#x6574;&#x4E2A;&#x573A;&#x666F;&#x4E2D;&#x7684;&#x5BF9;&#x8C61;&#xFF1B;
+&#x4E0B;&#x9762;&#x6211;&#x4EEC;&#x5148;&#x4ECE;&#x573A;&#x666F;&#x6570;&#x636E; Scene &#x5F00;&#x59CB;&#x5206;&#x6790;</li>
+</ol>
+<h2 id="&#x573A;&#x666F;&#x6570;&#x636E;-scene">&#x573A;&#x666F;&#x6570;&#x636E; Scene</h2>
+<p>&#x573A;&#x666F;&#x6570;&#x636E;&#x7684;&#x4F5C;&#x7528;&#xFF0C;&#x662F;&#x7528;&#x6765;&#x63CF;&#x8FF0;&#x51E0;&#x4F55;&#x4F53;&#x4E4B;&#x95F4;&#x7684;&#x5173;&#x7CFB;&#xFF0C;&#x8FD9;&#x91CC;&#x91C7;&#x7528; Node &#x8282;&#x70B9;&#x4F5C;&#x4E3A;&#x6700;&#x57FA;&#x7840;&#x7684;&#x63CF;&#x8FF0;&#x5355;&#x4F4D;&#xFF0C;Node &#x4E4B;&#x95F4;&#x6709;&#x7236;&#x5B50;&#x5144;&#x5F1F;&#x7684;&#x8054;&#x7CFB;&#xFF0C;Node &#x53EF;&#x4EE5;&#x5173;&#x8054;&#x51E0;&#x4F55;&#x6570;&#x636E;&#x548C;&#x6750;&#x8D28;&#x6570;&#x636E;&#xFF0C;&#x4E5F;&#x53EF;&#x4EE5;&#x4E0D;&#x5173;&#x8054;&#xFF0C;&#x53EA;&#x662F;&#x4F5C;&#x4E3A;&#x5171;&#x540C;&#x7684;&#x7236;&#x7EA7;&#xFF0C;&#x63CF;&#x8FF0;&#x51E0;&#x4F55;&#x53D8;&#x6362;&#xFF0C;&#x4E0B;&#x9762;&#x5F00;&#x59CB;&#x5177;&#x4F53;&#x5206;&#x6790;&#x3002;</p>
+<p>&#x6211;&#x4EEC;&#x9996;&#x5148;&#x6765;&#x770B;&#x770B;&#xFF0C;&#x4F20;&#x7EDF;&#x7684;&#x7236;&#x5B50;&#x5BF9;&#x8C61;&#x7ED3;&#x6784;&#x7684;&#x573A;&#x666F;&#x56FE;&#x662F;&#x4EC0;&#x4E48;&#x6837;&#x7684;&#xFF0C;&#x5982;&#x4E0B;&#xFF1A;</p>
+<pre><code>    struct SceneNode {
+        SceneNode* parent_;
+        vector&lt;SceneNode*&gt; children_;
+        mat4 localTransform_;
+        mat4 globalTransform_;
+        Mesh* mesh_;
+        Material* material_;
+        void Render();
+    };
+</code></pre><p>&#x8FD9;&#x4E2A;&#x7ED3;&#x6784;&#x63CF;&#x8FF0;&#x4E86;&#x4E00;&#x4E2A;&#x8282;&#x70B9;&#x57FA;&#x672C;&#x7684;&#x4F5C;&#x7528;&#xFF1A;</p>
+<ol>
+<li>&#x63CF;&#x8FF0;&#x7EE7;&#x627F;&#x5173;&#x7CFB;&#xFF0C;&#x5305;&#x62EC;&#x7236;&#x5B50;&#x5144;&#x5F1F;&#xFF1B;</li>
+<li>&#x5173;&#x8054;&#x53D8;&#x6362;&#x77E9;&#x9635;&#xFF1B;</li>
+<li>&#x5173;&#x8054;&#x51E0;&#x4F55;&#x6570;&#x636E;&#xFF1B;</li>
+<li>&#x5173;&#x8054;&#x6750;&#x8D28;&#x6570;&#x636E;&#xFF1B;</li>
+<li>Render &#x65B9;&#x6CD5;&#xFF0C;&#x6839;&#x636E;&#x4EE5;&#x4E0A;&#x6570;&#x636E;&#x6765;&#x7ED8;&#x5236;&#x81EA;&#x8EAB;&#xFF1B;</li>
+</ol>
+<p>&#x8FD9;&#x79CD;&#x9762;&#x5411;&#x7236;&#x5B50;&#x5173;&#x7CFB;&#x7684;&#x6811;&#x5F62;&#x5BF9;&#x8C61;&#x7ED3;&#x6784;&#xFF0C;&#x7B26;&#x5408;&#x4EBA;&#x4EEC;&#x7684;&#x7B2C;&#x4E00;&#x76F4;&#x89C9;&#xFF0C;&#x53EA;&#x9700;&#x8981;&#x628A;&#x6BCF;&#x5C42;&#x7684;&#x5BF9;&#x8C61;&#x901A;&#x8FC7;&#x7236;&#x5B50;&#x5144;&#x5F1F;&#x4E32;&#x8054;&#x8D77;&#x6765;&#xFF0C;&#x5728;&#x901A;&#x8FC7;&#x6DF1;&#x5EA6;&#x904D;&#x5386;&#x7B97;&#x6CD5;&#x6765;&#x89E6;&#x53D1;&#x6BCF;&#x4E2A;&#x4E2A;&#x4F53;&#x7684; Render &#x65B9;&#x6CD5;&#xFF0C;&#x5C31;&#x80FD;&#x5C06;&#x6574;&#x4E2A;&#x573A;&#x666F;&#x7ED8;&#x5236;&#x5B8C;&#x6BD5;&#xFF0C;&#x4F46;&#x662F;&#x8FD9;&#x79CD;&#x65B9;&#x6CD5;&#x5728;&#x4F7F;&#x7528;&#x7B80;&#x5355;&#x7684;&#x540C;&#x65F6;&#xFF0C;&#x4E5F;&#x5E26;&#x6765;&#x4E86;&#x5F88;&#x591A;&#x8BBE;&#x8BA1;&#x4E0A;&#x7684;&#x7F3A;&#x9677;&#xFF0C;&#x5982;&#xFF1A;</p>
+<ol>
+<li>&#x6269;&#x5C55;&#x6027;&#x5DEE;&#xFF0C;&#x9762;&#x5BF9;&#x65B0;&#x7684;&#x573A;&#x666F;&#x65F6;&#xFF0C;&#x4E0D;&#x5F97;&#x4E0D;&#x6269;&#x5C55; SceneNode&#xFF0C;&#x5728;&#x8282;&#x70B9;&#x4E0A;&#x9644;&#x52A0;&#x66F4;&#x591A;&#x7684;&#x5C5E;&#x6027;&#xFF1B;</li>
+<li>&#x6027;&#x80FD;&#x5DEE;&#xFF0C;&#x904D;&#x5386;&#x8282;&#x70B9;&#x7684;&#x6570;&#x636E;&#x5E76;&#x4E0D;&#x653E;&#x5728;&#x4E00;&#x8D77;&#xFF0C;&#x5BFC;&#x81F4;&#x904D;&#x5386;&#x7684;&#x65F6;&#x5019;&#xFF0C;&#x4F1A;&#x7531;&#x4E8E;&#x5C40;&#x90E8;&#x6027;&#x539F;&#x7406;&#x6D6A;&#x8D39;&#x6027;&#x80FD;&#xFF1B;</li>
+<li>&#x91C7;&#x7528;&#x6307;&#x9488;&#x7BA1;&#x7406;&#x6570;&#x636E;&#xFF0C;&#x5BB9;&#x6613;&#x5BFC;&#x81F4;&#x5FAA;&#x73AF;&#x5F15;&#x7528;&#x3001;&#x91CE;&#x6307;&#x9488;&#x7B49;&#x5404;&#x79CD;&#x95EE;&#x9898;&#xFF1B;</li>
+<li>&#x904D;&#x5386;&#x7ED8;&#x5236;&#x7684;&#x65B9;&#x6CD5;&#xFF0C;&#x4F7F;&#x5F97;&#x8C03;&#x8BD5;&#x8FC7;&#x7A0B;&#x4E5F;&#x56F0;&#x96BE;&#x91CD;&#x91CD;&#xFF1B;</li>
+</ol>
+<p>&#x8FD9;&#x91CC;&#x6211;&#x4EEC;&#x91C7;&#x7528;&#x9762;&#x5411;&#x6570;&#x636E;&#x7684;&#x8BBE;&#x8BA1;&#x65B9;&#x5F0F;&#xFF0C;&#x4E3B;&#x8981;&#x5305;&#x62EC;&#x4EE5;&#x4E0B;&#x51E0;&#x70B9;&#xFF1A;</p>
+<ol>
+<li>&#x8282;&#x70B9;&#x4E0D;&#x518D;&#x5305;&#x542B;&#x6570;&#x636E;&#xFF0C;&#x6240;&#x6709;&#x7684;&#x6570;&#x636E;&#x4EE5;&#x6570;&#x7EC4;&#x7684;&#x5F62;&#x5F0F;&#x5B58;&#x653E;&#x5728; Scene &#x573A;&#x666F;&#x5BF9;&#x8C61;&#x4E2D;&#xFF1B;</li>
+<li>&#x8282;&#x70B9;&#x4E0D;&#x518D;&#x662F;&#x4E00;&#x4E2A; Node &#x5B9E;&#x4F53;&#xFF0C;&#x800C;&#x662F;&#x4E00;&#x4E2A;&#x7D22;&#x5F15;&#xFF0C;&#x8FD9;&#x4E2A;&#x7D22;&#x5F15;&#x4F5C;&#x7528;&#x4E8E;&#x6240;&#x6709;&#x5B58;&#x653E;&#x6570;&#x636E;&#x7684;&#x6570;&#x7EC4;&#xFF1B;</li>
+<li><p>&#x901A;&#x8FC7;&#x7D22;&#x5F15;&#x4EE3;&#x66FF;&#x6307;&#x9488;&#xFF0C;&#x7BA1;&#x7406;&#x51E0;&#x4F55;&#x6570;&#x636E;&#x548C;&#x6750;&#x8D28;&#x6570;&#x636E;&#xFF1B;</p>
+<pre><code> struct Scene
+ {
+     // 1. &#x53D8;&#x6362;&#x77E9;&#x9635;
+     // local transformations for each node and global transforms
+     // + an array of &apos;dirty/changed&apos; local transforms
+     std::vector&lt;mat4&gt; localTransform_;
+     std::vector&lt;mat4&gt; globalTransform_;
+
+     // list of nodes whose global transform must be recalculated
+     std::vector&lt;int&gt; changedAtThisFrame_[MAX_NODE_LEVEL];
+
+     // 2. &#x7EE7;&#x627F;&#x5173;&#x7CFB;
+     // Hierarchy component
+     std::vector&lt;Hierarchy&gt; hierarchy_;
+
+     // 3. &#x5173;&#x8054;&#x51E0;&#x4F55;&#x6570;&#x636E;
+     // Mesh component: Which node corresponds to which node
+     std::unordered_map&lt;uint32_t, uint32_t&gt; meshes_;
+
+     // 4. &#x5173;&#x8054;&#x6750;&#x8D28;&#x6570;&#x636E;
+     // Material component: Which material belongs to which node
+     std::unordered_map&lt;uint32_t, uint32_t&gt; materialForNode_;
+
+     // 5. &#x8C03;&#x8BD5;&#x4FE1;&#x606F;&#xFF0C;&#x5305;&#x62EC;&#x8282;&#x70B9;&#x540D;&#x79F0;&#x3001;&#x6750;&#x8D28;&#x540D;&#x79F0;
+     // Node name component: Which name is assigned to the node
+     std::unordered_map&lt;uint32_t, uint32_t&gt; nameForNode_;
+
+     // List of scene node names
+     std::vector&lt;std::string&gt; names_;
+
+     // Debug list of material names
+     std::vector&lt;std::string&gt; materialNames_;
+ };
+
+ struct Hierarchy
+ {
+     // parent for this node (or -1 for root)
+     int parent_;
+     // first child for a node (or -1)
+     int firstChild_;
+     // next sibling for a node (or -1)
+     int nextSibling_;
+     // last added node (or -1)
+     int lastSibling_;
+     // cached node level
+     int level_;
+ };
+</code></pre></li>
+</ol>
+<h2 id="&#x51E0;&#x4F55;&#x6570;&#x636E;-mesh">&#x51E0;&#x4F55;&#x6570;&#x636E; Mesh</h2>
+<p>&#x51E0;&#x4F55;&#x6570;&#x636E;&#x7684;&#x6838;&#x5FC3;&#x662F;&#x5982;&#x4F55;&#x7EC4;&#x7EC7;&#x9876;&#x70B9;&#x6570;&#x636E;&#x548C;&#x7D22;&#x5F15;&#x6570;&#x636E;&#xFF0C;&#x5BF9;&#x4E8E;&#x6570;&#x636E;&#x7684;&#x7EC4;&#x7EC7;&#xFF0C;&#x6700;&#x91CD;&#x8981;&#x7684;&#x8981;&#x6C42;&#x5C31;&#x662F;&#x8981;&#x7D27;&#x51D1;&#xFF0C;&#x6700;&#x597D;&#x53EF;&#x4EE5;&#x76F4;&#x63A5;&#x5C31;&#x7ED9; GPU &#x4F7F;&#x7528;&#xFF0C;&#x6240;&#x4EE5;&#x8981;&#x5728;&#x5185;&#x5B58;&#x4E2D;&#x7D27;&#x51D1;&#x6392;&#x5217;&#xFF0C;&#x8FD9;&#x91CC;&#x6211;&#x4EEC;&#x60F3;&#x5230;&#x4E86;&#x7528;&#x4E24;&#x4E2A;&#x5927;&#x7684;&#x6570;&#x7EC4;&#x6765;&#x5206;&#x522B;&#x5B58;&#x50A8;&#x9876;&#x70B9;&#x6570;&#x636E;&#x548C;&#x7D22;&#x5F15;&#x6570;&#x636E;&#xFF0C;&#x7136;&#x540E;&#x56E0;&#x4E3A;&#x6570;&#x636E;&#x4E2D;&#x7684;&#x5143;&#x7D20;&#x90FD;&#x662F;&#x4E00;&#x6837;&#x7684;&#x7C7B;&#x578B;&#xFF0C;&#x4E3A;&#x4E86;&#x641E;&#x6E05;&#x695A;&#x90A3;&#x4E00;&#x90E8;&#x5206;&#x6570;&#x636E;&#x5C5E;&#x4E8E;&#x54EA;&#x4E00;&#x4E2A; Mesh&#xFF0C;&#x6211;&#x4EEC;&#x8FD8;&#x9700;&#x8981;&#x5B9A;&#x4E49;&#x4E00;&#x4E2A;&#x7EDF;&#x4E00;&#x7684;&#x63CF;&#x8FF0;&#x7ED3;&#x6784;&#xFF0C;&#x800C;&#x4E14;&#x56E0;&#x4E3A;&#x6570;&#x636E;&#x662F;&#x5728;&#x6570;&#x7EC4;&#x4E2D;&#x5B58;&#x653E;&#x7684;&#xFF0C;&#x6240;&#x4EE5;&#x63CF;&#x8FF0;&#x7ED3;&#x6784;&#x4E2D;&#x5BF9;&#x4E8E;&#x6570;&#x636E;&#x7684;&#x5F15;&#x7528;&#xFF0C;&#x81EA;&#x7136;&#x800C;&#x7136;&#x5C31;&#x53EF;&#x4EE5;&#x4F7F;&#x7528;&#x7D22;&#x5F15;&#xFF0C;&#x907F;&#x514D;&#x4F7F;&#x7528;&#x6307;&#x9488;&#xFF0C;&#x4E0B;&#x9762;&#x6765;&#x5177;&#x4F53;&#x770B;&#x4E0B;&#x6570;&#x636E;&#x7ED3;&#x6784;&#xFF1A;</p>
+<ol>
+<li><p>MeshData &#x4F5C;&#x4E3A;&#x5185;&#x5B58;&#x4E2D;&#x5B58;&#x50A8;&#x6570;&#x636E;&#x7684;&#x4EE3;&#x8868;&#xFF0C;&#x6309;&#x7167;&#x521A;&#x624D;&#x8BF4;&#x7684;&#x65B9;&#x5F0F;&#x4FDD;&#x5B58;&#x4E86;&#x9876;&#x70B9;&#x3001;&#x7D22;&#x5F15;&#x6570;&#x7EC4;&#xFF0C;&#x4EE5;&#x53CA; Mesh &#x51E0;&#x4F55;&#x4F53;&#x63CF;&#x8FF0;&#x6570;&#x7EC4;&#xFF0C;&#x548C;&#x5305;&#x56F4;&#x76D2;&#x6570;&#x636E;&#xFF1A;</p>
+<pre><code> struct MeshData
+ {
+     std::vector&lt;uint32_t&gt; indexData_;
+     std::vector&lt;float&gt; vertexData_;
+     std::vector&lt;Mesh&gt; meshes_;
+     std::vector&lt;BoundingBox&gt; boxes_;
+ };
+</code></pre></li>
+<li><p>MeshFileHeader &#x4F5C;&#x4E3A;&#x6587;&#x4EF6;&#x4E2D;&#x7684;&#x603B;&#x63CF;&#x8FF0;&#x7B26;&#xFF0C;&#x4E3B;&#x8981;&#x7528;&#x6765;&#x6307;&#x5BFC;&#x6587;&#x4EF6;&#x4E2D;&#x7684;&#x6570;&#x636E;&#x548C;&#x5185;&#x5B58;&#x4E2D;&#x7684;&#x6570;&#x636E;&#x662F;&#x4E00;&#x79CD;&#x4EC0;&#x4E48;&#x6837;&#x7684;&#x5BF9;&#x5E94;&#x5173;&#x7CFB;&#xFF0C;&#x5728;&#x6587;&#x4EF6;&#x4E2D;&#x504F;&#x79FB;&#x7684;&#x4F4D;&#x7F6E;&#x548C;&#x5BF9;&#x5E94;&#x7684; MeshData &#x4E2D;&#x7684;&#x5C5E;&#x6027;&#xFF1A;</p>
+<pre><code> struct MeshFileHeader
+ {
+     // 1. &#x9B54;&#x6570;&#xFF0C;&#x7528;&#x6765;&#x786E;&#x5B9A;&#x8BE5;&#x6587;&#x4EF6;&#x662F; Mesh &#x6570;&#x636E;&#x6587;&#x4EF6;
+     /* Unique 64-bit value to check integrity of the file */
+     uint32_t magicValue;
+
+     // 2. Mesh &#x7684;&#x6570;&#x91CF;&#xFF0C;&#x7528;&#x6765;&#x786E;&#x5B9A;&#x6709;&#x591A;&#x5C11;&#x4E2A; Mesh &#x63CF;&#x8FF0;&#x7B26;
+     /* Number of mesh descriptors following this header */
+     uint32_t meshCount;
+
+     // 3. &#x6570;&#x636E;&#x6BB5;&#x5F00;&#x59CB;&#x7684; offset
+     /* The offset to combined mesh data (this is the base from which the offsets in individual meshes start) */
+     uint32_t dataBlockStartOffset;
+
+     // 4. &#x7D22;&#x5F15;&#x6570;&#x636E;&#x6BB5;&#x7684;&#x5927;&#x5C0F;
+     /* How much space index data takes */
+     uint32_t indexDataSize;
+
+     // 5. &#x9876;&#x70B9;&#x6570;&#x636E;&#x6BB5;&#x7684;&#x5927;&#x5C0F;
+     /* How much space vertex data takes */
+     uint32_t vertexDataSize;
+
+     /* According to your needs, you may add additional metadata fields */
+ };
+</code></pre></li>
+<li><p>Mesh &#x63CF;&#x8FF0;&#x5982;&#x4F55;&#x5BF9;&#x5E94;&#x9876;&#x70B9;&#x548C;&#x7D22;&#x5F15;&#x6570;&#x636E;</p>
+<pre><code> struct Mesh final
+ {
+     // 1. &#x603B;&#x5171;&#x6709;&#x591A;&#x5C11;&#x4E2A; LOD &#x5C42;&#x7EA7;
+     /* Number of LODs in this mesh. Strictly less than MAX_LODS, last LOD offset is used as a marker only */
+     uint32_t lodCount = 1;
+
+     // 2. &#x6BCF;&#x79CD;&#x9876;&#x70B9;&#x683C;&#x5F0F;&#x7684;&#x9876;&#x70B9;&#x6784;&#x6210;&#x4E00;&#x79CD; Stream&#xFF0C;&#x603B;&#x5171;&#x6709;&#x591A;&#x5C11;&#x4E2A; Stream
+     /* Number of vertex data streams */
+     uint32_t streamCount = 0;
+
+     // 3. &#x8BE5; Mesh &#x5BF9;&#x5E94;&#x7684;&#x7D22;&#x5F15;&#x548C;&#x9876;&#x70B9;&#x7684; offset&#xFF0C;&#x8FD9;&#x91CC;&#x662F;&#x4EE5;&#x9876;&#x70B9;&#x4E3A;&#x5355;&#x4F4D;&#xFF0C;&#x4E0D;&#x662F;&#x4EE5;&#x5B57;&#x8282;&#x4E3A;&#x5355;&#x4F4D;
+     /* The total count of all previous vertices in this mesh file */
+     uint32_t indexOffset = 0;
+
+     uint32_t vertexOffset = 0;
+
+     // 4. &#x603B;&#x5171;&#x6709;&#x591A;&#x5C11;&#x9876;&#x70B9;
+     /* Vertex count (for all LODs) */
+     uint32_t vertexCount = 0;
+
+     // 5. &#x6BCF;&#x79CD; LOD &#x5BF9;&#x5E94;&#x7684;&#x7D22;&#x5F15;&#x7684;&#x8D77;&#x59CB;&#x4F4D;&#x7F6E;
+     /* Offsets to LOD data. Last offset is used as a marker to calculate the size */
+     uint32_t lodOffset[kMaxLODs] = { 0 };
+
+     inline uint32_t getLODIndicesCount(uint32_t lod) const { return lodOffset[lod + 1] - lodOffset[lod]; }
+
+     // 6. &#x4E0D;&#x540C; steam &#x5BF9;&#x5E94;&#x7684; offset
+     /* All the data &quot;pointers&quot; for all the streams */
+     uint32_t streamOffset[kMaxStreams] = { 0 };
+
+     // 7. &#x6BCF;&#x79CD; steam &#x4E2D;&#xFF0C;&#x9876;&#x70B9;&#x7684;&#x5927;&#x5C0F;&#xFF0C;&#x6BD4;&#x5982;&#xFF1A;&#x4E00;&#x4E2A;&#x9876;&#x70B9;&#x5305;&#x542B;&#x4F4D;&#x7F6E;&#x3001;&#x6CD5;&#x7EBF;&#x3001;UV&#x5750;&#x6807;&#xFF0C;&#x90A3;&#x5C31;&#x662F; 3 + 3 + 2 = 8
+     /* Information about stream element (size pretty much defines everything else, the &quot;semantics&quot; is defined by the shader) */
+     uint32_t streamElementSize[kMaxStreams] = { 0 };
+
+     /* We could have included the streamStride[] array here to allow interleaved storage of attributes.
+         For this book we assume tightly-packed (non-interleaved) vertex attribute streams */
+
+     /* Additional information, like mesh name, can be added here */
+ };
+</code></pre></li>
+</ol>
+<h2 id="&#x6750;&#x8D28;&#x6570;&#x636E;">&#x6750;&#x8D28;&#x6570;&#x636E;</h2>
+<pre><code>    enum MaterialFlags
+    {
+        sMaterialFlags_CastShadow = 0x1,
+        sMaterialFlags_ReceiveShadow = 0x2,
+        sMaterialFlags_Transparent = 0x4,
+    };
+
+    constexpr const uint64_t INVALID_TEXTURE = 0xFFFFFFFF;
+
+    // PACKED_STRUCT &#x8868;&#x793A;&#x6309;&#x7167;&#x4E00;&#x4E2A;&#x5B57;&#x8282;&#x7D27;&#x51D1;&#x5BF9;&#x9F50;
+    // &#x8FD9;&#x91CC;&#x7684;&#x6750;&#x8D28;&#x5C5E;&#x6027;&#xFF0C;&#x548C; glTF2 &#x6807;&#x51C6;&#x5BF9;&#x9F50;
+    struct PACKED_STRUCT MaterialDescription final
+    {
+        gpuvec4 emissiveColor_ = { 0.0f, 0.0f, 0.0f, 0.0f};
+        gpuvec4 albedoColor_   = { 1.0f, 1.0f, 1.0f, 1.0f };
+        // UV anisotropic roughness (isotropic lighting models use only the first value). ZW values are ignored
+        gpuvec4 roughness_     = { 1.0f, 1.0f, 0.0f, 0.0f }; 
+        float transparencyFactor_ = 1.0f;
+        float alphaTest_          = 0.0f;
+        float metallicFactor_     = 0.0f;
+        uint32_t flags_ = sMaterialFlags_CastShadow | sMaterialFlags_ReceiveShadow;
+        // maps
+        uint64_t ambientOcclusionMap_  = INVALID_TEXTURE;
+        uint64_t emissiveMap_          = INVALID_TEXTURE;
+        uint64_t albedoMap_            = INVALID_TEXTURE;
+        /// Occlusion (R), Roughness (G), Metallic (B) https://github.com/KhronosGroup/glTF/issues/857
+        uint64_t metallicRoughnessMap_ = INVALID_TEXTURE;
+        uint64_t normalMap_            = INVALID_TEXTURE;
+        uint64_t opacityMap_           = INVALID_TEXTURE;
+    };
+
+    struct PACKED_STRUCT gpuvec4
+    {
+        float x, y, z, w;
+
+        gpuvec4() = default;
+        explicit gpuvec4(float v): x(v), y(v), z(v), w(v) {}
+        gpuvec4(float a, float b, float c, float d): x(a), y(b), z(c), w(d) {}
+        explicit gpuvec4(const vec4&amp; v): x(v.x), y(v.y), z(v.z), w(v.w) {}
+    };
+
+    struct PACKED_STRUCT gpumat4
+    {
+        float data_[16];
+
+        gpumat4() = default;
+        explicit gpumat4(const glm::mat4&amp; m)  { memcpy(data_, glm::value_ptr(m), 16 * sizeof(float)); }
+    };
+</code></pre><h2 id="&#x5B9E;&#x73B0;&#x5BF9;&#x4E8E;-assimp-&#x52A0;&#x8F7D;&#x573A;&#x666F;&#x7684;&#x8F6C;&#x6362;">&#x5B9E;&#x73B0;&#x5BF9;&#x4E8E; assimp &#x52A0;&#x8F7D;&#x573A;&#x666F;&#x7684;&#x8F6C;&#x6362;</h2>
+<pre><code>    int main()
+    {
+        fs::create_directory(&quot;data/out_textures&quot;);
+
+        const auto configs = readConfigFile(&quot;data/sceneconverter.json&quot;);
+
+        for (const auto&amp; cfg: configs)
+            processScene(cfg);
+
+        // Final step: optimize bistro scene
+        mergeBistro();
+
+        return 0;
+    }
+</code></pre><p>&#x8FD9;&#x91CC;&#x7684; <code>configs</code> &#x7528;&#x6765;&#x4FDD;&#x5B58;&#x9700;&#x8981;&#x8FDB;&#x884C;&#x8F6C;&#x6362;&#x7684;&#x6A21;&#x578B;&#x7684;&#x4E00;&#x4E9B;&#x4FE1;&#x606F;&#xFF0C;&#x5982;&#x4E0B;&#xFF1A;</p>
+<pre><code>    [
+        {
+            &quot;input_scene&quot;: &quot;deps/src/bistro/Exterior/exterior.obj&quot;,
+            &quot;output_mesh&quot;: &quot;data/meshes/test.meshes&quot;,
+            &quot;output_scene&quot;: &quot;data/meshes/test.scene&quot;,
+            &quot;output_materials&quot;: &quot;data/meshes/test.materials&quot;,
+            &quot;scale&quot;: 0.01,
+            &quot;calculate_LODs&quot;: false,
+            &quot;merge_instances&quot;: true
+        },
+        {
+            &quot;input_scene&quot;: &quot;deps/src/bistro/Interior/interior.obj&quot;,
+            &quot;output_mesh&quot;: &quot;data/meshes/test2.meshes&quot;,
+            &quot;output_scene&quot;: &quot;data/meshes/test2.scene&quot;,
+            &quot;output_materials&quot;: &quot;data/meshes/test2.materials&quot;,
+            &quot;scale&quot;: 0.01,
+            &quot;calculate_LODs&quot;: false,
+            &quot;merge_instances&quot;: true
+        },
+        {
+            &quot;input_scene&quot;: &quot;data/meshes/orrery/scene.gltf&quot;,
+            &quot;output_mesh&quot;: &quot;data/meshes/test_graph.meshes&quot;,
+            &quot;output_scene&quot;: &quot;data/meshes/test_graph.scene&quot;,
+            &quot;output_materials&quot;: &quot;data/meshes/test_graph.materials&quot;,
+            &quot;scale&quot;: 1.0,
+            &quot;calculate_LODs&quot;: false,
+            &quot;merge_instances&quot;: false
+        },
+        {
+            &quot;input_scene&quot;:  &quot;data/rubber_duck/scene.gltf&quot;,
+            &quot;output_mesh&quot;:  &quot;data/meshes/test_duck.meshes&quot;,
+            &quot;output_scene&quot;: &quot;data/meshes/test_duck.scene&quot;,
+            &quot;output_materials&quot;: &quot;data/meshes/test_duck.materials&quot;,
+            &quot;scale&quot;: 1.0,
+            &quot;calculate_LODs&quot;: false,
+            &quot;merge_instances&quot;: false
+        }
+    ]
+</code></pre><p><code>mergeBistro()</code> &#x51FD;&#x6570;&#x4E3B;&#x8981;&#x7528;&#x6765;&#x5408;&#x5E76;&#x573A;&#x666F;&#x6570;&#x636E;&#xFF0C;&#x540E;&#x9762;&#x518D;&#x8BE6;&#x7EC6;&#x5206;&#x6790;&#xFF0C;&#x4E0B;&#x9762;&#x5148;&#x4E3B;&#x8981;&#x6765;&#x770B;<code>processScene()</code> &#x51FD;&#x6570;&#x3002;</p>
+<h3 id="processscene-&#x8F6C;&#x6362;&#x6A21;&#x578B;&#x6570;&#x636E;">processScene &#x8F6C;&#x6362;&#x6A21;&#x578B;&#x6570;&#x636E;</h3>
+<pre><code>    MeshData g_MeshData;
+    uint32_t g_indexOffset = 0;
+    uint32_t g_vertexOffset = 0;
+    const uint32_t g_numElementsToStore = 3 + 3 + 2; // pos(vec3) + normal(vec3) + uv(vec2)
+
+    struct SceneConfig
+    {
+        std::string fileName;
+        std::string outputMesh;
+        std::string outputScene;
+        std::string outputMaterials;
+        float scale;
+        bool calculateLODs;
+        bool mergeInstances;
+    };
+
+    void processScene(const SceneConfig&amp; cfg)
+    {
+        // clear mesh data from previous scene
+        g_MeshData.meshes_.clear();
+        g_MeshData.boxes_.clear();
+        g_MeshData.indexData_.clear();
+        g_MeshData.vertexData_.clear();
+
+        g_indexOffset = 0;
+        g_vertexOffset = 0;
+
+        // extract base model path
+        const std::size_t pathSeparator = cfg.fileName.find_last_of(&quot;/\\&quot;);
+        const std::string basePath = (pathSeparator != std::string::npos) ? cfg.fileName.substr(0, pathSeparator + 1) : std::string();
+
+        const unsigned int flags = 0 |
+            aiProcess_JoinIdenticalVertices |
+            aiProcess_Triangulate |
+            aiProcess_GenSmoothNormals |
+            aiProcess_LimitBoneWeights |
+            aiProcess_SplitLargeMeshes |
+            aiProcess_ImproveCacheLocality |
+            aiProcess_RemoveRedundantMaterials |
+            aiProcess_FindDegenerates |
+            aiProcess_FindInvalidData |
+            aiProcess_GenUVCoords;
+
+        printf(&quot;Loading scene from &apos;%s&apos;...\n&quot;, cfg.fileName.c_str());
+
+        const aiScene* scene = aiImportFile(cfg.fileName.c_str(), flags);
+
+        if (!scene || !scene-&gt;HasMeshes())
+        {
+            printf(&quot;Unable to load &apos;%s&apos;\n&quot;, cfg.fileName.c_str());
+            exit(EXIT_FAILURE);
+        }
+        // 0. &#x4EE5;&#x4E0A;&#x662F;&#x5728;&#x52A0;&#x8F7D;&#x6A21;&#x578B;&#xFF0C;&#x4EE5;&#x53CA;&#x5728;&#x6A21;&#x578B;&#x52A0;&#x8F7D;&#x524D;&#x91CD;&#x7F6E;&#x5168;&#x5C40;&#x53D8;&#x91CF;&#x7684;&#x72B6;&#x6001;
+
+        // 1. Mesh &#x6570;&#x636E;&#x8F6C;&#x6362;
+        // 1. Mesh conversion as in Chapter 5
+        g_MeshData.meshes_.reserve(scene-&gt;mNumMeshes);
+        g_MeshData.boxes_.reserve(scene-&gt;mNumMeshes);
+
+        for (unsigned int i = 0; i != scene-&gt;mNumMeshes; i++)
+        {
+            printf(&quot;\nConverting meshes %u/%u...&quot;, i + 1, scene-&gt;mNumMeshes);
+            Mesh mesh = convertAIMesh(scene-&gt;mMeshes[i], cfg);
+            g_MeshData.meshes_.push_back(mesh);
+        }
+
+        recalculateBoundingBoxes(g_MeshData);
+
+        saveMeshData(cfg.outputMesh.c_str(), g_MeshData);
+
+        Scene ourScene;
+
+        // 2. &#x6750;&#x8D28;&#x6570;&#x636E;&#x8F6C;&#x6362;
+        // 2. Material conversion
+        std::vector&lt;MaterialDescription&gt; materials;
+        std::vector&lt;std::string&gt;&amp; materialNames = ourScene.materialNames_;
+
+        std::vector&lt;std::string&gt; files;
+        std::vector&lt;std::string&gt; opacityMaps;
+
+        for (unsigned int m = 0 ; m &lt; scene-&gt;mNumMaterials ; m++)
+        {
+            aiMaterial* mm = scene-&gt;mMaterials[m];
+
+            printf(&quot;Material [%s] %u\n&quot;, mm-&gt;GetName().C_Str(), m);
+            materialNames.push_back(std::string(mm-&gt;GetName().C_Str()));
+
+            MaterialDescription D = convertAIMaterialToDescription(mm, files, opacityMaps);
+            materials.push_back(D);
+            //dumpMaterial(files, D);
+        }
+
+        // 3. &#x7EB9;&#x7406;&#x56FE;&#x7247;&#x5904;&#x7406;
+        // 3. Texture processing, rescaling and packing
+        convertAndDownscaleAllTextures(materials, basePath, files, opacityMaps);
+
+        saveMaterials(cfg.outputMaterials.c_str(), materials, files);
+
+        // 4. &#x573A;&#x666F;&#x6570;&#x636E;&#x8F6C;&#x6362;
+        // 4. Scene hierarchy conversion
+        traverse(scene, ourScene, scene-&gt;mRootNode, -1, 0);
+
+        saveScene(cfg.outputScene.c_str(), ourScene);
+    }
+</code></pre><p><code>processScene()</code> &#x51FD;&#x6570;&#x4E3B;&#x8981;&#x5206;&#x4E3A;&#x4E09;&#x90E8;&#x5206;&#xFF1A;</p>
+<ol>
+<li>&#x8F6C;&#x6362; Mesh &#x51E0;&#x4F55;&#x6570;&#x636E;&#xFF0C;&#x5B58;&#x50A8;&#x5728;&#x5168;&#x5C40;&#x53D8;&#x91CF;&#x4E2D;&#xFF0C;&#x5E76;&#x4FDD;&#x5B58;&#x5230;&#x6587;&#x4EF6;&#x4E2D;&#xFF1B;</li>
+<li>&#x8F6C;&#x6362; Material &#x6750;&#x8D28;&#x6570;&#x636E;&#xFF0C;&#x5E76;&#x5904;&#x7406;&#x7EB9;&#x7406;&#x7F29;&#x653E;&#x7B49;&#x95EE;&#x9898;&#xFF0C;&#x5E76;&#x4FDD;&#x5B58;&#x5728;&#x6587;&#x4EF6;&#x4E2D;&#xFF1B;</li>
+<li>&#x8F6C;&#x6362;&#x573A;&#x666F;&#x56FE;&#x6570;&#x636E;&#xFF0C;&#x548C; Mesh&#x3001;Material &#x4EA7;&#x751F;&#x5173;&#x8054;&#xFF0C;&#x5E76;&#x4FDD;&#x5B58;&#x5728;&#x6587;&#x4EF6;&#x4E2D;&#xFF1B;
+&#x4E0B;&#x9762;&#x4E00;&#x4E00;&#x5206;&#x6790;&#xFF1A;</li>
+<li><p>Mesh &#x6570;&#x636E;</p>
+<pre><code> g_MeshData.meshes_.reserve(scene-&gt;mNumMeshes);
+ g_MeshData.boxes_.reserve(scene-&gt;mNumMeshes);
+ for (unsigned int i = 0; i != scene-&gt;mNumMeshes; i++)
+ {
+     printf(&quot;\nConverting meshes %u/%u...&quot;, i + 1, scene-&gt;mNumMeshes);
+     Mesh mesh = convertAIMesh(scene-&gt;mMeshes[i], cfg);
+     g_MeshData.meshes_.push_back(mesh);
+ }
+ recalculateBoundingBoxes(g_MeshData);
+ saveMeshData(cfg.outputMesh.c_str(), g_MeshData);
+</code></pre><p> &#x5176;&#x4E2D;&#xFF0C;&#x8F6C;&#x6362;&#x7684;&#x5173;&#x952E;&#x5728;&#x4E8E; <code>convertAIMesh()</code> &#x51FD;&#x6570;</p>
+<pre><code> Mesh convertAIMesh(const aiMesh* m, const SceneConfig&amp; cfg)
+ {
+     const bool hasTexCoords = m-&gt;HasTextureCoords(0);
+     const uint32_t streamElementSize = static_cast&lt;uint32_t&gt;(g_numElementsToStore * sizeof(float));
+
+     // 1. &#x8FD9;&#x91CC;&#x53EA;&#x7528;&#x4E00;&#x4E2A; stream&#xFF0C;g_indexOffset &#x662F;&#x4E4B;&#x524D;&#x6240;&#x6709; Mesh &#x7684; indexCount &#x4E4B;&#x548C;&#xFF0C;g_vertexOffset &#x662F;&#x4E4B;&#x524D;&#x6240;&#x6709; Mesh &#x7684; vertexCount &#x4E4B;&#x548C;
+     Mesh result = {
+         .streamCount = 1,
+         .indexOffset = g_indexOffset,
+         .vertexOffset = g_vertexOffset,
+         .vertexCount = m-&gt;mNumVertices,
+         .streamOffset = { g_vertexOffset * streamElementSize },
+         .streamElementSize = { streamElementSize }
+     };
+
+     // 2. &#x7528;&#x6765;&#x8BA1;&#x7B97; LOD &#x7684;&#x5165;&#x53C2;&#xFF0C;&#x4EE5;&#x53CA;&#x4FDD;&#x5B58;&#x8BA1;&#x7B97; LOD &#x7684;&#x7ED3;&#x679C;
+     // Original data for LOD calculation
+     std::vector&lt;float&gt; srcVertices;
+     std::vector&lt;uint32_t&gt; srcIndices;
+
+     std::vector&lt;std::vector&lt;uint32_t&gt;&gt; outLods;
+
+     // 3. &#x5F00;&#x59CB;&#x4FDD;&#x5B58;&#x9876;&#x70B9;&#x6570;&#x636E;
+     auto&amp; vertices = g_MeshData.vertexData_;
+
+     for (size_t i = 0; i != m-&gt;mNumVertices; i++)
+     {
+         // 3-1. &#x4ECE;&#x6A21;&#x578B;&#x4E2D;&#x83B7;&#x53D6;&#x9876;&#x70B9;&#x3001;&#x6CD5;&#x7EBF;&#x548C;&#x7EB9;&#x7406;&#x5750;&#x6807;
+         const aiVector3D v = m-&gt;mVertices[i];
+         const aiVector3D n = m-&gt;mNormals[i];
+         const aiVector3D t = hasTexCoords ? m-&gt;mTextureCoords[0][i] : aiVector3D();
+
+         if (cfg.calculateLODs)
+         {
+             srcVertices.push_back(v.x);
+             srcVertices.push_back(v.y);
+             srcVertices.push_back(v.z);
+         }
+
+         // 3-2. &#x4FDD;&#x5B58;&#x9876;&#x70B9;&#x3001;&#x6CD5;&#x7EBF;&#x548C;&#x7EB9;&#x7406;&#x5750;&#x6807;
+         vertices.push_back(v.x * cfg.scale);
+         vertices.push_back(v.y * cfg.scale);
+         vertices.push_back(v.z * cfg.scale);
+
+         vertices.push_back(t.x);
+         vertices.push_back(1.0f - t.y);
+
+         vertices.push_back(n.x);
+         vertices.push_back(n.y);
+         vertices.push_back(n.z);
+     }
+
+     // 4. &#x5F00;&#x59CB;&#x4FDD;&#x5B58;&#x7D22;&#x5F15;&#x6570;&#x636E;
+     for (size_t i = 0; i != m-&gt;mNumFaces; i++)
+     {
+         if (m-&gt;mFaces[i].mNumIndices != 3)
+             continue;
+         for (unsigned j = 0; j != m-&gt;mFaces[i].mNumIndices; j++)
+             srcIndices.push_back(m-&gt;mFaces[i].mIndices[j]);
+     }
+
+     // 5. &#x8BA1;&#x7B97; LOD&#xFF0C;&#x8FD9;&#x91CC;&#x6570;&#x7EC4;&#x7684;&#x5143;&#x7D20;&#xFF0C;&#x90FD;&#x662F;&#x4E00;&#x7EC4;&#x5BF9;&#x5E94; LOD &#x7684;&#x7D22;&#x5F15;&#x6570;&#x7EC4;
+     if (!cfg.calculateLODs)
+         outLods.push_back(srcIndices);
+     else
+         processLods(srcIndices, srcVertices, outLods);
+
+     printf(&quot;\nCalculated LOD count: %u\n&quot;, (unsigned)outLods.size());
+
+     // 6. &#x4FDD;&#x5B58;&#x7ECF;&#x8FC7; LOD &#x8BA1;&#x7B97;&#x540E;&#x7684;&#x7D22;&#x5F15;&#x6570;&#x636E;
+     uint32_t numIndices = 0;
+
+     for (size_t l = 0 ; l &lt; outLods.size() ; l++)
+     {
+         for (size_t i = 0 ; i &lt; outLods[l].size() ; i++)
+             g_MeshData.indexData_.push_back(outLods[l][i]);
+
+         result.lodOffset[l] = numIndices;
+         numIndices += (int)outLods[l].size();
+     }
+
+     result.lodOffset[outLods.size()] = numIndices;
+     result.lodCount = (uint32_t)outLods.size();
+
+     // 7. &#x66F4;&#x65B0;&#x7D22;&#x5F15;&#x548C;&#x9876;&#x70B9;&#x7684; offset&#xFF0C;&#x662F;&#x4E4B;&#x524D;&#x6240;&#x6709;&#x9876;&#x70B9;&#x548C;&#x7D22;&#x5F15;&#x7684;&#x6570;&#x76EE;&#x4E4B;&#x548C;
+     g_indexOffset  += numIndices;
+     g_vertexOffset += m-&gt;mNumVertices;
+
+     return result;
+ }
+</code></pre><p> &#x5BF9;&#x4E8E; LOD &#x8BA1;&#x7B97;&#x7684; <code>processLods</code> &#x51FD;&#x6570;&#xFF0C;&#x5206;&#x6790;&#x5982;&#x4E0B;&#xFF1A;</p>
+<pre><code> void processLods(std::vector&lt;uint32_t&gt;&amp; indices, std::vector&lt;float&gt;&amp; vertices, std::vector&lt;std::vector&lt;uint32_t&gt;&gt;&amp; outLods)
+ {
+     // srcVertices &#x91CC;&#x9762;&#x53EA;&#x4FDD;&#x7559;&#x4E86;&#x4F4D;&#x7F6E;&#x5750;&#x6807;&#xFF0C;&#x6240;&#x4EE5;&#x9664;&#x4EE5; 3&#xFF0C;&#x53EF;&#x4EE5;&#x8BA1;&#x7B97;&#x5F97;&#x5230;&#x9876;&#x70B9;&#x7684;&#x6570;&#x76EE;
+     size_t verticesCountIn = vertices.size() / 3;
+     size_t targetIndicesCount = indices.size();
+
+     uint8_t LOD = 1;
+
+     printf(&quot;\n   LOD0: %i indices&quot;, int(indices.size()));
+
+     // 1. &#x4E00;&#x5F00;&#x59CB;&#x7684;&#x7D22;&#x5F15;&#x6570;&#x7EC4;&#xFF0C;&#x4F5C;&#x4E3A; LOD &#x4E3A; 0 &#x7684;&#x6570;&#x636E;&#x5B58;&#x50A8;
+     outLods.push_back(indices);
+
+     // 2. &#x53EA;&#x6709;&#x5728;&#x4F18;&#x5316;&#x540E;&#x7D22;&#x5F15;&#x6570;&#x76EE;&#x5C0F;&#x4E8E; 1024&#xFF0C;&#x6216;&#x8005; LOD &gt;= 8 &#x65F6;&#xFF0C;&#x624D;&#x4F1A;&#x505C;&#x6B62;
+     while ( targetIndicesCount &gt; 1024 &amp;&amp; LOD &lt; 8 )
+     {
+         // 3. &#x6BCF;&#x6B21;&#x4F18;&#x5316;&#xFF0C;&#x8BA1;&#x5212;&#x6BD4;&#x4E3A;&#x4E0A;&#x4E00;&#x7EA7;&#x7684;&#x4E00;&#x534A;
+         targetIndicesCount = indices.size() / 2;
+
+         bool sloppy = false;
+
+         // 4. &#x91C7;&#x7528;&#x5FEB;&#x901F;&#x65B9;&#x6CD5;&#x4F18;&#x5316;&#x4E00;&#x6CE2;&#xFF0C;&#x5F97;&#x5230;&#x6700;&#x7EC8;&#x7684;&#x7D22;&#x5F15;&#x6570;&#x636E;
+         size_t numOptIndices = meshopt_simplify(
+             indices.data(),
+             indices.data(), (uint32_t)indices.size(),
+             vertices.data(), verticesCountIn,
+             sizeof( float ) * 3,
+             targetIndicesCount, 0.02f );
+
+         // 5. &#x5982;&#x679C;&#x538B;&#x7F29;&#x540E;&#x7684;&#x7D22;&#x5F15;&#x5927;&#x5C0F;&#xFF0C;&#x4E58;&#x4EE5; 1.1&#xFF0C;&#x6BD4;&#x4E4B;&#x524D;&#x7684;&#x7D22;&#x5F15;&#x8FD8;&#x8981;&#x591A;&#xFF0C;&#x8BF4;&#x660E;&#x5FEB;&#x901F;&#x538B;&#x7F29;&#x5DF2;&#x7ECF;&#x538B;&#x4E0D;&#x4E86;&#x591A;&#x5C11;&#x4E86;&#xFF0C;&#x90A3;&#x5C31;&#x6362;&#x79CD;&#x65B9;&#x6CD5;&#xFF0C;&#x518D;&#x538B;&#x7F29;
+         // cannot simplify further
+         if (static_cast&lt;size_t&gt;(numOptIndices * 1.1f) &gt; indices.size())
+         {
+             // 5-1. &#x5982;&#x679C; LOD == 1&#xFF0C;&#x8BF4;&#x660E;&#x662F;&#x7B2C;&#x4E00;&#x6B21;&#x538B;&#x7F29;&#xFF0C;&#x7ED3;&#x679C;&#x90FD;&#x538B;&#x7684;&#x4E0D;&#x7406;&#x60F3;&#xFF0C;&#x90A3;&#x5E72;&#x8106;&#x4E0D;&#x538B;&#x7F29;&#x4E86;
+             if (LOD &gt; 1)
+             {
+                 // try harder
+                 numOptIndices = meshopt_simplifySloppy(
+                     indices.data(),
+                     indices.data(), indices.size(),
+                     vertices.data(), verticesCountIn,
+                     sizeof(float) * 3,
+                     targetIndicesCount, 0.02f, nullptr);
+                 sloppy = true;
+                 // 5-2. &#x5982;&#x679C;&#x538B;&#x7F29;&#x4E0D;&#x4E86;&#x4E86;&#xFF0C;&#x5E72;&#x8106;&#x4E0D;&#x538B;&#x7F29;&#x4E86;
+                 if (numOptIndices == indices.size()) break;
+             }
+             else
+                 break;
+         }
+
+         // 6. &#x91CD;&#x65B0;&#x8C03;&#x6574;&#x7D22;&#x5F15;&#x6570;&#x636E;&#x5927;&#x5C0F;
+         indices.resize(numOptIndices);
+
+         // 7. &#x4F18;&#x5316;&#x9876;&#x70B9;&#x6570;&#x7EC4;
+         meshopt_optimizeVertexCache(indices.data(), indices.data(), indices.size(), verticesCountIn);
+
+         printf(&quot;\n   LOD%i: %i indices %s&quot;, int(LOD), int(numOptIndices), sloppy ? &quot;[sloppy]&quot; : &quot;&quot;);
+
+         LOD++;
+
+         // 8. &#x4FDD;&#x5B58;&#x538B;&#x7F29;&#x7ED3;&#x679C;
+         outLods.push_back(indices);
+     }
+ }
+</code></pre><p> <code>convertAIMesh()</code> &#x51FD;&#x6570;&#x8BA1;&#x7B97;&#x5B8C;&#x6210;&#x540E;&#xFF0C;&#x8F6C;&#x6362;&#x540E;&#x7684;&#x6570;&#x636E;&#x4FDD;&#x5B58;&#x5728; g_MeshData &#x5168;&#x5C40;&#x53D8;&#x91CF;&#x4E2D;&#xFF0C;&#x4E4B;&#x540E;&#x8C03;&#x7528; <code>recalculateBoundingBoxes()</code> &#x51FD;&#x6570;&#xFF0C;&#x8BA1;&#x7B97;&#x5305;&#x56F4;&#x76D2;&#xFF1A;</p>
+<pre><code> // &#x5305;&#x56F4;&#x76D2;&#x7684;&#x8BA1;&#x7B97;&#x5176;&#x5B9E;&#x5C31;&#x662F;&#x8BA1;&#x7B97;&#x6240;&#x6709;&#x9876;&#x70B9;&#x6570;&#x636E;&#x4E2D;&#xFF0C;&#x6700;&#x5C0F;&#x7684; x&#x3001;y&#x3001;z &#x5750;&#x6807;&#x548C;&#x6700;&#x5927;&#x7684; x&#x3001;y&#x3001;z &#x5750;&#x6807;&#xFF0C;&#x8FD9;&#x91CC;&#x7684;&#x8BA1;&#x7B97;&#x65B9;&#x6CD5;&#x901A;&#x8FC7;&#x7D22;&#x5F15;&#x6765;&#x627E;&#x5230;&#x9876;&#x70B9;&#x5750;&#x6807;&#xFF0C;&#x5176;&#x5B9E;&#x4E5F;&#x53EF;&#x4EE5;&#x76F4;&#x63A5;&#x904D;&#x5386;&#x9876;&#x70B9;&#x6570;&#x636E;
+ void recalculateBoundingBoxes(MeshData&amp; m)
+ {
+     m.boxes_.clear();
+
+     for (const auto&amp; mesh : m.meshes_)
+     {
+         const auto numIndices = mesh.getLODIndicesCount(0);
+
+         glm::vec3 vmin(std::numeric_limits&lt;float&gt;::max());
+         glm::vec3 vmax(std::numeric_limits&lt;float&gt;::lowest());
+
+         for (auto i = 0; i != numIndices; i++)
+         {
+             auto vtxOffset = m.indexData_[mesh.indexOffset + i] + mesh.vertexOffset;
+             const float* vf = &amp;m.vertexData_[vtxOffset * kMaxStreams];
+             vmin = glm::min(vmin, vec3(vf[0], vf[1], vf[2]));
+             vmax = glm::max(vmax, vec3(vf[0], vf[1], vf[2]));
+         }
+
+         m.boxes_.emplace_back(vmin, vmax);
+     }
+ }
+</code></pre><p> <code>recalculateBoundingBoxes()</code> &#x51FD;&#x6570;&#x8BA1;&#x7B97;&#x5B8C;&#x5305;&#x56F4;&#x76D2;&#x540E;&#xFF0C;&#x5F00;&#x59CB;&#x5C06;&#x51E0;&#x4F55;&#x6570;&#x636E;&#x4FDD;&#x5B58;&#x5230;&#x6587;&#x4EF6;&#x4E2D; <code>saveMeshData(cfg.outputMesh.c_str(), g_MeshData);</code></p>
+<pre><code> void saveMeshData(const char* fileName, const MeshData&amp; m)
+ {
+     FILE *f = fopen(fileName, &quot;wb&quot;);
+
+     const MeshFileHeader header = {
+         .magicValue = 0x12345678, // &#x9B54;&#x6570;&#xFF0C;&#x9A8C;&#x8BC1;&#x8FD9;&#x662F;&#x5426;&#x662F; Mesh &#x6587;&#x4EF6;
+         .meshCount = (uint32_t)m.meshes_.size(), // mesh &#x7684;&#x6570;&#x91CF;
+         .dataBlockStartOffset = (uint32_t )(sizeof(MeshFileHeader) + m.meshes_.size() * sizeof(Mesh)), // &#x6570;&#x636E;&#x6BB5;&#x8DDD;&#x79BB;&#x6587;&#x4EF6;&#x5F00;&#x59CB;&#x7684; offset&#xFF0C;&#x4EE5;&#x5B57;&#x8282;&#x4E3A;&#x5355;&#x4F4D;
+         .indexDataSize = (uint32_t)(m.indexData_.size() * sizeof(uint32_t)), // &#x7D22;&#x5F15;&#x6570;&#x636E;&#x6BB5;&#x7684;&#x5927;&#x5C0F;
+         .vertexDataSize = (uint32_t)(m.vertexData_.size() * sizeof(float)) // &#x9876;&#x70B9;&#x6570;&#x636E;&#x6BB5;&#x7684;&#x5927;&#x5C0F;
+     };
+
+     fwrite(&amp;header, 1, sizeof(header), f);
+     fwrite(m.meshes_.data(), sizeof(Mesh), header.meshCount, f);
+     fwrite(m.boxes_.data(), sizeof(BoundingBox), header.meshCount, f);
+     fwrite(m.indexData_.data(), 1, header.indexDataSize, f);
+     fwrite(m.vertexData_.data(), 1, header.vertexDataSize, f);
+
+     fclose(f);
+ }
+</code></pre></li>
+<li><p>Material &#x6570;&#x636E;
+ &#x6750;&#x8D28;&#x6570;&#x636E;&#x7684;&#x8F6C;&#x6362;&#x5206;&#x4E3A;&#x4E24;&#x6B65;&#xFF0C;&#x7B2C;&#x4E00;&#x6B65;&#x8F6C;&#x6362;&#xFF0C;&#x7B2C;&#x4E8C;&#x4E0D;&#x4FDD;&#x5B58;&#xFF0C;&#x6211;&#x4EEC;&#x5148;&#x770B;&#x7B2C;&#x4E00;&#x6B65;</p>
+<pre><code> std::vector&lt;MaterialDescription&gt; materials;
+ std::vector&lt;std::string&gt;&amp; materialNames = ourScene.materialNames_;
+
+ // 1. &#x4FDD;&#x5B58;&#x7EB9;&#x7406;&#x6587;&#x4EF6;&#x540D;
+ std::vector&lt;std::string&gt; files;
+ // 2. &#x4FDD;&#x5B58; opacityMaps &#x7EB9;&#x7406;&#x6587;&#x4EF6;&#x540D;
+ std::vector&lt;std::string&gt; opacityMaps;
+
+ for (unsigned int m = 0 ; m &lt; scene-&gt;mNumMaterials ; m++)
+ {
+     aiMaterial* mm = scene-&gt;mMaterials[m];
+
+     printf(&quot;Material [%s] %u\n&quot;, mm-&gt;GetName().C_Str(), m);
+     materialNames.push_back(std::string(mm-&gt;GetName().C_Str()));
+
+     MaterialDescription D = convertAIMaterialToDescription(mm, files, opacityMaps);
+     materials.push_back(D);
+     //dumpMaterial(files, D);
+ }
+</code></pre><p> &#x5176;&#x4E2D;&#x5173;&#x952E;&#x5728; <code>convertAIMaterialToDescription()</code> &#x51FD;&#x6570;&#xFF0C;&#x5176;&#x4F5C;&#x7528;&#x662F;&#x5C06;&#x6A21;&#x578B;&#x4E2D;&#x7684;&#x6750;&#x8D28;&#xFF0C;&#x8F6C;&#x6362;&#x4E3A; <code>MaterialDescription</code> &#x7684;&#x63CF;&#x8FF0;&#x5BF9;&#x8C61;&#xFF0C;&#x4E0B;&#x9762;&#x8BE6;&#x7EC6;&#x5206;&#x6790;&#x4E0B;&#x8BE5;&#x51FD;&#x6570;</p>
+<pre><code> MaterialDescription convertAIMaterialToDescription(const aiMaterial* M, std::vector&lt;std::string&gt;&amp; files, std::vector&lt;std::string&gt;&amp; opacityMaps)
+ {
+     MaterialDescription D;
+
+     aiColor4D Color;
+
+     // 1. &#x5904;&#x7406;&#x6750;&#x8D28;&#x989C;&#x8272;
+     if (aiGetMaterialColor(M, AI_MATKEY_COLOR_AMBIENT, &amp;Color) == AI_SUCCESS)
+     {
+         D.emissiveColor_ = { Color.r, Color.g, Color.b, Color.a };
+         if (D.emissiveColor_.w &gt; 1.0f) D.emissiveColor_.w = 1.0f;
+     }
+     if (aiGetMaterialColor(M, AI_MATKEY_COLOR_DIFFUSE, &amp;Color) == AI_SUCCESS)
+     {
+         D.albedoColor_ = { Color.r, Color.g, Color.b, Color.a };
+         if (D.albedoColor_.w &gt; 1.0f) D.albedoColor_.w = 1.0f;
+     }
+     if (aiGetMaterialColor(M, AI_MATKEY_COLOR_EMISSIVE, &amp;Color) == AI_SUCCESS)
+     {
+         D.emissiveColor_.x += Color.r;
+         D.emissiveColor_.y += Color.g;
+         D.emissiveColor_.z += Color.b;
+         D.emissiveColor_.w += Color.a;
+         if (D.emissiveColor_.w &gt; 1.0f) D.albedoColor_.w = 1.0f;
+     }
+
+     // 2. &#x5904;&#x7406;&#x900F;&#x660E;
+     const float opaquenessThreshold = 0.05f;
+     float Opacity = 1.0f;
+
+     if (aiGetMaterialFloat(M, AI_MATKEY_OPACITY, &amp;Opacity) == AI_SUCCESS)
+     {
+         D.transparencyFactor_ = glm::clamp(1.0f - Opacity, 0.0f, 1.0f);
+         if (D.transparencyFactor_ &gt;= 1.0f - opaquenessThreshold) D.transparencyFactor_ = 0.0f;
+     }
+
+     if (aiGetMaterialColor(M, AI_MATKEY_COLOR_TRANSPARENT, &amp;Color) == AI_SUCCESS)
+     {
+         const float Opacity = std::max(std::max(Color.r, Color.g), Color.b);
+         D.transparencyFactor_ = glm::clamp(Opacity, 0.0f, 1.0f);
+         if (D.transparencyFactor_ &gt;= 1.0f - opaquenessThreshold) D.transparencyFactor_ = 0.0f;
+         D.alphaTest_ = 0.5f;
+     }
+
+     float tmp = 1.0f;
+     // 3. &#x91D1;&#x5C5E;&#x5EA6;
+     if (aiGetMaterialFloat(M, AI_MATKEY_GLTF_PBRMETALLICROUGHNESS_METALLIC_FACTOR, &amp;tmp) == AI_SUCCESS)
+         D.metallicFactor_ = tmp;
+
+     // 4. &#x7C97;&#x7CD9;&#x5EA6;
+     if (aiGetMaterialFloat(M, AI_MATKEY_GLTF_PBRMETALLICROUGHNESS_ROUGHNESS_FACTOR, &amp;tmp) == AI_SUCCESS)
+         D.roughness_ = { tmp, tmp, tmp, tmp };
+
+     aiString Path;
+     aiTextureMapping Mapping;
+     unsigned int UVIndex = 0;
+     float Blend = 1.0f;
+     aiTextureOp TextureOp = aiTextureOp_Add;
+     aiTextureMapMode TextureMapMode[2] = { aiTextureMapMode_Wrap, aiTextureMapMode_Wrap };
+     unsigned int TextureFlags = 0;
+
+     // 5. emissiveMap &#x5BF9;&#x5E94;&#x7684;&#x7EB9;&#x7406;&#x6587;&#x4EF6;
+     if ( aiGetMaterialTexture( M, aiTextureType_EMISSIVE, 0, &amp;Path, &amp;Mapping, &amp;UVIndex, &amp;Blend, &amp;TextureOp, TextureMapMode, &amp;TextureFlags ) == AI_SUCCESS )
+     {
+         D.emissiveMap_ = addUnique(files, Path.C_Str());
+     }
+
+     // 6. albedoMap &#x5BF9;&#x5E94;&#x7684;&#x7EB9;&#x7406;&#x6587;&#x4EF6;
+     if ( aiGetMaterialTexture( M, aiTextureType_DIFFUSE, 0, &amp;Path, &amp;Mapping, &amp;UVIndex, &amp;Blend, &amp;TextureOp, TextureMapMode, &amp;TextureFlags ) == AI_SUCCESS )
+     {
+         D.albedoMap_ = addUnique(files, Path.C_Str());
+         const std::string albedoMap = std::string(Path.C_Str());
+         if (albedoMap.find(&quot;grey_30&quot;) != albedoMap.npos)
+             D.flags_ |= sMaterialFlags_Transparent;
+     }
+
+     // 7. &#x5207;&#x7EBF;&#x7A7A;&#x95F4;&#x6CD5;&#x5411;&#x91CF;
+     // first try tangent space normal map
+     if ( aiGetMaterialTexture( M, aiTextureType_NORMALS, 0, &amp;Path, &amp;Mapping, &amp;UVIndex, &amp;Blend, &amp;TextureOp, TextureMapMode, &amp;TextureFlags) == AI_SUCCESS )
+     {
+         D.normalMap_ = addUnique(files, Path.C_Str());
+     }
+     // then height map
+     if (D.normalMap_ == 0xFFFFFFFF)
+         if ( aiGetMaterialTexture( M, aiTextureType_HEIGHT, 0, &amp;Path, &amp;Mapping, &amp;UVIndex, &amp;Blend, &amp;TextureOp, TextureMapMode, &amp;TextureFlags ) == AI_SUCCESS )
+             D.normalMap_ = addUnique(files, Path.C_Str());
+
+     // 8. opacityMap &#x900F;&#x660E;&#x56FE;
+     if ( aiGetMaterialTexture( M, aiTextureType_OPACITY, 0, &amp;Path, &amp;Mapping, &amp;UVIndex, &amp;Blend, &amp;TextureOp, TextureMapMode, &amp;TextureFlags ) == AI_SUCCESS )
+     {
+         D.opacityMap_ = addUnique(opacityMaps, Path.C_Str());
+         D.alphaTest_ = 0.5f;
+     }
+
+     // 9. &#x6839;&#x636E;&#x7D20;&#x6750;&#x540D;&#x8C03;&#x6574;&#x7D20;&#x6750;&#x53C2;&#x6570;
+     // patch materials
+     aiString Name;
+     std::string materialName;
+     if (aiGetMaterialString(M, AI_MATKEY_NAME, &amp;Name) == AI_SUCCESS)
+     {
+         materialName = Name.C_Str();
+     }
+     // apply heuristics
+     if ((materialName.find(&quot;Glass&quot;) != std::string::npos) ||
+         (materialName.find(&quot;Vespa_Headlight&quot;) != std::string::npos))
+     {
+         D.alphaTest_ = 0.75f;
+         D.transparencyFactor_ = 0.1f;
+         D.flags_ |= sMaterialFlags_Transparent;
+     }
+     else if (materialName.find(&quot;Bottle&quot;) != std::string::npos)
+     {
+         D.alphaTest_ = 0.54f;
+         D.transparencyFactor_ = 0.4f;
+         D.flags_ |= sMaterialFlags_Transparent;
+     }
+     else if (materialName.find(&quot;Metal&quot;) != std::string::npos)
+     {
+         D.metallicFactor_ = 1.0f;
+         D.roughness_ = gpuvec4(0.1f, 0.1f, 0.0f, 0.0f);
+     }
+
+     return D;
+ }
+</code></pre><p> &#x4E4B;&#x540E;&#xFF0C;&#x901A;&#x8FC7; <code>convertAndDownscaleAllTextures()</code> &#x51FD;&#x6570;&#x8FDB;&#x4E00;&#x6B65;&#x5904;&#x7406; albedo &#x7EB9;&#x7406;&#xFF0C;&#x628A;&#x50CF;&#x7D20;&#x7684; w &#x901A;&#x9053;&#x8BBE;&#x7F6E;&#x4E3A; opacityMap &#x4E2D;&#x7684;&#x503C;&#xFF1B;
+ &#x6700;&#x540E;&#xFF0C;&#x901A;&#x8FC7; <code>saveMaterials()</code> &#x5C06;&#x5904;&#x7406;&#x540E;&#x7684; <code>MaterialDescription</code> &#x6570;&#x7EC4;&#x548C;&#x7EB9;&#x7406;&#x56FE;&#x50CF;&#x7684;&#x4F4D;&#x7F6E;&#x6570;&#x7EC4;&#xFF0C;&#x4FDD;&#x5B58;&#x5230;&#x6587;&#x4EF6;&#x4E2D;&#xFF0C;&#x5982;&#x4E0B;&#xFF1A;</p>
+<pre><code> void saveMaterials(const char* fileName, const std::vector&lt;MaterialDescription&gt;&amp; materials, const std::vector&lt;std::string&gt;&amp; files)
+ {
+     FILE* f = fopen(fileName, &quot;wb&quot;);
+     if (!f)
+         return;
+
+     uint32_t sz = (uint32_t)materials.size();
+     fwrite(&amp;sz, 1, sizeof(uint32_t), f);
+     fwrite(materials.data(), sizeof(MaterialDescription), sz, f);
+     saveStringList(f, files);
+     fclose(f);
+ }
+
+ void saveStringList(FILE* f, const std::vector&lt;std::string&gt;&amp; lines)
+ {
+     uint32_t sz = (uint32_t)lines.size();
+     fwrite(&amp;sz, sizeof(uint32_t), 1, f);
+     for (const auto&amp; s: lines)
+     {
+         sz = (uint32_t)s.length();
+         fwrite(&amp;sz, sizeof(uint32_t), 1, f);
+         fwrite(s.c_str(), sz + 1, 1, f);
+     }
+ }
+</code></pre><p> &#x9644;&#x4E0A;&#xFF0C;&#x52A0;&#x8F7D;&#x6750;&#x8D28;&#x7684;&#x51FD;&#x6570; <code>loadMaterials()</code> &#x7684;&#x4EE3;&#x7801;&#xFF1A;</p>
+<pre><code> void loadMaterials(const char* fileName, std::vector&lt;MaterialDescription&gt;&amp; materials, std::vector&lt;std::string&gt;&amp; files)
+ {
+     FILE* f = fopen(fileName, &quot;rb&quot;);
+     if (!f) {
+         printf(&quot;Cannot load file %s\nPlease run SceneConverter tool from Chapter7\n&quot;, fileName);
+         exit(255);
+     }
+
+     uint32_t sz;
+     fread(&amp;sz, 1, sizeof(uint32_t), f);
+     materials.resize(sz);
+     fread(materials.data(), sizeof(MaterialDescription), materials.size(), f);
+     loadStringList(f, files);
+     fclose(f);
+ }
+
+ void loadStringList(FILE* f, std::vector&lt;std::string&gt;&amp; lines)
+ {
+     {
+         uint32_t sz = 0;
+         fread(&amp;sz, sizeof(uint32_t), 1, f);
+         lines.resize(sz);
+     }
+     std::vector&lt;char&gt; inBytes;
+     for (auto&amp; s: lines)
+     {
+         uint32_t sz = 0;
+         fread(&amp;sz, sizeof(uint32_t), 1, f);
+         inBytes.resize(sz + 1);
+         fread(inBytes.data(), sz + 1, 1, f);
+         s = std::string(inBytes.data());
+     }
+ }
+</code></pre></li>
+<li><p>&#x573A;&#x666F;&#x56FE;&#x6570;&#x636E;
+&#x9996;&#x5148;&#xFF0C;&#x6765;&#x770B; <code>traverse()</code> &#x51FD;&#x6570;&#xFF0C;&#x4E3B;&#x8981;&#x529F;&#x80FD;&#x662F;&#x5C06;&#x6A21;&#x578B;&#x4E2D;&#x7684;&#x8282;&#x70B9;&#x4FDD;&#x5B58;&#x4E3A; Scene &#x4E2D;&#x7684;&#x4E00;&#x4E2A;&#x8282;&#x70B9;&#xFF0C;&#x5176;&#x4E2D;&#x5982;&#x679C;&#x6A21;&#x578B;&#x8282;&#x70B9;&#x4E2D;&#x542B;&#x6709; Mesh &#x51E0;&#x4F55;&#x6570;&#x636E;&#xFF0C;&#x90A3;&#x4E48;&#x6BCF;&#x4E2A; Mesh &#x90FD;&#x6DFB;&#x52A0;&#x4E3A; Scene &#x4E2D;&#x8282;&#x70B9;&#x7684;&#x5B50;&#x8282;&#x70B9;&#x8FDB;&#x884C;&#x5904;&#x7406;&#xFF0C;&#x7136;&#x540E;&#x904D;&#x5386;&#x6267;&#x884C; <code>traverse()</code> &#x51FD;&#x6570;&#xFF0C;&#x5904;&#x7406;&#x6A21;&#x578B;&#x8282;&#x70B9;&#x7684;&#x5B50;&#x8282;&#x70B9;</p>
+<pre><code> void traverse(const aiScene* sourceScene, Scene&amp; scene, aiNode* N, int parent, int ofs)
+ {
+     // 1. &#x5728; Scene &#x4E2D;&#x6DFB;&#x52A0;&#x5B50;&#x8282;&#x70B9;&#xFF0C;&#x8FD4;&#x56DE;&#x503C;&#x662F; Scene &#x4E2D;&#x8BE5;&#x8282;&#x70B9;&#x7684;&#x6570;&#x7EC4;&#x7D22;&#x5F15;&#xFF0C;&#x540E;&#x9762;&#x5177;&#x4F53;&#x5206;&#x6790;&#x6DFB;&#x52A0;&#x65B9;&#x6CD5;
+     int newNode = addNode(scene, parent, ofs);
+
+     // 2. &#x5982;&#x679C;&#x8BE5;&#x8282;&#x70B9;&#x6709;&#x540D;&#x5B57;&#xFF0C;&#x5219;&#x5C06;&#x540D;&#x5B57;&#x4FDD;&#x5B58;&#x5728; names_ &#x6570;&#x7EC4;&#x4E2D;&#xFF0C;&#x5E76;&#x901A;&#x8FC7; nameForNode_ &#x8FD9;&#x4E2A; hashMap &#x8FDB;&#x884C;&#x67E5;&#x627E;
+     if (N-&gt;mName.C_Str())
+     {
+         makePrefix(ofs); printf(&quot;Node[%d].name = %s\n&quot;, newNode, N-&gt;mName.C_Str());
+
+         uint32_t stringID = (uint32_t)scene.names_.size();
+         scene.names_.push_back(std::string(N-&gt;mName.C_Str()));
+         scene.nameForNode_[newNode] = stringID;
+     }
+
+     // 3. &#x5982;&#x679C;&#x8BE5;&#x8282;&#x70B9;&#x4E2D;&#x6709; Mesh &#x6570;&#x636E;&#xFF0C;&#x6BCF;&#x4E2A; Mesh &#x90FD;&#x4F5C;&#x4E3A;&#x8BE5;&#x8282;&#x70B9;&#x7684;&#x5B50;&#x8282;&#x70B9;&#x51FA;&#x73B0;
+     for (size_t i = 0; i &lt; N-&gt;mNumMeshes ; i++)
+     {
+         // 3-1. &#x6DFB;&#x52A0; Mesh &#x51E0;&#x4F55;&#x8282;&#x70B9;&#x4F5C;&#x4E3A;&#x8BE5;&#x8282;&#x70B9;&#x7684;&#x5B50;&#x8282;&#x70B9;
+         int newSubNode = addNode(scene, newNode, ofs + 1);;
+
+         // 3-2. &#x8BE5; Mesh &#x547D;&#x540D;&#x4E3A; xxx_Mesh_[i]
+         uint32_t stringID = (uint32_t)scene.names_.size();
+         scene.names_.push_back(std::string(N-&gt;mName.C_Str()) + &quot;_Mesh_&quot; + std::to_string(i));
+         scene.nameForNode_[newSubNode] = stringID;
+
+         // 3-3. &#x4FDD;&#x5B58;&#x8BE5; Mesh &#x8282;&#x70B9;&#x5BF9;&#x5E94;&#x7684;&#x51E0;&#x4F55;&#x6570;&#x636E;&#x548C;&#x6750;&#x8D28;&#x6570;&#x636E;&#x7684;&#x7D22;&#x5F15;&#xFF0C;&#x6CE8;&#x610F;&#xFF0C;&#x8FD9;&#x91CC;&#x5229;&#x7528;&#x4E86;&#x4E00;&#x4E2A;&#x9690;&#x542B;&#x6761;&#x4EF6;&#xFF0C;&#x5C31;&#x662F;&#x5904;&#x7406; Mesh &#x548C; Material &#x6750;&#x8D28;&#x65F6;&#xFF0C;&#x662F;&#x6309;&#x7167;&#x6A21;&#x578B;&#x91CC;&#x9762;&#x7684;&#x987A;&#x5E8F;&#x8F6C;&#x6362;&#x7684;&#xFF0C;&#x6240;&#x4EE5;&#x53EF;&#x4EE5;&#x76F4;&#x63A5;&#x7528;&#x6A21;&#x578B;&#x91CC;&#x9762;&#x7684;&#x7D22;&#x5F15;&#x6765;&#x83B7;&#x53D6;&#x5904;&#x7406;&#x540E;&#x7684;&#x6570;&#x636E;
+         int mesh = (int)N-&gt;mMeshes[i];
+         scene.meshes_[newSubNode] = mesh;
+         scene.materialForNode_[newSubNode] = sourceScene-&gt;mMeshes[mesh]-&gt;mMaterialIndex;
+
+         // 3-4. &#x6253;&#x5370;&#x8C03;&#x8BD5;&#x4FE1;&#x606F;
+         makePrefix(ofs); printf(&quot;Node[%d].SubNode[%d].mesh     = %d\n&quot;, newNode, newSubNode, (int)mesh);
+         makePrefix(ofs); printf(&quot;Node[%d].SubNode[%d].material = %d\n&quot;, newNode, newSubNode, sourceScene-&gt;mMeshes[mesh]-&gt;mMaterialIndex);
+
+         // 3-5. &#x51E0;&#x4F55;&#x8282;&#x70B9;&#x7684;&#x8F6C;&#x6362;&#x77E9;&#x9635;&#xFF0C;&#x8BBE;&#x7F6E;&#x4E3A;&#x5355;&#x4F4D;&#x77E9;&#x9635;
+         scene.globalTransform_[newSubNode] = glm::mat4(1.0f);
+         scene.localTransform_[newSubNode] = glm::mat4(1.0f);
+     }
+
+     // 4. &#x8BBE;&#x7F6E;&#x8BE5;&#x8282;&#x70B9;&#x7684;&#x8F6C;&#x6362;&#x77E9;&#x9635;
+     scene.globalTransform_[newNode] = glm::mat4(1.0f);
+     scene.localTransform_[newNode] = toMat4(N-&gt;mTransformation);
+
+     if (N-&gt;mParent != nullptr) {
+         makePrefix(ofs); printf(&quot;\tNode[%d].parent         = %s\n&quot;, newNode, N-&gt;mParent-&gt;mName.C_Str());
+         makePrefix(ofs); printf(&quot;\tNode[%d].localTransform = &quot;, newNode); printMat4(N-&gt;mTransformation); printf(&quot;\n&quot;);
+     }
+
+     // 5. &#x5982;&#x679C;&#x6A21;&#x578B;&#x5305;&#x542B;&#x5B50;&#x8282;&#x70B9;&#xFF0C;&#x4EE5;&#x8BE5;&#x8282;&#x70B9;&#x4E3A;&#x7236;&#xFF0C;&#x7EE7;&#x7EED;&#x904D;&#x5386;&#x5904;&#x7406;&#x5B50;&#x8282;&#x70B9;
+     for (unsigned int n = 0 ; n  &lt; N-&gt;mNumChildren ; n++)
+         traverse(sourceScene, scene, N-&gt;mChildren[n], newNode, ofs + 1);
+ }
+</code></pre><p> <code>traverse()</code> &#x51FD;&#x6570;&#x4F1A;&#x6DF1;&#x5EA6;&#x904D;&#x5386;&#x5904;&#x7406;&#x6240;&#x6709;&#x6A21;&#x578B;&#x7684;&#x8282;&#x70B9;&#xFF0C;&#x8F6C;&#x6362;&#x4E3A;&#x573A;&#x666F;&#x56FE;&#x4E2D;&#x7684; Node&#xFF0C;&#x5E76;&#x5C06;&#x6A21;&#x578B;&#x8282;&#x70B9;&#x7684; Mesh &#x6570;&#x636E;&#xFF0C;&#x6302;&#x8F7D;&#x4E3A; Node &#x7684;&#x51E0;&#x4F55;&#x5B50;&#x8282;&#x70B9;&#xFF0C;&#x4E0B;&#x9762;&#x6211;&#x4EEC;&#x770B;&#x4E00;&#x4E0B; <code>addNode()</code> &#x51FD;&#x6570;&#xFF0C;&#x662F;&#x5982;&#x4F55;&#x6DFB;&#x52A0; Node &#x5B50;&#x8282;&#x70B9;&#x7684;</p>
+<pre><code> int addNode(Scene&amp; scene, int parent, int level)
+ {
+     int node = (int)scene.hierarchy_.size();
+     {
+         // TODO: resize aux arrays (local/global etc.)
+         scene.localTransform_.push_back(glm::mat4(1.0f));
+         scene.globalTransform_.push_back(glm::mat4(1.0f));
+     }
+
+     // 1. &#x5728;&#x6700;&#x672B;&#x4F4D;&#x6DFB;&#x52A0;&#x65B0;&#x7684;&#x5B50;&#x8282;&#x70B9;&#xFF0C;&#x9996;&#x5148;&#x8BBE;&#x7F6E;&#x597D;&#x7236;&#x8282;&#x70B9;
+     scene.hierarchy_.push_back({ .parent_ = parent, .lastSibling_ = -1 });
+
+     // 2. &#x5982;&#x679C;&#x4E0D;&#x662F;&#x6839;&#x8282;&#x70B9;&#x7684;&#x8BDD;&#xFF0C;&#x8FDB;&#x5165;&#x91CC;&#x9762;&#x7684;&#x6D41;&#x7A0B;
+     if (parent &gt; -1)
+     {
+         // 2-1. &#x627E;&#x5230;&#x7236;&#x8282;&#x70B9;&#x7684;&#x7B2C;&#x4E00;&#x4E2A;&#x5B69;&#x5B50;&#x8282;&#x70B9;
+         // find first item (sibling)
+         int s = scene.hierarchy_[parent].firstChild_;
+
+         // 2-2. &#x5982;&#x679C;&#x4E0D;&#x5B58;&#x5728;&#xFF0C;&#x8BF4;&#x660E;&#x8BE5;&#x8282;&#x70B9;&#x662F;&#x7236;&#x8282;&#x70B9;&#x7684;&#x7B2C;&#x4E00;&#x4E2A;&#x5B69;&#x5B50;&#xFF0C;&#x8BBE;&#x7F6E;&#x7236;&#x8282;&#x70B9;&#x7684; firstChild_ &#x5C5E;&#x6027;&#xFF0C;&#x4EE5;&#x53CA;&#x81EA;&#x5DF1;&#x7684; lastSibling_ &#x5C5E;&#x6027;
+         if (s == -1)
+         {
+             scene.hierarchy_[parent].firstChild_ = node;
+             scene.hierarchy_[node].lastSibling_ = node;
+         } else
+         {
+             // 2-3. &#x5982;&#x679C;&#x627E;&#x5230;&#x4E86;&#x7236;&#x8282;&#x70B9;&#x7684;&#x7B2C;&#x4E00;&#x4E2A;&#x5B69;&#x5B50;&#xFF0C;&#x90A3;&#x4E48;&#x6839;&#x636E;&#x5176;&#x4E0A;&#x9762;&#x7684; lastSibling_ &#x5C5E;&#x6027;&#xFF0C;&#x627E;&#x5230;&#x7236;&#x8282;&#x70B9;&#x7684;&#x6700;&#x540E;&#x7684;&#x4E00;&#x4E2A;&#x5B69;&#x5B50;
+             int dest = scene.hierarchy_[s].lastSibling_;
+             if (dest &lt;= -1)
+             {
+                 // 2-4. &#x5982;&#x679C;&#x6CA1;&#x6709; lastSibling_ &#x5C5E;&#x6027;&#xFF0C;&#x5C31;&#x901A;&#x8FC7;&#x7B2C;&#x4E00;&#x4E2A;&#x5B69;&#x5B50;&#x7684; nextSibling_ &#x5C5E;&#x6027;&#xFF0C;&#x627E;&#x5230;&#x4ED6;&#x7684;&#x5144;&#x5F1F;&#x8282;&#x70B9;&#xFF0C;&#x7136;&#x540E;&#x518D;&#x901A;&#x8FC7;&#x5144;&#x5F1F;&#x8282;&#x70B9;&#x7684; nextSibling_ &#x5C5E;&#x6027;&#x4E00;&#x5C42;&#x5C42;&#x627E;&#x4E0B;&#x53BB;&#xFF0C;&#x76F4;&#x5230;&#x6700;&#x540E;&#x4E00;&#x4E2A; nextSibling_ &#x4E3A; -1 &#x7684;&#x8282;&#x70B9;&#xFF0C;&#x5C31;&#x662F;&#x6700;&#x540E;&#x7684;&#x5B69;&#x5B50;
+                 // no cached lastSibling, iterate nextSibling indices
+                 for (dest = s; scene.hierarchy_[dest].nextSibling_ != -1; dest = scene.hierarchy_[dest].nextSibling_);
+             }
+             // 2-5. &#x66F4;&#x65B0;&#x6700;&#x540E;&#x7684;&#x5B69;&#x5B50;&#x7684; nextSibling_ &#x5C5E;&#x6027;&#xFF0C;&#x548C;&#x7B2C;&#x4E00;&#x4E2A;&#x5B69;&#x5B50;&#x7684; lastSibling_ &#x5C5E;&#x6027;&#xFF0C;&#x7B2C;&#x4E00;&#x4E2A;&#x5B69;&#x5B50;&#x6709;&#x7F13;&#x5B58;&#x6700;&#x540E;&#x4E00;&#x4E2A;&#x5B69;&#x5B50;&#x4F4D;&#x7F6E;&#x7684;&#x4F5C;&#x7528;
+             scene.hierarchy_[dest].nextSibling_ = node;
+             scene.hierarchy_[s].lastSibling_ = node;
+         }
+     }
+
+     // 3. &#x8BBE;&#x7F6E;&#x65B0;&#x8282;&#x70B9;&#x7684;&#x6DF1;&#x5EA6;&#x5C42;&#x7EA7;&#x3001;&#x7B2C;&#x4E00;&#x4E2A;&#x5B69;&#x5B50;&#x548C;&#x5144;&#x5F1F;&#x5C5E;&#x6027;
+     scene.hierarchy_[node].level_ = level;
+     scene.hierarchy_[node].nextSibling_ = -1;
+     scene.hierarchy_[node].firstChild_  = -1;
+     return node;
+ }
+</code></pre><p> &#x904D;&#x5386;&#x5904;&#x7406;&#x5B8C;&#x8282;&#x70B9;&#x540E;&#xFF0C;&#x9700;&#x8981;&#x4FDD;&#x5B58;&#x8282;&#x70B9;&#x6570;&#x636E; <code>saveScene()</code></p>
+<pre><code> void saveScene(const char* fileName, const Scene&amp; scene)
+ {
+     FILE* f = fopen(fileName, &quot;wb&quot;);
+
+     const uint32_t sz = (uint32_t)scene.hierarchy_.size();
+     fwrite(&amp;sz, sizeof(sz), 1, f);
+
+     fwrite(scene.localTransform_.data(), sizeof(glm::mat4), sz, f);
+     fwrite(scene.globalTransform_.data(), sizeof(glm::mat4), sz, f);
+     fwrite(scene.hierarchy_.data(), sizeof(Hierarchy), sz, f);
+
+     // Mesh for node [index to some list of buffers]
+     saveMap(f, scene.materialForNode_);
+     saveMap(f, scene.meshes_);
+
+     if (!scene.names_.empty() &amp;&amp; !scene.nameForNode_.empty())
+     {
+         saveMap(f, scene.nameForNode_);
+         saveStringList(f, scene.names_);
+
+         saveStringList(f, scene.materialNames_);
+     }
+     fclose(f);
+ }
+
+ void saveMap(FILE* f, const std::unordered_map&lt;uint32_t, uint32_t&gt;&amp; map)
+ {
+     std::vector&lt;uint32_t&gt; ms;
+     ms.reserve(map.size() * 2);
+     for (const auto&amp; m : map)
+     {
+         ms.push_back(m.first);
+         ms.push_back(m.second);
+     }
+     const uint32_t sz = static_cast&lt;uint32_t&gt;(ms.size());
+     fwrite(&amp;sz, sizeof(sz), 1, f);
+     fwrite(ms.data(), sizeof(int), ms.size(), f);
+ }
+</code></pre><p> &#x4FDD;&#x5B58;&#x51FD;&#x6570;&#x5F88;&#x7B80;&#x6D01;&#x660E;&#x4E86;&#xFF0C;&#x57FA;&#x672C;&#x7ED3;&#x6784;&#x5982;&#x4E0B;&#xFF1A;</p>
+<ol>
+<li>&#x8282;&#x70B9;&#x6570;&#x76EE;&#xFF0C;&#x4E00;&#x4E2A;&#x5B57;&#x8282;&#xFF1B;</li>
+<li>localTransform<em>&#x3001;globalTransform</em>&#x3001;hierarchy_&#xFF1B;</li>
+<li><p>&#x4FDD;&#x5B58; Map&#xFF0C;materialForNode<em> &#x548C; meshes</em>&#xFF1B;  </p>
+<p>&#x540C;&#x6837;&#xFF0C;&#x8F7D;&#x5165;&#x51FD;&#x6570;&#xFF0C;&#x5C31;&#x662F;&#x8FD9;&#x4E2A;&#x7684;&#x9006;&#x8FC7;&#x7A0B;</p>
+<p> void loadMap(FILE* f, std::unordered_map<uint32_t, uint32_t="">&amp; map)
+ {</uint32_t,></p>
+<pre><code> std::vector&lt;uint32_t&gt; ms;
+
+ uint32_t sz = 0;
+ fread(&amp;sz, 1, sizeof(sz), f);
+
+ ms.resize(sz);
+ fread(ms.data(), sizeof(int), sz, f);
+ for (size_t i = 0; i &lt; (sz / 2) ; i++)
+     map[ms[i * 2 + 0]] = ms[i * 2 + 1];
+</code></pre><p> }</p>
+<p> void loadScene(const char* fileName, Scene&amp; scene)
+ {</p>
+<pre><code> FILE* f = fopen(fileName, &quot;rb&quot;);
+
+ if (!f)
+ {
+     printf(&quot;Cannot open scene file &apos;%s&apos;. Please run SceneConverter from Chapter7 and/or MergeMeshes from Chapter 9&quot;, fileName);
+     return;
+ }
+
+ uint32_t sz = 0;
+ fread(&amp;sz, sizeof(sz), 1, f);
+
+ scene.hierarchy_.resize(sz);
+ scene.globalTransform_.resize(sz);
+ scene.localTransform_.resize(sz);
+ // TODO: check &gt; -1
+ // TODO: recalculate changedAtThisLevel() - find max depth of a node [or save scene.maxLevel]
+ fread(scene.localTransform_.data(), sizeof(glm::mat4), sz, f);
+ fread(scene.globalTransform_.data(), sizeof(glm::mat4), sz, f);
+ fread(scene.hierarchy_.data(), sizeof(Hierarchy), sz, f);
+
+ // Mesh for node [index to some list of buffers]
+ loadMap(f, scene.materialForNode_);
+ loadMap(f, scene.meshes_);
+
+ if (!feof(f))
+ {
+     loadMap(f, scene.nameForNode_);
+     loadStringList(f, scene.names_);
+
+     loadStringList(f, scene.materialNames_);
+ }
+
+ fclose(f);
+</code></pre><p> }</p>
+</li>
+</ol>
+</li>
+</ol>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="vulkanRenderer.html" class="navigation navigation-prev " aria-label="Previous page: 引擎架构之 Vulkan Renderer 封装">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="application.html" class="navigation navigation-next " aria-label="Next page: 引擎架构之应用封装">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"引擎架构之场景数据","level":"1.3.2","depth":2,"next":{"title":"引擎架构之应用封装","level":"1.3.3","depth":2,"path":"engine/application.md","ref":"engine/application.md","articles":[]},"previous":{"title":"引擎架构之 Vulkan Renderer 封装","level":"1.3.1","depth":2,"path":"engine/vulkanRenderer.md","ref":"engine/vulkanRenderer.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"engine/sceneData.md","mtime":"2022-01-14T10:01:38.246Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2022-02-23T12:30:00.796Z"},"basePath":"..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

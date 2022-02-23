@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <title>引擎架构 · GitBook</title>
+        <title>引擎架构之 后处理 Renderer 封装 · GitBook</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
         <meta name="generator" content="GitBook 3.2.3">
@@ -57,10 +57,10 @@
     <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
 
     
-    <link rel="next" href="vulkanRenderer.html" />
+    <link rel="next" href="../RHI/" />
     
     
-    <link rel="prev" href="../graphicsAPI/vulkanAPI.html" />
+    <link rel="prev" href="frameworkRenderer.html" />
     
 
     </head>
@@ -147,7 +147,7 @@
             
         </li>
     
-        <li class="chapter active" data-level="1.3" data-path="./">
+        <li class="chapter " data-level="1.3" data-path="./">
             
                 <a href="./">
             
@@ -226,7 +226,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.3.6" data-path="postprocessorRenderer.html">
+        <li class="chapter active" data-level="1.3.6" data-path="postprocessorRenderer.html">
             
                 <a href="postprocessorRenderer.html">
             
@@ -371,7 +371,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href=".." >引擎架构</a>
+        <a href=".." >引擎架构之 后处理 Renderer 封装</a>
     </h1>
 </div>
 
@@ -386,16 +386,7 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 id="&#x5F15;&#x64CE;&#x67B6;&#x6784;">&#x5F15;&#x64CE;&#x67B6;&#x6784;</h1>
-<ul>
-<li>&#x6218;&#x706B;&#x5F15;&#x64CE;</li>
-<li>3D Graphics Rendering Cookbook</li>
-<li>Filament (<a href="https://github.com/google/filament" target="_blank">https://github.com/google/filament</a>)</li>
-<li>Horde3D (<a href="https://github.com/horde3d/Horde3D" target="_blank">https://github.com/horde3d/Horde3D</a>)</li>
-<li>Urho3D (<a href="https://github.com/urho3d/Urho3D" target="_blank">https://github.com/urho3d/Urho3D</a>)</li>
-<li>OpenSceneGraph (<a href="https://github.com/openscenegraph/OpenSceneGraph" target="_blank">https://github.com/openscenegraph/OpenSceneGraph</a>)</li>
-<li>VulkanSceneGraph (<a href="https://github.com/vsg-dev/VulkanSceneGraph" target="_blank">https://github.com/vsg-dev/VulkanSceneGraph</a>)</li>
-</ul>
+                                <h1 id="&#x5F15;&#x64CE;&#x67B6;&#x6784;&#x4E4B;-&#x540E;&#x5904;&#x7406;-renderer-&#x5C01;&#x88C5;">&#x5F15;&#x64CE;&#x67B6;&#x6784;&#x4E4B; &#x540E;&#x5904;&#x7406; Renderer &#x5C01;&#x88C5;</h1>
 
                                 
                                 </section>
@@ -423,12 +414,12 @@
 
             
                 
-                <a href="../graphicsAPI/vulkanAPI.html" class="navigation navigation-prev " aria-label="Previous page: Vulkan API 梳理">
+                <a href="frameworkRenderer.html" class="navigation navigation-prev " aria-label="Previous page: 引擎架构之 FrameworkRenderer 封装">
                     <i class="fa fa-angle-left"></i>
                 </a>
                 
                 
-                <a href="vulkanRenderer.html" class="navigation navigation-next " aria-label="Next page: 引擎架构之 Vulkan Renderer 封装">
+                <a href="../RHI/" class="navigation navigation-next " aria-label="Next page: RHI 跨平台">
                     <i class="fa fa-angle-right"></i>
                 </a>
                 
@@ -439,7 +430,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"引擎架构","level":"1.3","depth":1,"next":{"title":"引擎架构之 Vulkan Renderer 封装","level":"1.3.1","depth":2,"path":"engine/vulkanRenderer.md","ref":"engine/vulkanRenderer.md","articles":[]},"previous":{"title":"Vulkan API 梳理","level":"1.2.2","depth":2,"path":"graphicsAPI/vulkanAPI.md","ref":"graphicsAPI/vulkanAPI.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"engine/README.md","mtime":"2021-11-20T03:30:48.160Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2022-02-23T12:30:00.796Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"引擎架构之 后处理 Renderer 封装","level":"1.3.6","depth":2,"next":{"title":"RHI 跨平台","level":"1.4","depth":1,"path":"RHI/README.md","ref":"RHI/README.md","articles":[]},"previous":{"title":"引擎架构之 FrameworkRenderer 封装","level":"1.3.5","depth":2,"path":"engine/frameworkRenderer.md","ref":"engine/frameworkRenderer.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"engine/postprocessorRenderer.md","mtime":"2022-02-18T09:15:57.009Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2022-02-23T12:30:00.796Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>
