@@ -10,6 +10,7 @@
     * [引擎架构之应用封装](engine/application.md)
     * [引擎架构之资源管理](engine/resource.md)
     * [引擎架构之 FrameworkRenderer 封装](engine/frameworkRenderer.md)
+    * [引擎架构之 后处理 Renderer 封装](engine/postprocessorRenderer.md)
 * [RHI 跨平台](RHI/README.md)
 * [渲染技术](rendering/README.md)
     * [摄像机基础](rendering/camera.md)
